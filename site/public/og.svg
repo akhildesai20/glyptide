@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0A0A0A"/>
+  <text x="96" y="300" fill="#EDEDED" font-family="system-ui,sans-serif" font-size="96" font-weight="560" letter-spacing="-4">Glyptide.</text>
+  <text x="96" y="380" fill="#A3A3A3" font-family="system-ui,sans-serif" font-size="36" font-weight="400">Thoughtful text motion for generative interfaces.</text>
+  <text x="96" y="540" fill="#8A8A8A" font-family="ui-monospace,monospace" font-size="22" letter-spacing="2">96 PATTERNS · OPEN SOURCE</text>
+  <g transform="translate(1040 88) skewX(-10)">
+    <rect x="0" y="0" width="10" height="64" rx="2" fill="#EDEDED"/>
+    <rect x="22" y="16" width="10" height="48" rx="2" fill="#A9E8BA"/>
+    <rect x="44" y="32" width="10" height="32" rx="2" fill="#8A8A8A"/>
+  </g>
+</svg>

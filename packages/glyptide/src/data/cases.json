@@ -1,0 +1,50 @@
+[
+  {
+    "id": "new",
+    "title": "New response",
+    "desc": "An empty answer surface becomes readable as text arrives.",
+    "surface": "Assistant response",
+    "source": "",
+    "text": "A well-designed interface makes uncertainty easier to manage. When a system needs time to prepare an answer, a small and meaningful signal can reassure the reader that their request has been received. As the response begins to appear, the words that have already arrived should remain stable, allowing someone to read at their own pace without being distracted by unnecessary movement.\n\nThe goal is not to make the interface feel faster than it really is, but to make the waiting experience feel understandable and predictable."
+  },
+  {
+    "id": "insert",
+    "title": "Inline insertion",
+    "desc": "Generate missing text inside an existing sentence or between paragraphs.",
+    "surface": "Document editor",
+    "source": "Good interfaces communicate what is happening without demanding the user’s attention at every step. [[]] This is especially important when an automated system needs several seconds to produce a meaningful response. The reader should always understand what has changed and what remains untouched.",
+    "text": "A small status indicator can establish that the request is being processed, while a carefully paced reveal makes the eventual result easier to follow."
+  },
+  {
+    "id": "replace",
+    "title": "Selection rewrite",
+    "desc": "Replace a selected phrase or sentence without losing its surrounding context.",
+    "surface": "Document editor / selection",
+    "source": "Our team has been working on a new customer dashboard for the past several weeks. [[The dashboard is really nice and has lots of different things that people can use to do their work better.]] We will validate the revised experience through usability testing before releasing it to all customers.",
+    "text": "The dashboard brings essential account information and frequently used actions into a single, easy-to-navigate workspace, helping customers complete everyday tasks with fewer interruptions."
+  },
+  {
+    "id": "rewrite",
+    "title": "Multi-paragraph rewrite",
+    "desc": "Revise larger blocks while keeping the rest of a document available.",
+    "surface": "Document editor / revision",
+    "source": "Project update — November\n\n[[We have completed a lot of work on the dashboard, and the team is happy with the direction. There are still a few problems with the navigation that we need to solve.\n\nWe also talked to some customers and got useful feedback about how they find their documents and make payments. We will use this feedback in the next version.]]\n\nNext milestone: share the revised prototype with the wider team.",
+    "text": "The dashboard redesign has reached its first internal milestone. The core experience is in place, with navigation and account discovery identified as the remaining priorities.\n\nEarly customer feedback highlighted two recurring needs: easier access to important documents and more direct payment actions. These findings will inform the next iteration before wider validation."
+  },
+  {
+    "id": "continue",
+    "title": "Continue writing",
+    "desc": "Extend existing prose or suggest the next sentence without rewriting the prefix.",
+    "surface": "Writing assistant",
+    "source": "The next version of the dashboard should give customers a clearer overview of their financial commitments. Rather than adding more cards to the homepage, the design should prioritize information that helps people decide what to do next.",
+    "text": " For example, upcoming repayments could be grouped by due date, with relevant account details and payment actions available in the same place. This would make the experience more useful without increasing its visual complexity."
+  },
+  {
+    "id": "structured",
+    "title": "Structured output",
+    "desc": "Generate text with meaningful boundaries, such as lists, code, and document sections.",
+    "surface": "Structured response",
+    "source": "",
+    "text": "Recommended next steps\n\n1. Review the customer journey and identify the points where people are most likely to need assistance.\n2. Prioritize the actions that resolve the most common issues without adding unnecessary navigation.\n3. Test the revised interface with a small group of customers and record where they hesitate.\n4. Refine the design based on observed behavior before expanding the release."
+  }
+]

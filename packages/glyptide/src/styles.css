@@ -1,0 +1,543 @@
+/* Glyptide document surface — theme-independent generation styles */
+
+.glyptide-document,
+.document {
+  --gen: var(--glyptide-gen, var(--added, #135b32));
+  --hilite: var(--glyptide-hilite, var(--tint, #d6efdd));
+  --grad2: var(--glyptide-grad2, #7852ad);
+  --grad3: var(--glyptide-grad3, #b34379);
+  --ink: var(--glyptide-ink, currentColor);
+  position: relative;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.76;
+}
+
+.glyptide-document.code,
+.document.code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.85em;
+  line-height: 1.75;
+}
+
+.glyptide-document .selected,
+.document .selected {
+  background: var(--selection, #dbe8ff);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 1px 0;
+}
+
+.glyptide-document .newmark,
+.document .newmark {
+  background: var(--hilite);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .ghost,
+.document .ghost {
+  color: var(--muted, #737373);
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
+.glyptide-document .oldstrike,
+.document .oldstrike {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  color: var(--removed, #a12228);
+  background: color-mix(in srgb, var(--removed, #a12228) 8%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .proposed,
+.glyptide-document .added,
+.document .proposed,
+.document .added {
+  color: var(--gen);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  background: var(--hilite);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .ink,
+.document .ink {
+  color: var(--gen);
+}
+
+.glyptide-document .underlined,
+.document .underlined {
+  text-decoration: underline;
+  text-decoration-color: var(--gen);
+  text-underline-offset: 4px;
+}
+
+.glyptide-document .piece,
+.document .piece {
+  display: inline;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .piece.motion-block,
+.document .piece.motion-block {
+  display: inline;
+  white-space: inherit;
+}
+
+.glyptide-document .caret,
+.document .caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -0.13em;
+  background: var(--gen, var(--accent, #17633c));
+  border-radius: 1px;
+  animation: none;
+}
+
+.glyptide-document .caret:not(.cursorsteady),
+.document .caret:not(.cursorsteady) {
+  animation: glyptide-blink 1s step-end infinite;
+}
+
+.glyptide-document .inlinewait,
+.document .inlinewait {
+  color: var(--gen, var(--accent, #17633c));
+  font-size: 0.85em;
+  white-space: normal;
+}
+
+.glyptide-document .blockwait,
+.document .blockwait {
+  display: block;
+  background: var(--hilite);
+  border-radius: 6px;
+  height: 1.3em;
+  width: 75%;
+  margin: 0.25em 0;
+  animation: glyptide-breath 1.8s ease-in-out infinite;
+}
+
+.glyptide-document .revision,
+.document .revision {
+  display: inline;
+}
+
+.glyptide-document .reviewblock,
+.document .reviewblock {
+  display: block;
+  border-left: 2px solid var(--gen, var(--accent, #17633c));
+  padding: 8px 0 8px 13px;
+  margin: 12px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.glyptide-document .reviewblock.stale,
+.document .reviewblock.stale {
+  border-color: var(--removed, #a12228);
+  color: var(--removed, #a12228);
+  text-decoration: line-through;
+}
+
+.glyptide-document .reviewblock.proposed,
+.document .reviewblock.proposed {
+  color: var(--gen);
+}
+
+.glyptide-document .stale:not(.reviewblock),
+.document .stale:not(.reviewblock) {
+  color: var(--muted, #737373);
+  background: color-mix(in srgb, var(--selection, #dbe8ff) 40%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .gapmark,
+.glyptide-document .placeholder,
+.document .gapmark,
+.document .placeholder {
+  background: var(--hilite);
+  color: var(--gen);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .gapmark,
+.document .gapmark {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.glyptide-document .changebar,
+.document .changebar {
+  border-left: 2px solid var(--gen, var(--accent, #17633c));
+  padding-left: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .checkpoint,
+.document .checkpoint {
+  color: var(--gen, var(--accent, #17633c));
+  font-size: 0.75em;
+  margin-left: 4px;
+}
+
+.glyptide-document .pending-target,
+.document .pending-target {
+  background: var(--selection, #dbe8ff);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 3px;
+}
+
+.glyptide-document .diff-kept,
+.document .diff-kept {
+  color: inherit;
+}
+
+.glyptide-document .diff-removed,
+.document .diff-removed {
+  color: var(--removed, #a12228);
+  text-decoration: line-through;
+  background: color-mix(in srgb, var(--removed, #a12228) 9%, transparent);
+}
+
+.glyptide-document .diff-added,
+.document .diff-added {
+  color: var(--gen);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: var(--hilite);
+}
+
+.glyptide-document .ink-range,
+.document .ink-range {
+  color: var(--gen);
+  background: var(--hilite);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 3px;
+  text-decoration: underline;
+  text-decoration-color: var(--gen);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.glyptide-document .visual-guide,
+.document .visual-guide {
+  position: absolute;
+  pointer-events: none;
+  height: 2px;
+  background: var(--gen);
+  border-radius: 2px;
+  opacity: 0.78;
+  transition: width 140ms ease-out;
+  z-index: 1;
+}
+
+.glyptide-document .piece.active-guide,
+.document .piece.active-guide {
+  background: var(--hilite);
+  text-decoration: underline;
+  text-decoration-color: var(--gen);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 3px;
+}
+
+.glyptide-document .piece.checkpoint-active,
+.glyptide-document .piece.row-accent,
+.document .piece.checkpoint-active,
+.document .piece.row-accent {
+  background: var(--hilite);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 3px;
+}
+
+.glyptide-document .piece.row-focus,
+.document .piece.row-focus {
+  color: var(--gen);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@supports not (background-clip: text) {
+  .glyptide-document .grad-ink,
+  .document .grad-ink {
+    color: var(--gen) !important;
+    background: none !important;
+  }
+}
+
+/* Solid appearance treatments (decoupled from pattern motion) */
+.glyptide-document .appear-ink,
+.document .appear-ink {
+  color: var(--gen);
+}
+
+.glyptide-document .appear-highlight,
+.document .appear-highlight {
+  background: color-mix(
+    in srgb,
+    var(--glyptide-highlight, var(--hilite))
+      calc(var(--appear-intensity, 1) * 100%),
+    transparent
+  );
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.glyptide-document .appear-glow,
+.document .appear-glow {
+  text-shadow:
+    0 0 calc(10px * var(--appear-intensity, 1))
+      color-mix(in srgb, var(--glyptide-gradient-middle, var(--grad2)) 40%, transparent),
+    0 0 calc(4px * var(--appear-intensity, 1))
+      color-mix(in srgb, var(--glyptide-gradient-start, var(--gen)) 25%, transparent);
+}
+
+.glyptide-document .appear-underline,
+.document .appear-underline {
+  text-decoration-color: var(--gen);
+}
+
+.glyptide-document .grad-ink,
+.document .grad-ink {
+  /* Fallback */
+  background: linear-gradient(
+    var(--appear-angle, 105deg),
+    var(--glyptide-gradient-start, var(--gen)) 10%,
+    var(--glyptide-gradient-middle, var(--grad2)) 43%,
+    var(--glyptide-gradient-end, var(--grad3)) 60%,
+    var(--glyptide-gradient-start, var(--gen)) 88%
+  );
+  background-size: 230% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@supports (background: linear-gradient(in oklab, red, blue)) {
+  .glyptide-document .grad-ink,
+  .document .grad-ink {
+    background: linear-gradient(
+      var(--appear-angle, 110deg) in oklab,
+      var(--glyptide-gradient-start, var(--gen)) 8%,
+      var(--glyptide-gradient-middle, var(--grad2)) 45%,
+      var(--glyptide-gradient-end, var(--grad3)) 72%,
+      var(--glyptide-gradient-start, var(--gen)) 100%
+    );
+    background-size: 230% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+}
+
+.glyptide-document .grad-highlight,
+.document .grad-highlight {
+  background: linear-gradient(
+    100deg,
+    transparent 5%,
+    var(--glyptide-highlight, var(--hilite)) 32%,
+    color-mix(in srgb, var(--glyptide-gradient-middle, var(--grad2)) 18%, transparent) 55%,
+    transparent 88%
+  );
+  background-size: 240% 100%;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@supports (background: linear-gradient(in oklab, red, blue)) {
+  .glyptide-document .grad-highlight,
+  .document .grad-highlight {
+    background: linear-gradient(
+      100deg in oklab,
+      transparent 5%,
+      var(--glyptide-highlight, var(--hilite)) 32%,
+      color-mix(in oklab, var(--glyptide-gradient-middle, var(--grad2)) 18%, transparent) 55%,
+      transparent 88%
+    );
+    background-size: 240% 100%;
+  }
+}
+
+.glyptide-document .grad-glow,
+.document .grad-glow {
+  background: linear-gradient(
+    105deg,
+    transparent,
+    var(--glyptide-highlight, var(--hilite)),
+    color-mix(in srgb, var(--glyptide-gradient-middle, var(--grad2)) 14%, transparent),
+    transparent
+  );
+  background-size: 240% 100%;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  text-shadow:
+    0 0 12px color-mix(in srgb, var(--glyptide-gradient-middle, var(--grad2)) 42%, transparent),
+    0 0 5px color-mix(in srgb, var(--glyptide-gradient-start, var(--gen)) 25%, transparent);
+}
+
+.glyptide-document .grad-underline,
+.document .grad-underline {
+  background-image: linear-gradient(
+    90deg,
+    var(--glyptide-gradient-start, var(--gen)),
+    var(--glyptide-gradient-middle, var(--grad2)),
+    var(--glyptide-gradient-end, var(--grad3)),
+    var(--glyptide-gradient-start, var(--gen))
+  );
+  background-size: 220% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@supports (background: linear-gradient(in oklab, red, blue)) {
+  .glyptide-document .grad-underline,
+  .document .grad-underline {
+    background-image: linear-gradient(
+      90deg in oklab,
+      var(--glyptide-gradient-start, var(--gen)),
+      var(--glyptide-gradient-middle, var(--grad2)),
+      var(--glyptide-gradient-end, var(--grad3)),
+      var(--glyptide-gradient-start, var(--gen))
+    );
+    background-size: 220% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+  }
+}
+
+.glyptide-waiting,
+.waiting {
+  --gen: var(--glyptide-gen, var(--added, #135b32));
+  color: var(--muted, #737373);
+  font-size: 12px;
+  min-height: 22px;
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  letter-spacing: 0.005em;
+}
+
+.glyptide-waiting:empty,
+.waiting:empty {
+  visibility: hidden;
+}
+
+.waiting .dots,
+.glyptide-waiting .dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.waiting .dots i,
+.glyptide-waiting .dots i {
+  width: 5px;
+  height: 5px;
+  background: var(--gen, var(--accent, #17633c));
+  border-radius: 50%;
+  animation: glyptide-breath 1.2s ease-in-out infinite;
+}
+
+.waiting .dots i:nth-child(2),
+.glyptide-waiting .dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.waiting .dots i:nth-child(3),
+.glyptide-waiting .dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.waiting .shimmer-label,
+.glyptide-waiting .shimmer-label {
+  background: linear-gradient(
+    100deg,
+    var(--muted, #737373) 15%,
+    var(--gen, var(--accent, #17633c)) 48%,
+    var(--muted, #737373) 80%
+  );
+  background-size: 230% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: glyptide-label-sweep 1.7s linear infinite;
+}
+
+.paused * {
+  animation-play-state: paused !important;
+}
+
+.reduced *,
+.reduced .shimmer-label {
+  animation: none !important;
+}
+
+.reduced .shimmer-label {
+  color: var(--muted, #737373);
+}
+
+@keyframes glyptide-breath {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes glyptide-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes glyptide-label-sweep {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyptide-document .caret,
+  .document .caret,
+  .glyptide-document .blockwait,
+  .document .blockwait,
+  .waiting .dots i,
+  .glyptide-waiting .dots i,
+  .waiting .shimmer-label,
+  .glyptide-waiting .shimmer-label {
+    animation: none !important;
+  }
+
+  .waiting .shimmer-label,
+  .glyptide-waiting .shimmer-label {
+    color: var(--muted, #737373);
+  }
+}

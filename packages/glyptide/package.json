@@ -1,0 +1,67 @@
+{
+  "name": "glyptide",
+  "version": "0.1.0",
+  "description": "Thoughtful text generation, editing and transformation patterns for modern interfaces",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./patterns": {
+      "types": "./dist/patterns.d.ts",
+      "import": "./dist/patterns.js",
+      "require": "./dist/patterns.cjs"
+    },
+    "./presets": {
+      "types": "./dist/presets.d.ts",
+      "import": "./dist/presets.js",
+      "require": "./dist/presets.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsup && cp src/styles.css dist/styles.css",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "text",
+    "animation",
+    "streaming",
+    "generative-ui",
+    "ai",
+    "motion",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Glyptide",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glyptide/glyptide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/glyptide/glyptide/issues"
+  },
+  "homepage": "https://glyptide.dev",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
