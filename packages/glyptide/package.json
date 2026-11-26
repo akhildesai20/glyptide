@@ -12,6 +12,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./engine": {
+      "types": "./dist/engine.d.ts",
+      "import": "./dist/engine.js",
+      "require": "./dist/engine.cjs"
+    },
     "./styles.css": "./dist/styles.css",
     "./patterns": {
       "types": "./dist/patterns.d.ts",
@@ -22,7 +27,8 @@
       "types": "./dist/presets.d.ts",
       "import": "./dist/presets.js",
       "require": "./dist/presets.cjs"
-    }
+    },
+    "./glyptide.iife.js": "./dist/glyptide.iife.js"
   },
   "files": [
     "dist",
@@ -33,7 +39,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsup && cp src/styles.css dist/styles.css",
+    "build": "tsup && node ./scripts/copy-css.mjs",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"

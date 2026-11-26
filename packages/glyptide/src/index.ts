@@ -2,11 +2,20 @@ import { makeEngine, type InternalEngine } from "./engine";
 import { getPattern, patternCount } from "./patterns";
 import { defaultAppearanceConfig } from "./appearance";
 import { resolveGenerationColors } from "./palette";
+import {
+  GlyptideConfigError,
+  resolvePatternId,
+  validateCreateOptions,
+  validatePartialConfig,
+} from "./validate";
 import type {
   AppearanceConfig,
   CreateGlyptideOptions,
   GlyptideConfig,
+  GlyptideEvent,
+  GlyptideEventHandler,
   GlyptideInstance,
+  MotionConfig,
   ResolvedConfig,
   ThemeAwarePalette,
   ThemePreference,
@@ -22,6 +31,7 @@ export type {
   BufferKind,
   CaseDefinition,
   CaseId,
+  CatchUpPolicy,
   ColorControlKey,
   ColorControlNeeds,
   CreateGlyptideOptions,
@@ -30,8 +40,12 @@ export type {
   GenerationColors,
   GenerationPalette,
   GlyptideConfig,
+  GlyptideEvent,
+  GlyptideEventHandler,
   GlyptideInstance,
   GradientMotion,
+  MotionConfig,
+  MotionPresetId,
   PaletteCategory,
   PalettePreset,
   PatternDefinition,
@@ -114,9 +128,20 @@ export {
   consumeTextStream,
   iterateTextStream,
   pipeTextToGlyptide,
+  normalizeSnapshot,
+  applyTextOperation,
+  commonPrefixLength,
   type ConsumeTextStreamOptions,
   type StreamMode,
+  type TextOperation,
 } from "./stream";
+export {
+  GlyptideConfigError,
+  assertValidPatternId,
+  resolvePatternId,
+  validateCreateOptions,
+  validatePartialConfig,
+} from "./validate";
 export {
   recommendPatterns,
   type PatternRecommendation,
@@ -124,6 +149,35 @@ export {
   type RecommendInput,
   type RecommendUseCase,
 } from "./recommend";
+export {
+  createStreamIngress,
+  type StreamIngress,
+  type StreamIngressOptions,
+} from "./stream-ingress";
+export {
+  createEventBus,
+  eventForEngineState,
+  type EventBus,
+} from "./events";
+export {
+  MOTION_PRESET_IDS,
+  resolveMotion,
+  type ResolvedMotion,
+} from "./motion";
+export {
+  PATTERN,
+  headingWeightMode,
+  isBlockByBlock,
+  isCodeSurfacePattern,
+  isParagraphLeadIn,
+  isReservedGap,
+  showsCaret,
+} from "./pattern-flags";
+export {
+  passthroughRenderAdapter,
+  type RenderAdapter,
+  type RenderAdapterContext,
+} from "./render-adapter";
 
 function prefersReducedMotion(): boolean {
   if (typeof matchMedia !== "function") return false;
@@ -141,12 +195,15 @@ function resolveConfig(
   const paletteCfg =
     (merged.palette as ThemeAwarePalette | null | undefined) ?? null;
   const caseId = merged.caseId ?? "new";
+  const patternId = merged.patternId ?? "";
   const patternName = merged.patternName ?? "Word settle";
   const effect = merged.effect ?? "spring";
   const appearance: AppearanceConfig | null =
     merged.appearance === undefined
-      ? defaultAppearanceConfig(effect, caseId, patternName)
+      ? defaultAppearanceConfig(effect, caseId, patternName, patternId)
       : merged.appearance;
+  const motion: MotionConfig | null =
+    merged.motion === undefined ? null : merged.motion;
 
   const resolved = resolveGenerationColors({
     theme,
@@ -158,6 +215,7 @@ function resolveConfig(
 
   return {
     caseId,
+    patternId,
     patternName,
     kind: merged.kind ?? "word",
     effect,
@@ -165,8 +223,12 @@ function resolveConfig(
     text: merged.text ?? "",
     speed: merged.speed ?? 54,
     latency: merged.latency ?? 600,
+    waitingThresholdMs: merged.waitingThresholdMs ?? 180,
+    stallMs: merged.stallMs ?? 2500,
+    catchUp: merged.catchUp ?? "catchUp",
     scenario: merged.scenario ?? "steady",
     reduce: merged.reduce ?? prefersReducedMotion(),
+    motion,
     colors: resolved.colors,
     preset,
     palette: paletteCfg,
@@ -176,36 +238,44 @@ function resolveConfig(
   };
 }
 
+/**
+ * Own a waiting node per instance. Never reuse a sibling's `.glyptide-waiting`
+ * via parent queries — that couples instances under the same host.
+ */
 function ensureWaiting(
   parent: HTMLElement,
   waiting?: HTMLElement | null,
-): HTMLElement {
-  if (waiting) return waiting;
-  const existing = parent.parentElement?.querySelector(
-    ".glyptide-waiting",
-  ) as HTMLElement | null;
-  if (existing) return existing;
+): { el: HTMLElement; owned: boolean } {
+  if (waiting) return { el: waiting, owned: false };
   const el = document.createElement("div");
   el.className = "glyptide-waiting waiting";
   el.setAttribute("aria-hidden", "true");
+  el.dataset.glyptideOwned = "true";
   parent.insertAdjacentElement("afterend", el);
-  return el;
+  return { el, owned: true };
 }
 
 /**
  * Create a Glyptide instance bound to a DOM element.
+ * Glyptide only mutates `element` and the optional waiting node.
  */
 export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance {
+  validateCreateOptions(options);
+
   const element = options.element;
   element.classList.add("document", "glyptide-document");
 
-  const waiting = ensureWaiting(element, options.waiting ?? null);
+  const { el: waiting, owned: ownedWaiting } = ensureWaiting(
+    element,
+    options.waiting ?? null,
+  );
   const engine: InternalEngine = makeEngine({
     out: element,
     wait: waiting,
     status: options.onStatus,
     announce: options.onAnnounce,
     change: options.onChange,
+    event: options.onEvent,
   });
 
   let base: Partial<GlyptideConfig> = {
@@ -216,21 +286,26 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
     preset: options.preset ?? null,
     palette: options.palette ?? null,
     theme: options.theme ?? "inherit",
+    motion: options.motion ?? null,
   };
 
   if (options.pattern) {
-    const p = getPattern(options.pattern);
-    if (p) {
-      base = {
-        ...base,
-        caseId: p.caseId,
-        patternName: p.name,
-        kind: p.kind,
-        effect: p.effect,
-        source: p.source,
-        text: p.sample,
-      };
+    const resolvedId = resolvePatternId(options.pattern);
+    const p = getPattern(resolvedId);
+    if (!p) {
+      // validateCreateOptions already throws; keep guard for type narrowing
+      throw new GlyptideConfigError(`Unknown pattern "${options.pattern}".`);
     }
+    base = {
+      ...base,
+      caseId: p.caseId,
+      patternId: p.id,
+      patternName: p.name,
+      kind: p.kind,
+      effect: p.effect,
+      source: p.source,
+      text: p.sample,
+    };
   }
 
   if (options.config) {
@@ -239,18 +314,42 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
 
   engine.reset(resolveConfig({ text: "" }, base, element));
 
-  return {
+  let abortHandler: (() => void) | null = null;
+  const bindSignal = (signal?: AbortSignal) => {
+    if (abortHandler && options.signal) {
+      options.signal.removeEventListener("abort", abortHandler);
+    }
+    abortHandler = null;
+    const sig = signal ?? options.signal;
+    if (!sig) return;
+    abortHandler = () => engine.stop();
+    if (sig.aborted) {
+      abortHandler();
+      return;
+    }
+    sig.addEventListener("abort", abortHandler, { once: true });
+  };
+  bindSignal(options.signal);
+
+  const instance: GlyptideInstance = {
     start(config) {
+      if (config) validatePartialConfig(config);
       engine.start(resolveConfig({ ...base, ...config }, base, element));
     },
     append(chunk) {
       engine.append(chunk);
     },
+    applySnapshot(fullText) {
+      engine.applySnapshot(fullText);
+    },
     finish() {
       engine.finish();
     },
     reset(config) {
-      if (config) base = { ...base, ...config };
+      if (config) {
+        validatePartialConfig(config);
+        base = { ...base, ...config };
+      }
       engine.reset(resolveConfig({ text: base.text ?? "" }, base, element));
     },
     pause: () => engine.pause(),
@@ -265,9 +364,11 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
       if ("theme" in next) base.theme = next.theme;
       if ("colors" in next) base.colors = next.colors ?? null;
       if ("appearance" in next) base.appearance = next.appearance ?? null;
+      if ("motion" in next) base.motion = next.motion ?? null;
       const resolved = resolveConfig({ text: base.text ?? "" }, base, element);
       base.colors = resolved.colors;
       base.appearance = resolved.appearance;
+      base.motion = resolved.motion;
       engine.updateAppearance({
         colors: resolved.colors,
         preset: resolved.preset,
@@ -275,9 +376,21 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
         theme: resolved.theme,
         appearance: resolved.appearance,
         persistGradient: resolved.persistGradient,
+        motion: resolved.motion,
       });
     },
-    destroy: () => engine.destroy(),
+    on(event: GlyptideEvent | "*", handler: GlyptideEventHandler) {
+      return engine.on(event, handler);
+    },
+    destroy() {
+      if (abortHandler && options.signal) {
+        options.signal.removeEventListener("abort", abortHandler);
+        abortHandler = null;
+      }
+      engine.destroy();
+      if (ownedWaiting) waiting.remove();
+      element.classList.remove("document", "glyptide-document", "code", "reduced");
+    },
     get state() {
       return engine.state;
     },
@@ -285,6 +398,8 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
       return engine.rendered;
     },
   };
+
+  return instance;
 }
 
 export { patternCount as PATTERN_COUNT };

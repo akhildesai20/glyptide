@@ -1,15 +1,29 @@
 import { resolveVisualTreatment } from "./appearance";
+import { createEventBus, eventForEngineState } from "./events";
 import {
   appearanceLifecycleFor,
   clearTransientAppearance,
   settlePieceAppearance,
 } from "./lifecycle";
+import { resolveMotion } from "./motion";
 import { applyPalette, resolveGenerationColors } from "./palette";
+import {
+  headingWeightMode,
+  isBlockByBlock,
+  isCodeSurfacePattern,
+  isParagraphLeadIn,
+  isReservedGap,
+  showsCaret,
+} from "./pattern-flags";
 import { springFrames } from "./spring";
+import { createStreamIngress } from "./stream-ingress";
 import { splitText } from "./split";
+import { normalizeSnapshot } from "./text-ops";
 import type {
   EngineCallbacks,
   EngineState,
+  GlyptideEvent,
+  GlyptideEventHandler,
   ResolvedConfig,
 } from "./types";
 
@@ -34,13 +48,21 @@ export interface InternalEngine {
     patch: Partial<
       Pick<
         ResolvedConfig,
-        "colors" | "preset" | "palette" | "theme" | "appearance" | "persistGradient"
+        | "colors"
+        | "preset"
+        | "palette"
+        | "theme"
+        | "appearance"
+        | "persistGradient"
+        | "motion"
       >
     >,
   ) => void;
-  /** Real-stream append (bypasses simulated scheduler) */
+  /** Real-stream append (cancels simulator if dual-feed) */
   append: (chunk: string) => void;
+  applySnapshot: (fullText: string) => void;
   finish: () => void;
+  on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
   destroy: () => void;
   readonly state: EngineState;
   readonly rendered: string;
@@ -99,11 +121,37 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   let rendered = "";
   let review = false;
   let liveMode = false;
+  let simulated = false;
+  let firstContentEmitted = false;
+  let waitingShown = false;
+  let snapshotAccum = "";
+  /** Monotonic generation id — stale async work from prior runs is ignored */
+  let generation = 0;
+  let destroyed = false;
   const settleTimers = new Set<number>();
+  const bus = createEventBus();
+  const ingress = createStreamIngress({
+    maxQueue: 256,
+    policy: "catchUp",
+    stallMs: 2500,
+    onStall: () => {
+      if (destroyed) return;
+      if (liveMode && state === "Generating") {
+        set("Waiting for text");
+        cue("Waiting for more text…");
+        emit("stalled");
+      }
+    },
+  });
+  let stallWatch = 0;
 
   const status = (s: EngineState) => cb.status?.(s);
   const announce = (m: string) => cb.announce?.(m);
   const change = (s: EngineState) => cb.change?.(s);
+  const emit = (event: GlyptideEvent, detail?: unknown) => {
+    bus.emit(event, detail);
+    cb.event?.(event, detail);
+  };
 
   function later(fn: () => void, ms: number): void {
     const id = window.setTimeout(() => {
@@ -137,6 +185,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     state = s;
     status(s);
     change(s);
+    const ev = eventForEngineState(s);
+    if (ev) emit(ev);
   }
 
   function palette(): void {
@@ -186,43 +236,93 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
   function animate(el: HTMLElement, effect: string): void {
     if (opt.reduce || effect === "none" || !el.animate) return;
+    const motion = resolveMotion(opt.motion);
+    const reveal = motion.revealMs;
+    const blur = motion.blurPx;
     let frames: Keyframe[];
-    let duration = 210;
+    let duration = reveal > 0 ? reveal : 1;
     if (effect === "ink") {
       // Settle to inherited host color — never hardcode black/white
       frames = [{ color: "var(--gen)" }, { color: "inherit" }];
-      duration = 850;
+      duration = Math.max(reveal, 850);
     } else if (effect === "spring") {
-      frames = el.classList.contains("motion-block")
-        ? springFrames()
-        : [{ opacity: 0.28 }, { opacity: 1 }];
-      duration = el.classList.contains("motion-block") ? 400 : 210;
+      if (el.classList.contains("motion-block")) {
+        // Map preset spring feel → omega / distance (stiffer = snappier)
+        const stiff = motion.spring.stiffness;
+        const omega = Math.max(10, Math.min(32, stiff / 8));
+        frames = springFrames({
+          distance: Math.max(1, motion.displacementPx / 3),
+          omega,
+          duration: Math.max(0.2, (reveal || 400) / 1000),
+        });
+        duration = Math.max(reveal, 400);
+      } else {
+        frames = [
+          {
+            opacity: motion.initialOpacity,
+            filter: blur ? `blur(${blur}px)` : "none",
+            transform: motion.displacementPx
+              ? `translateY(${Math.min(8, motion.displacementPx / 2)}px)`
+              : "none",
+          },
+          { opacity: 1, filter: "none", transform: "none" },
+        ];
+        duration = reveal > 0 ? reveal : 1;
+      }
     } else if (effect === "wipe") {
-      frames = [{ opacity: 0.25 }, { opacity: 1 }];
-      duration = 220;
+      frames = [
+        {
+          opacity: motion.initialOpacity,
+          clipPath: "inset(0 100% 0 0)",
+        },
+        { opacity: 1, clipPath: "inset(0 0 0 0)" },
+      ];
+      duration = reveal > 0 ? Math.max(reveal, 180) : 1;
     } else if (effect === "mark") {
       frames = [
         { backgroundColor: "var(--hilite)" },
         { backgroundColor: "transparent" },
       ];
-      duration = 900;
+      duration = Math.max(reveal, 900);
     } else if (effect === "block") {
       frames = [
-        { opacity: 0, transform: "translateY(3px)" },
-        { opacity: 1, transform: "none" },
+        {
+          opacity: motion.initialOpacity,
+          transform: `translateY(${Math.max(2, motion.displacementPx / 3)}px)`,
+          filter: blur ? `blur(${blur}px)` : "none",
+        },
+        { opacity: 1, transform: "none", filter: "none" },
       ];
-      duration = 320;
+      duration = reveal > 0 ? Math.max(reveal, 200) : 1;
     } else {
-      frames = [{ opacity: 0.28 }, { opacity: 1 }];
+      frames = [
+        {
+          opacity: motion.initialOpacity,
+          filter: blur ? `blur(${blur}px)` : "none",
+        },
+        { opacity: 1, filter: "none" },
+      ];
+      duration = reveal > 0 ? reveal : 1;
+    }
+    // Instant preset: skip WAAPI — content appears settled
+    if (reveal === 0 && motion.preset === "instant") {
+      el.style.removeProperty("filter");
+      return;
     }
     const a = el.animate(frames, {
       duration,
-      easing: effect === "spring" ? "linear" : "cubic-bezier(.22,.75,.25,1)",
+      easing:
+        effect === "spring"
+          ? "linear"
+          : motion.preset === "expressive"
+            ? "cubic-bezier(.18,.9,.22,1)"
+            : "cubic-bezier(.22,.75,.25,1)",
       fill: "none",
     });
     activeAnimations.add(a);
     a.onfinish = a.oncancel = () => {
       activeAnimations.delete(a);
+      el.style.removeProperty("filter");
       if (effect === "ink" || effect === "mark") {
         el.style.removeProperty("color");
         el.style.removeProperty("background-color");
@@ -275,9 +375,10 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
         )[opt.effect] || "";
       chunk = node("span", cls);
     }
-    if (opt.patternName === "Reserved gap") chunk.classList.add("gapmark");
+    if (isReservedGap(opt.patternId, opt.patternName))
+      chunk.classList.add("gapmark");
     out.append(chunk);
-    if (opt.caseId === "rewrite" && opt.patternName === "Block-by-block") {
+    if (opt.caseId === "rewrite" && isBlockByBlock(opt.patternId, opt.patternName)) {
       oldBlocks = splitText(range.old, "paragraph");
       blockTail = node("span", "stale", oldBlocks.join(""));
       out.append(blockTail);
@@ -286,7 +387,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   }
 
   function add(t: string): void {
-    if (!chunk) return;
+    if (destroyed || !chunk) return;
 
     if (opt.effect === "worddiff") {
       rendered += t;
@@ -329,9 +430,15 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     cursor = null;
     rendered += t;
 
-    if (opt.caseId === "rewrite" && opt.patternName === "Block-by-block") {
+    if (opt.caseId === "rewrite" && isBlockByBlock(opt.patternId, opt.patternName)) {
       oldBlocks.shift();
       if (blockTail) blockTail.textContent = oldBlocks.join("");
+    }
+
+    if (!firstContentEmitted && t) {
+      firstContentEmitted = true;
+      emit("first-content");
+      if (!waitingShown) wait.replaceChildren();
     }
 
     const effect = opt.effect;
@@ -365,15 +472,15 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     if (visual.className || specialMotion) {
       const e = node("span", "piece", t);
       chunk.append(e);
-      if (
-        effect === "heading" &&
-        (opt.patternName === "Data header first"
-          ? index === 1
-          : opt.patternName === "Outline hierarchy"
-            ? /^\d+\.\s/.test(t)
-            : t.trim() && !/[.!?]\s*$/.test(t) && t.trim().length < 50)
-      ) {
-        e.style.fontWeight = "650";
+      if (effect === "heading") {
+        const mode = headingWeightMode(opt.patternId, opt.patternName);
+        const weight =
+          mode === "data-header"
+            ? index === 1
+            : mode === "outline"
+              ? /^\d+\.\s/.test(t)
+              : t.trim() && !/[.!?]\s*$/.test(t) && t.trim().length < 50;
+        if (weight) e.style.fontWeight = "650";
       }
       if (!opt.reduce) {
         if (visual.className) {
@@ -531,10 +638,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
     if (
       !opt.reduce &&
-      (effect === "cursor" ||
-        opt.patternName === "Caret insertion" ||
-        opt.patternName === "Token stream" ||
-        opt.effect === "ghost")
+      showsCaret(opt.patternId, opt.patternName, effect)
     ) {
       cursor = node("span", "caret");
       cursor.setAttribute("aria-hidden", "true");
@@ -615,6 +719,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     guide?.remove();
     guide = null;
     set("Complete");
+    emit("settled");
     announce("Generation complete.");
   }
 
@@ -670,6 +775,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
     const t = parts[index++];
     add(t);
+    const motion = resolveMotion(opt.motion);
     let delay = Math.max(16, (t.length / opt.speed) * 1000);
     if (opt.kind === "word" || opt.kind === "token") {
       delay = Math.min(270, delay);
@@ -680,12 +786,26 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     else if (opt.kind === "all") delay = 400;
     if (opt.scenario === "bursts" && index % 4 === 0)
       delay += Math.min(120, delay * 0.4);
+    // Motion delivery interval adds perceptible pacing between units
+    if (motion.deliveryIntervalMs > 0 && index < parts.length) {
+      delay += motion.deliveryIntervalMs;
+    }
+    if (motion.preset === "instant") delay = Math.min(delay, 8);
     schedule(tick, delay);
   }
 
   function reset(config: ResolvedConfig): void {
+    if (destroyed) return;
     clear();
+    stopStallWatch();
+    generation += 1;
     liveMode = false;
+    simulated = false;
+    firstContentEmitted = false;
+    waitingShown = false;
+    snapshotAccum = "";
+    ingress.clear();
+    ingress.setPolicy(config.catchUp ?? "catchUp");
     chunk = null;
     blockTail = null;
     oldBlocks = [];
@@ -699,7 +819,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     out.classList.toggle(
       "code",
       opt.caseId === "structured" &&
-        /^(Code|Data|Buffered code|Buffered data)/.test(opt.patternName),
+        isCodeSurfacePattern(opt.patternId, opt.patternName),
     );
     out.classList.toggle("reduced", opt.reduce);
     wait.classList.toggle("reduced", opt.reduce);
@@ -715,6 +835,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   function start(config: ResolvedConfig): void {
     reset(config);
     liveMode = false;
+    simulated = true;
     if (!config.text.trim()) {
       cue("Enter incoming text first.", false);
       return;
@@ -728,7 +849,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     }
 
     let text = opt.text;
-    if (["Next paragraph", "Paragraph suggestion"].includes(opt.patternName)) {
+    if (isParagraphLeadIn(opt.patternId, opt.patternName)) {
       text = "\n\n" + text.trim();
     }
     if (
@@ -741,7 +862,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     }
     if (
       opt.caseId === "continue" &&
-      !["Next paragraph", "Paragraph suggestion"].includes(opt.patternName) &&
+      !isParagraphLeadIn(opt.patternId, opt.patternName) &&
       range.before &&
       !/\s$/.test(range.before) &&
       !/^\s/.test(text)
@@ -757,26 +878,37 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
       (opt.effect === "ghost" && ["replace", "rewrite"].includes(opt.caseId));
 
+    const threshold = opt.waitingThresholdMs ?? 180;
     set("Waiting");
-    cue(
-      opt.caseId === "replace" || opt.caseId === "rewrite"
-        ? "Preparing revision…"
-        : opt.caseId === "continue"
-          ? "Preparing continuation…"
-          : opt.caseId === "insert"
-            ? "Preparing insertion…"
-            : "Preparing response…",
-    );
 
-    if (opt.patternName === "Reserved gap" || opt.effect === "placeholder") {
+    const showWaitingUi = () => {
+      if (firstContentEmitted || waitingShown) return;
+      waitingShown = true;
+      cue(
+        opt.caseId === "replace" || opt.caseId === "rewrite"
+          ? "Preparing revision…"
+          : opt.caseId === "continue"
+            ? "Preparing continuation…"
+            : opt.caseId === "insert"
+              ? "Preparing insertion…"
+              : "Preparing response…",
+      );
+    };
+
+    if (threshold <= 0 || opt.latency >= threshold) {
+      showWaitingUi();
+    } else {
+      later(showWaitingUi, threshold);
+    }
+
+    if (isReservedGap(opt.patternId, opt.patternName) || opt.effect === "placeholder") {
       let marker = out.querySelector(".inlinewait") as HTMLElement | null;
       if (!marker) marker = out.querySelector(".selected") as HTMLElement | null;
       if (marker) {
         marker.className = "placeholder";
-        marker.textContent =
-          opt.patternName === "Reserved gap"
-            ? "Preparing insertion…"
-            : "Generating…";
+        marker.textContent = isReservedGap(opt.patternId, opt.patternName)
+          ? "Preparing insertion…"
+          : "Generating…";
       }
     }
     if (opt.effect === "skeleton") {
@@ -789,14 +921,39 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     }
 
     announce("Preparing text.");
+    const motion = resolveMotion(opt.motion);
     const buffer =
       opt.kind === "all" ? Math.min(4500, (text.length / opt.speed) * 1000) : 0;
     schedule(() => {
-      wait.replaceChildren();
+      if (!waitingShown) wait.replaceChildren();
       setup();
       set("Generating");
       tick();
-    }, opt.latency + buffer);
+    }, opt.latency + buffer + (motion.deliveryIntervalMs || 0));
+  }
+
+  function cancelSimulatorForLive(): void {
+    if (!simulated && !next && state !== "Generating" && state !== "Waiting" && state !== "Paused") {
+      return;
+    }
+    clearTimeout(timer);
+    next = null;
+    simulated = false;
+  }
+
+  function startStallWatch(): void {
+    stopStallWatch();
+    if (!opt?.stallMs) return;
+    stallWatch = window.setInterval(() => {
+      ingress.checkStall();
+    }, Math.min(500, Math.max(100, opt.stallMs / 5)));
+  }
+
+  function stopStallWatch(): void {
+    if (stallWatch) {
+      clearInterval(stallWatch);
+      stallWatch = 0;
+    }
   }
 
   function pause(): void {
@@ -863,41 +1020,180 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
   /** Begin or continue a real (non-simulated) stream */
   function append(chunkText: string): void {
+    if (destroyed || !chunkText) return;
+    // Dual-feed guard: cancel simulated scheduler when live chunks arrive
+    if (simulated || (state === "Generating" && !liveMode) || state === "Waiting") {
+      cancelSimulatorForLive();
+    }
+
     if (!liveMode) {
-      liveMode = true;
-      if (state === "Ready" || state === "Complete" || state === "Stopped") {
-        const cfg = { ...opt };
-        reset(cfg);
-        review =
-          ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
-          (opt.effect === "ghost" &&
-            ["replace", "rewrite"].includes(opt.caseId));
-        setup();
+      if (
+        state === "Ready" ||
+        state === "Complete" ||
+        state === "Stopped" ||
+        state === "Waiting" ||
+        state === "Generating"
+      ) {
+        if (!chunk) {
+          const cfg = { ...opt };
+          if (state === "Ready" || state === "Complete" || state === "Stopped") {
+            reset(cfg);
+          }
+          review =
+            ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
+            (opt.effect === "ghost" &&
+              ["replace", "rewrite"].includes(opt.caseId));
+          setup();
+        }
+        liveMode = true;
+        simulated = false;
         set("Generating");
+        startStallWatch();
+      } else {
+        liveMode = true;
+        simulated = false;
       }
     }
     if (!chunk) setup();
+    ingress.setPolicy(opt.catchUp ?? "catchUp");
     const units = splitText(chunkText, opt.kind === "all" ? "word" : opt.kind);
-    for (const u of units) add(u);
+    const ready = ingress.push(units);
+    for (const u of ready) add(u);
+    // Drain remaining immediately under flush / catch-up backlog
+    if ((opt.catchUp ?? "catchUp") !== "pace") {
+      for (const u of ingress.flush()) add(u);
+    }
+  }
+
+  /**
+   * Replace live rendered content without leaving live mode.
+   * Never implements replacement via append of the full snapshot.
+   */
+  function replaceRenderedContent(fullText: string): void {
+    clearTimeout(timer);
+    next = null;
+    cursor?.remove();
+    cursor = null;
+    for (const a of activeAnimations) a.cancel();
+    activeAnimations.clear();
+    for (const id of settleTimers) clearTimeout(id);
+    settleTimers.clear();
+    ingress.clear();
+
+    // Bootstrap live mode like append, without reset() (which clears liveMode)
+    if (!liveMode) {
+      if (
+        state === "Ready" ||
+        state === "Complete" ||
+        state === "Stopped" ||
+        state === "Waiting" ||
+        state === "Generating"
+      ) {
+        if (
+          !chunk &&
+          (state === "Ready" || state === "Complete" || state === "Stopped")
+        ) {
+          clear();
+          waitingShown = false;
+          review =
+            ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
+            (opt.effect === "ghost" &&
+              ["replace", "rewrite"].includes(opt.caseId));
+        }
+        liveMode = true;
+        simulated = false;
+        set("Generating");
+        startStallWatch();
+      } else {
+        liveMode = true;
+        simulated = false;
+      }
+    }
+
+    rendered = "";
+    snapshotAccum = "";
+    chunk = null;
+    blockTail = null;
+    oldBlocks = [];
+    setup();
+
+    if (fullText) {
+      const units = splitText(fullText, opt.kind === "all" ? "word" : opt.kind);
+      for (const u of units) add(u);
+    }
+    snapshotAccum = fullText;
+  }
+
+  function applySnapshot(fullText: string): void {
+    if (destroyed) return;
+    // Prefer snapshotAccum; fall back to rendered so a prior delta append
+    // cannot make a divergent snapshot look like a cold start.
+    const previous = snapshotAccum || rendered;
+    const op = normalizeSnapshot(previous, fullText);
+    if (op.type === "noop") {
+      snapshotAccum = fullText;
+      return;
+    }
+    if (op.type === "append") {
+      if (op.text) append(op.text);
+      snapshotAccum = fullText;
+      return;
+    }
+    // Divergent, shrinking, or empty — replace, never append
+    replaceRenderedContent(fullText);
   }
 
   function finish(): void {
-    if (!liveMode) return;
+    if (destroyed || !liveMode) return;
+    emit("stream-end");
+    stopStallWatch();
+    for (const u of ingress.flush()) add(u);
     finalize();
     liveMode = false;
+    simulated = false;
   }
 
   function destroy(): void {
+    if (destroyed) return;
+    destroyed = true;
+    generation += 1;
+    stopStallWatch();
     clear();
+    bus.clear();
+    ingress.clear();
+    liveMode = false;
+    simulated = false;
+    // Clear Glyptide-owned generated content; do not strip host classes beyond ours
     out.replaceChildren();
     wait.replaceChildren();
+    out.classList.remove(
+      "document",
+      "glyptide-document",
+      "code",
+      "reduced",
+      "paused",
+    );
+    wait.classList.remove("waiting", "glyptide-waiting", "reduced", "paused");
+  }
+
+  function on(
+    event: GlyptideEvent | "*",
+    handler: GlyptideEventHandler,
+  ): () => void {
+    return bus.on(event, handler);
   }
 
   function updateAppearance(
     patch: Partial<
       Pick<
         ResolvedConfig,
-        "colors" | "preset" | "palette" | "theme" | "appearance" | "persistGradient"
+        | "colors"
+        | "preset"
+        | "palette"
+        | "theme"
+        | "appearance"
+        | "persistGradient"
+        | "motion"
       >
     >,
   ): void {
@@ -908,6 +1204,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     if ("theme" in patch && patch.theme) opt.theme = patch.theme;
     if ("appearance" in patch) opt.appearance = patch.appearance ?? null;
     if ("persistGradient" in patch) opt.persistGradient = !!patch.persistGradient;
+    if ("motion" in patch) opt.motion = patch.motion ?? null;
     applyAppearanceVars();
     palette();
   }
@@ -933,7 +1230,9 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     palette,
     updateAppearance,
     append,
+    applySnapshot,
     finish,
+    on,
     destroy,
     get state() {
       return state;

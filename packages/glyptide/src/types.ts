@@ -176,10 +176,34 @@ export interface CaseDefinition {
   text: string;
 }
 
+/** Catch-up when the ingress queue backs up under fast streams */
+export type CatchUpPolicy = "pace" | "catchUp" | "flush";
+
+export type MotionPresetId =
+  | "natural"
+  | "quiet"
+  | "instant"
+  | "fluid"
+  | "precise"
+  | "editorial"
+  | "expressive";
+
+export interface MotionConfig {
+  preset?: MotionPresetId;
+  revealMs?: number;
+  deliveryIntervalMs?: number;
+  initialOpacity?: number;
+  blurPx?: number;
+  displacementPx?: number;
+  spring?: { stiffness?: number; damping?: number };
+}
+
 export interface GlyptideConfig {
   /** Use-case id controlling range / review behavior */
   caseId: CaseId;
-  /** Display name used for a few pattern-specific branches */
+  /** Stable registry id — prefer over patternName for behavior branches */
+  patternId?: string;
+  /** Display name (human); do not branch on this in new code */
   patternName: string;
   kind: BufferKind;
   effect: Effect;
@@ -191,8 +215,19 @@ export interface GlyptideConfig {
   speed?: number;
   /** Initial latency before generation begins (ms) */
   latency?: number;
+  /**
+   * Suppress waiting indicator if first content arrives before this many ms
+   * after start (adaptive anticipation). Default 180.
+   */
+  waitingThresholdMs?: number;
+  /** Stall detection idle time for real streams (ms). Default 2500; 0 = off */
+  stallMs?: number;
+  /** Real-stream queue policy when model outpaces reveal */
+  catchUp?: CatchUpPolicy;
   scenario?: StreamScenario;
   reduce?: boolean;
+  /** Optional motion preset / overrides (ignored where unsupported) */
+  motion?: MotionConfig | null;
   /** Resolved flat colors for the active theme (engine) */
   colors?: GenerationColors | null;
   /** Named curated preset id */
@@ -209,6 +244,23 @@ export interface GlyptideConfig {
   /** Decoupled aesthetic appearance (color mode + treatment) */
   appearance?: AppearanceConfig | null;
 }
+
+export type GlyptideEvent =
+  | "waiting"
+  | "first-content"
+  | "generating"
+  | "stalled"
+  | "stream-end"
+  | "settled"
+  | "review"
+  | "complete"
+  | "stopped"
+  | "error";
+
+export type GlyptideEventHandler = (
+  event: GlyptideEvent,
+  detail?: unknown,
+) => void;
 
 export interface CreateGlyptideOptions {
   /** Element that receives generated text */
@@ -230,16 +282,26 @@ export interface CreateGlyptideOptions {
   palette?: ThemeAwarePalette | null;
   /** light | dark | system | inherit (host dataset/theme) */
   theme?: ThemePreference;
+  motion?: MotionConfig | null;
+  /** AbortSignal cancels in-flight generation (same as stop) */
+  signal?: AbortSignal;
   onStatus?: (state: EngineState) => void;
   onAnnounce?: (message: string) => void;
   onChange?: (state: EngineState) => void;
+  onEvent?: GlyptideEventHandler;
 }
 
 export interface GlyptideInstance {
   /** Begin simulated generation with the current or provided config */
   start: (config?: Partial<GlyptideConfig>) => void;
-  /** Append text from a real stream (no simulation) */
+  /** Append text from a real stream (cancels simulator if dual-feed) */
   append: (chunk: string) => void;
+  /**
+   * Apply a full accumulated text snapshot.
+   * Append-only growth becomes a suffix append; divergent / shrinking /
+   * empty snapshots replace rendered content (never append a full rewrite).
+   */
+  applySnapshot: (fullText: string) => void;
   /** Signal that real streaming has finished */
   finish: () => void;
   /** Reset surface to ready state */
@@ -258,8 +320,11 @@ export interface GlyptideInstance {
     theme?: ThemePreference;
     colors?: GenerationColors | null;
     appearance?: AppearanceConfig | null;
+    motion?: MotionConfig | null;
   }) => void;
-  /** Tear down timers, animations, and observers */
+  /** Subscribe to lifecycle events; returns unsubscribe */
+  on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
+  /** Tear down timers, animations, and owned waiting node */
   destroy: () => void;
   readonly state: EngineState;
   readonly rendered: string;
@@ -271,11 +336,13 @@ export interface EngineCallbacks {
   status?: (state: EngineState) => void;
   announce?: (message: string) => void;
   change?: (state: EngineState) => void;
+  event?: GlyptideEventHandler;
 }
 
 /** Internal engine config (all fields resolved) */
 export interface ResolvedConfig {
   caseId: CaseId;
+  patternId: string;
   patternName: string;
   kind: BufferKind;
   effect: Effect;
@@ -283,8 +350,12 @@ export interface ResolvedConfig {
   text: string;
   speed: number;
   latency: number;
+  waitingThresholdMs: number;
+  stallMs: number;
+  catchUp: CatchUpPolicy;
   scenario: StreamScenario;
   reduce: boolean;
+  motion: MotionConfig | null;
   colors: GenerationColors | null;
   preset: string | null;
   palette: ThemeAwarePalette | null;
