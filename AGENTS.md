@@ -29,7 +29,9 @@ npm run dev                # build lib then Vite playground
 npm test                   # Vitest (site)
 npm run test:e2e           # Playwright (Chromium)
 npm run typecheck
-npm run size
+npm run size                 # include --check-budgets in CI
+npm run inventory            # docs/pattern-inventory.md
+npm run test:clean-room      # pack + import smoke (no publish)
 ```
 
 ## Coding conventions
@@ -43,9 +45,15 @@ npm run size
 ## Public API conventions
 
 - Prefer `createGlyptide({ pattern: "<id>" })` over hand-rolled animation.
-- Real streams: `append` / `finish` or `pipeTextToGlyptide` with `mode: "delta" | "snapshot"`.
+- **Unknown pattern ids throw** (`GlyptideConfigError`) — never silently substitute another pattern.
+- Real streams: `append` / `applySnapshot` / `finish` or `pipeTextToGlyptide` with `mode: "delta" | "snapshot"`.
+- Snapshots: divergent / shrinking / empty → **replace** (never append a full rewrite). See `docs/streaming.md`.
+- Subscribe with `g.on("settled" | "stream-end" | "review" | …, handler)`; pass the **same** `AbortSignal` to Glyptide and the model request.
+- Optional `motion: { preset: "natural" | "quiet" | … }`, `waitingThresholdMs`, `catchUp`.
+- Lightweight entry: `import { makeEngine } from "glyptide/engine"` (no registry JSON).
 - Use `recommendPatterns({ useCase })` for deterministic suggestions (no LLM).
 - Validate configs against `site/public/schemas/*.json` when generating integration code.
+- Recipes: `examples/recipes/` (offline mocks only).
 
 ## Motion & appearance rules
 

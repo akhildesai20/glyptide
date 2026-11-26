@@ -50,15 +50,9 @@ Browsers tested: **Chromium only**. Firefox and WebKit were not installed/run.
 - MIT license present; no Generative Loaders fork claim
 - npm install docs correctly state package is **not published**
 
-### Bundle sizes (measured, uncompressed)
+### Bundle sizes (post production hardening)
 
-| Artifact | Size |
-|----------|------|
-| `index.js` | 127.5 KB |
-| `glyptide.iife.js` | 99.4 KB |
-| `styles.css` | 12.9 KB |
-| `patterns.js` | 77.0 KB |
-| `presets.js` | 4.8 KB |
+See [docs/BASELINE.md](docs/BASELINE.md). Approx: `index.js` ~146 KB raw / ~28 KB gzip; lightweight `engine.js` ~54 KB raw.
 
 ## GitHub
 

@@ -77,6 +77,11 @@ function registryEntry(p) {
     themeSupport: ["light", "dark", "system", "inherit"],
     reducedMotion: "honored",
     reviewBehavior: review ? "accept-or-reject" : "none",
+    motionCapabilities: {
+      usesSpring: p.effect === "spring" || p.effect === "block",
+      spatial: ["spring", "block", "wipe", "fade"].includes(p.effect),
+      supportsMotionPresets: true,
+    },
     cancellationBehavior:
       p.caseId === "replace" || p.caseId === "rewrite" || review
         ? "restore-original"
@@ -85,11 +90,17 @@ function registryEntry(p) {
     preservesSyntaxHighlight: caps.preservesSyntaxHighlight,
     dedicatedGradient: caps.dedicatedGradient,
     whenToUse: p.description,
-    whenNotToUse: caps.preservesSyntaxHighlight
-      ? "Avoid highlight/glow treatments that wash syntax colors."
-      : review
+    whenNotToUse: [
+      caps.preservesSyntaxHighlight
+        ? "Avoid highlight/glow treatments that wash syntax colors."
+        : null,
+      review
         ? "Do not auto-commit without an accept/discard UI."
         : "Avoid if decorative motion would interrupt dense reading.",
+      p.kind === "all"
+        ? "Prefer token/word patterns for progressive streaming UX."
+        : null,
+    ].filter(Boolean),
     documentationRef: `/docs/patterns.md#${p.id}`,
   };
 }
@@ -142,6 +153,7 @@ const configSchema = {
       type: "string",
       enum: ["new", "insert", "replace", "rewrite", "continue", "structured"],
     },
+    patternId: { type: "string" },
     patternName: { type: "string" },
     kind: {
       type: "string",
@@ -152,12 +164,50 @@ const configSchema = {
     text: { type: "string" },
     speed: { type: "number", minimum: 1, maximum: 500, default: 54 },
     latency: { type: "number", minimum: 0, maximum: 10000, default: 600 },
+    waitingThresholdMs: { type: "number", minimum: 0, maximum: 5000, default: 180 },
+    stallMs: { type: "number", minimum: 0, maximum: 60000, default: 2500 },
+    catchUp: {
+      type: "string",
+      enum: ["pace", "catchUp", "flush"],
+      default: "catchUp",
+    },
     scenario: {
       type: "string",
       enum: ["steady", "bursts", "stall", "interrupt"],
       default: "steady",
     },
     reduce: { type: "boolean", default: false },
+    motion: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        preset: {
+          type: "string",
+          enum: [
+            "natural",
+            "quiet",
+            "instant",
+            "fluid",
+            "precise",
+            "editorial",
+            "expressive",
+          ],
+        },
+        revealMs: { type: "number", minimum: 0, maximum: 5000 },
+        deliveryIntervalMs: { type: "number", minimum: 0, maximum: 2000 },
+        initialOpacity: { type: "number", minimum: 0, maximum: 1 },
+        blurPx: { type: "number", minimum: 0, maximum: 24 },
+        displacementPx: { type: "number", minimum: 0, maximum: 64 },
+        spring: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            stiffness: { type: "number" },
+            damping: { type: "number" },
+          },
+        },
+      },
+    },
     preset: { type: ["string", "null"] },
     theme: {
       type: "string",
@@ -310,35 +360,6 @@ for (const c of cases) {
   }
 }
 
-const streamingMd = `# Streaming integration
-
-Glyptide is a **presentation layer**. It does not call model APIs and never needs API keys.
-
-## Normalized inputs
-
-- Incremental string chunks via \`append(chunk)\` then \`finish()\`
-- Async iterables / \`ReadableStream\` via \`pipeTextToGlyptide(instance, stream)\`
-- Complete text via \`start({ text })\` (simulated delivery)
-
-## Snapshot vs delta
-
-Some SDKs re-emit the full accumulated text. Use:
-
-\`\`\`js
-import { pipeTextToGlyptide } from "glyptide";
-
-await pipeTextToGlyptide(g, stream, { mode: "snapshot", signal: controller.signal });
-\`\`\`
-
-\`mode: "delta"\` (default) treats each value as a new suffix.
-
-## Security
-
-- Keep provider secrets on a server or trusted runtime — never in browser bundles.
-- Treat model text as untrusted content; Glyptide renders text nodes (not HTML).
-- Do not \`eval\` model output or inject unsanitized HTML into the document surface.
-`;
-
 const a11yMd = `# Accessibility
 
 - Honor \`prefers-reduced-motion\` (\`reduce: true\` or OS preference).
@@ -352,7 +373,7 @@ fs.writeFileSync(path.join(outDocs, "getting-started.md"), gettingStarted);
 fs.writeFileSync(path.join(outDocs, "api.md"), apiMd);
 fs.writeFileSync(path.join(outDocs, "appearance.md"), appearanceMd);
 fs.writeFileSync(path.join(outDocs, "patterns.md"), patternsMdFixed.join("\n"));
-fs.writeFileSync(path.join(outDocs, "streaming.md"), streamingMd);
+fs.copyFileSync(path.join(root, "docs/streaming.md"), path.join(outDocs, "streaming.md"));
 fs.writeFileSync(path.join(outDocs, "accessibility.md"), a11yMd);
 fs.copyFileSync(path.join(root, "design.md"), path.join(outDocs, "design.md"));
 fs.copyFileSync(path.join(root, "docs/providers.md"), path.join(outDocs, "providers.md"));

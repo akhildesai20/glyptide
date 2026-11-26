@@ -24,7 +24,7 @@ const g = createGlyptide({
 |--------|------|-------------|
 | `element` | `HTMLElement` | Required. Generation surface. |
 | `waiting` | `HTMLElement \| null` | Optional waiting/status row. |
-| `pattern` | `string` | Pattern id from the registry. |
+| `pattern` | `string` | Pattern id from the registry. **Throws `GlyptideConfigError` if unknown** (never silently defaults). |
 | `config` | `Partial<GlyptideConfig>` | Overrides for case, kind, effect, source, text. |
 | `speed` | `number` | Simulated chars/sec (default 54). |
 | `latency` | `number` | Initial wait in ms. |
@@ -33,24 +33,59 @@ const g = createGlyptide({
 | `preset` | `string \| null` | Curated preset id (`graphite`, `aurora`, `intelligence`, …). |
 | `palette` | `ThemeAwarePalette \| null` | Explicit `{ light, dark }` generation palettes. |
 | `theme` | `ThemePreference` | `light` \| `dark` \| `system` \| `inherit` (default). |
+| `motion` | `MotionConfig \| null` | Optional motion preset (`natural`, `quiet`, `instant`, …). |
+| `signal` | `AbortSignal` | Abort cancels in-flight generation (`stop`). |
 | `onStatus` | `(state) => void` | Status text callback. |
 | `onAnnounce` | `(message) => void` | Accessibility announcements. |
 | `onChange` | `(state) => void` | State machine changes. |
+| `onEvent` | `(event, detail?) => void` | Lifecycle events (`waiting`, `first-content`, `settled`, …). |
+
+Ownership: Glyptide only mutates `element` and the waiting node. If `waiting` is omitted, an owned `.glyptide-waiting` node is created **per instance** (never shared via parent queries) and removed on `destroy`. Host-supplied waiting nodes are left in place.
+
+Invalid `pattern`, `preset`, `theme`, numeric ranges, or hex colors throw `GlyptideConfigError` with actionable messages.
 
 ### Instance methods
 
 | Method | Description |
 |--------|-------------|
 | `start(config?)` | Begin simulated generation. |
-| `append(chunk)` | Append text from a real stream. |
-| `finish()` | Complete a real stream. |
+| `append(chunk)` | Append text from a real stream (cancels simulator if dual-feed). |
+| `applySnapshot(fullText)` | Absolute snapshot: append suffix on growth; **replace** on divergent / shrink / empty (never append a full rewrite). |
+| `finish()` | Signal source completion (`stream-end`), flush ingress, then settle or enter review. |
 | `reset(config?)` | Restore ready state. |
 | `pause()` / `resume()` | Pause and resume simulation. |
 | `stop()` | Cancel; preserve original or partial text by case. |
 | `accept()` / `reject()` | Resolve review states. |
 | `palette()` | Re-apply colors after theme change. |
-| `setAppearance({ preset, palette, theme, colors, appearance })` | Update palette / aesthetic appearance without restarting the stream. |
-| `destroy()` | Clean up timers, animations, DOM. |
+| `setAppearance({ preset, palette, theme, colors, appearance, motion })` | Update palette / aesthetic / motion without restarting. |
+| `on(event, handler)` | Subscribe to lifecycle events; returns unsubscribe. |
+| `destroy()` | Clean up timers, animations, owned waiting node. |
+
+Lightweight import (no pattern registry JSON): `import { makeEngine } from "glyptide/engine"`.
+
+## Streaming helpers
+
+```ts
+import { createGlyptide, pipeTextToGlyptide } from "glyptide";
+
+const g = createGlyptide({ element, pattern: "new-word-settle" });
+await pipeTextToGlyptide(g, readableOrAsyncIterable, {
+  mode: "delta", // or "snapshot" when the provider re-sends full text
+  signal: abortController.signal,
+});
+```
+
+Also: `iterateTextStream`, `consumeTextStream`, `normalizeSnapshot`. See [streaming.md](./streaming.md) for snapshot / abort / completion contracts. Glyptide does not call model APIs — pass the same `AbortSignal` to your provider when upstream cancel is required.
+
+## Pattern recommendations
+
+```ts
+import { recommendPatterns } from "glyptide";
+
+recommendPatterns({ useCase: "new", readingComfort: "high", limit: 3 });
+```
+
+Deterministic rules only — no network / LLM.
 
 ## Appearance lifecycle
 

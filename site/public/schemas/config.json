@@ -16,6 +16,9 @@
         "structured"
       ]
     },
+    "patternId": {
+      "type": "string"
+    },
     "patternName": {
       "type": "string"
     },
@@ -52,6 +55,27 @@
       "maximum": 10000,
       "default": 600
     },
+    "waitingThresholdMs": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5000,
+      "default": 180
+    },
+    "stallMs": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 60000,
+      "default": 2500
+    },
+    "catchUp": {
+      "type": "string",
+      "enum": [
+        "pace",
+        "catchUp",
+        "flush"
+      ],
+      "default": "catchUp"
+    },
     "scenario": {
       "type": "string",
       "enum": [
@@ -65,6 +89,61 @@
     "reduce": {
       "type": "boolean",
       "default": false
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "type": "string",
+          "enum": [
+            "natural",
+            "quiet",
+            "instant",
+            "fluid",
+            "precise",
+            "editorial",
+            "expressive"
+          ]
+        },
+        "revealMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5000
+        },
+        "deliveryIntervalMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2000
+        },
+        "initialOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "blurPx": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "displacementPx": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "spring": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "stiffness": {
+              "type": "number"
+            },
+            "damping": {
+              "type": "number"
+            }
+          }
+        }
+      }
     },
     "preset": {
       "type": [

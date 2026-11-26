@@ -10,11 +10,13 @@ An open-source library of carefully crafted text-generation, insertion, rewritin
 
 - **96 patterns** across **6 use cases** (new response, inline insertion, selection rewrite, multi-paragraph rewrite, continue writing, structured output)
 - Framework-agnostic core with an optional React adapter
-- Simulated streaming *and* real chunk append APIs
+- Simulated streaming *and* real streams (`append` / `applySnapshot` / `finish`, AbortSignal, lifecycle events)
+- Motion presets and adaptive waiting thresholds (no second animation engine)
 - Decoupled appearance (color mode, treatment, palette) with explicit **transient / persistent / review-bound** lifecycles
 - Theme-aware curated presets (light + dark) with contrast-aware ink
 - Reduced-motion support, pause/resume, accept/discard review flows
-- Tiny surface area — native CSS, Web Animations, and `requestAnimationFrame`
+- AI-native docs (`llms.txt`, registry JSON, schemas, Agent Skill) and offline recipes
+- Tiny surface area — native CSS, Web Animations, zero runtime deps in core
 
 ## Packages
 

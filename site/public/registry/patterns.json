@@ -1,7 +1,7 @@
 {
   "name": "glyptide",
   "version": "0.1.0",
-  "generatedAt": "2026-11-26T15:04:10.384Z",
+  "generatedAt": "2026-11-26T16:09:54.159Z",
   "patternCount": 96,
   "cases": [
     {
@@ -205,12 +205,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Immediate token-like delivery for conversational responses. Partial words are allowed, as in real model streams.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-token-stream"
     },
     {
@@ -258,12 +265,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Complete words enter with a tiny damped rise. A readable default for prose.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-word-settle"
     },
     {
@@ -311,12 +325,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Short phrases arrive as a unit, with a gentle opacity ramp for natural reading.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-phrase-fade"
     },
     {
@@ -364,12 +385,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Complete sentences reveal in reading order; useful when output is buffered into meaningful thoughts.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-sentence-reveal"
     },
     {
@@ -417,12 +445,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Whole paragraphs arrive together, suitable for a structured research answer.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-paragraph-arrival"
     },
     {
@@ -470,12 +505,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A steady insertion caret indicates the exact edge of a live response.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-quiet-cursor"
     },
     {
@@ -523,12 +565,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Wait for a complete word before showing it; avoids distracting partial words.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-buffered-words"
     },
     {
@@ -576,12 +625,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A thin guide follows the actual last rendered line as text wraps, then clears.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-reading-line"
     },
     {
@@ -629,12 +685,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Each incoming phrase is highlighted in readable ink, then settles independently without recoloring earlier text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-progressive-emphasis"
     },
     {
@@ -682,12 +745,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reserve a short answer preview before streaming actual words.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-skeleton-to-prose"
     },
     {
@@ -735,12 +805,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal a complete thought, briefly mark only that sentence and count completed sentences in the status area.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-sentence-checkpoint"
     },
     {
@@ -788,12 +865,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Buffer a short answer completely before presenting it; useful for concise answers.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#new-instant-answer"
     },
     {
@@ -841,12 +926,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A single colored sweep travels through each incoming phrase, then returns to normal ink.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-gradient-ink"
     },
     {
@@ -894,12 +986,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A localized traveling highlight marks new words while preserving readable foreground text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-gradient-highlight"
     },
     {
@@ -947,12 +1046,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A soft gradient glow blooms around a complete thought, then dissipates without moving text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-diffused-glow"
     },
     {
@@ -1000,12 +1106,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A moving underline identifies the active generation range without changing glyph color.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-luminous-underline"
     },
     {
@@ -1050,12 +1163,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A gradient sweeps across the waiting label only; incoming text streams quietly.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#new-thinking-shimmer"
     },
     {
@@ -1103,12 +1223,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A live caret marks the insertion point while surrounding text remains intact.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-caret-insertion"
     },
     {
@@ -1156,12 +1283,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A subtle temporary highlight identifies exactly what was added within the paragraph.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-marked-insertion"
     },
     {
@@ -1209,12 +1343,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A short reserved space signals an incoming sentence before the surrounding text reflows.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-reserved-gap"
     },
     {
@@ -1262,12 +1403,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep inserted prose in high-contrast green until generation completes.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-colored-insertion"
     },
     {
@@ -1315,12 +1463,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Mark the exact added range without relying on color.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-underline-insertion"
     },
     {
@@ -1364,12 +1519,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Preview the new text in context; accept or discard it.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#insert-insertion-preview"
     },
     {
@@ -1417,12 +1579,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep surrounding text intact until the entire insertion is available.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#insert-atomic-insertion"
     },
     {
@@ -1470,12 +1640,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A short inline placeholder marks the pending insertion point.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-inline-placeholder"
     },
     {
@@ -1519,12 +1696,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep the added text visibly marked after generation; accept or discard.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#insert-tracked-addition"
     },
     {
@@ -1572,12 +1756,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Insert complete sentences to avoid incomplete thoughts inside existing prose.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-sentence-insertion"
     },
     {
@@ -1625,12 +1816,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A traveling highlight marks the exact inline insertion; existing text remains unchanged.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-gradient-insertion"
     },
     {
@@ -1678,12 +1876,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A localized luminous underline follows incoming words inside the paragraph.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#insert-luminous-insertion"
     },
     {
@@ -1731,12 +1936,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep the selection visible during the wait, then replace only that range as new text arrives.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-direct-replacement"
     },
     {
@@ -1784,12 +1996,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep the old sentence readable until the complete replacement is ready, then swap it in one step.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#replace-atomic-rewrite"
     },
     {
@@ -1833,12 +2053,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Show the proposed replacement beside the struck-out original; accept or discard explicitly.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#replace-review-in-place"
     },
     {
@@ -1882,12 +2109,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Strike through original text and underline the proposed replacement for explicit review.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#replace-tracked-replacement"
     },
     {
@@ -1935,12 +2169,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep the replacement distinctly colored and underlined during generation, then settle after completion.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-replacement-ink"
     },
     {
@@ -1984,12 +2225,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Preserve the selected text and reveal the complete alternative for review.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#replace-keep-original-until-ready"
     },
     {
@@ -2037,12 +2286,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reserve an inline target while the replacement is being prepared.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-rewrite-placeholder"
     },
     {
@@ -2090,12 +2346,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Identify the exact rewritten range with an underline independent of color.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-underline-replacement"
     },
     {
@@ -2143,12 +2406,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Replace with complete sentences, useful for longer selections.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-sentence-by-sentence"
     },
     {
@@ -2192,12 +2462,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep matching words intact and mark only changed words for review. Useful for small corrections.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#replace-word-level-diff"
     },
     {
@@ -2245,12 +2523,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "Revised phrases briefly arrive in gradient ink to distinguish them from the surrounding paragraph.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-gradient-rewrite"
     },
     {
@@ -2298,12 +2583,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A temporary soft glow locates each newly replaced sentence.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#replace-revision-glow"
     },
     {
@@ -2351,12 +2643,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Replace one original paragraph at a time, so unfinished sections remain readable.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-block-by-block"
     },
     {
@@ -2400,12 +2699,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep the original selected blocks alongside the proposed version until the reader accepts.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-original-and-revised"
     },
     {
@@ -2453,12 +2759,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Buffer the entire selected section, then replace it atomically for a coherent editorial change.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-complete-document-swap"
     },
     {
@@ -2502,12 +2816,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Show removed and added document blocks using both color and explicit decoration.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-tracked-blocks"
     },
     {
@@ -2555,12 +2876,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Signal each completed paragraph before proceeding to the next.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-paragraph-checkpoints"
     },
     {
@@ -2604,12 +2932,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Generate a provisional document section that requires acceptance.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-revision-preview"
     },
     {
@@ -2653,12 +2988,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Keep all original blocks visible until the complete proposed section is available.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-buffered-section-review"
     },
     {
@@ -2706,12 +3049,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Mark the revised section with a temporary change bar.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-revision-margin"
     },
     {
@@ -2755,12 +3105,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Compare original and revised wording without marking unchanged text as a replacement.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-document-diff"
     },
     {
@@ -2808,12 +3166,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A restrained gradient marks each new paragraph without animating the surrounding document.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#rewrite-gradient-revision-blocks"
     },
     {
@@ -2861,12 +3226,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Continue directly at the end of the existing prose with no motion on the prefix.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-append-stream"
     },
     {
@@ -2910,12 +3282,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Present a faint, uncommitted continuation. It becomes ordinary text only after acceptance.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#continue-ghost-suggestion"
     },
     {
@@ -2963,12 +3342,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Start a new paragraph and deliver the continuation as a coherent block.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-next-paragraph"
     },
     {
@@ -3012,12 +3398,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Offer a word-by-word continuation that remains uncommitted until accepted.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#continue-inline-prediction"
     },
     {
@@ -3065,12 +3458,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Separate newly generated prose from the author’s existing text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-colored-continuation"
     },
     {
@@ -3114,12 +3514,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "accept-or-reject",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "restore-original",
       "preservesSemanticColors": true,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Offer a complete next paragraph for review before committing it.",
-      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "whenNotToUse": [
+        "Do not auto-commit without an accept/discard UI."
+      ],
       "documentationRef": "/docs/patterns.md#continue-paragraph-suggestion"
     },
     {
@@ -3167,12 +3574,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Append complete thoughts without additional motion.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-sentence-continuation"
     },
     {
@@ -3220,12 +3634,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Temporarily underline the newly appended range.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-continuation-boundary"
     },
     {
@@ -3273,12 +3694,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Present a complete conclusion at once, preserving the original prefix.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#continue-buffered-ending"
     },
     {
@@ -3326,12 +3755,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A gradient underline shows the boundary of newly appended writing.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#continue-gradient-continuation"
     },
     {
@@ -3379,12 +3815,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal each complete list item, keeping numbering and text together.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-list-item-arrival"
     },
     {
@@ -3430,12 +3873,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Deliver complete lines with preserved indentation and a stable monospace layout.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-code-line-stream"
     },
     {
@@ -3483,12 +3934,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Deliver whole sections with headings and supporting prose as coherent blocks.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-section-assembly"
     },
     {
@@ -3536,12 +3994,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal complete actionable checklist rows with a restrained completion cue.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-checklist-assembly"
     },
     {
@@ -3587,12 +4052,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Deliver complete aligned rows in a monospace layout.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-data-rows"
     },
     {
@@ -3640,12 +4113,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal hierarchical outline entries with a temporary reading guide.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-outline-generation"
     },
     {
@@ -3691,12 +4171,21 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Present complete code together to avoid showing invalid partial snippets.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#structured-buffered-code-block"
     },
     {
@@ -3744,12 +4233,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal complete passages with temporary emphasis on the incoming excerpt.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-quoted-passages"
     },
     {
@@ -3797,12 +4293,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Deliver complete explanatory sentences without distracting motion.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-progressive-explanation"
     },
     {
@@ -3850,12 +4353,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A continuous list stream for short items; a caret marks the current insertion point.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-list-token-stream"
     },
     {
@@ -3903,12 +4413,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Long list items become readable in phrases rather than arriving all at once.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-list-phrase-reveal"
     },
     {
@@ -3956,12 +4473,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Each completed item receives temporary ink emphasis; earlier items settle.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-list-item-focus"
     },
     {
@@ -4009,12 +4533,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Confirm each complete list entry in the status area, without adding characters to the list.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-list-checkpoint"
     },
     {
@@ -4060,12 +4591,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Stream raw code incrementally with indentation preserved and a caret at the live edge.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-code-token-stream"
     },
     {
@@ -4111,12 +4650,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Highlight only the latest complete code line so readers can follow the live edge.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-code-active-line"
     },
     {
@@ -4162,12 +4709,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Reveal logically grouped code blocks separated by blank lines.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-code-function-blocks"
     },
     {
@@ -4213,12 +4768,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": true,
       "whenToUse": "A transient gradient marks each complete incoming code line without recoloring syntax.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-code-line-glow"
     },
     {
@@ -4266,12 +4829,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal section headings distinctly before their supporting text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-heading-then-body"
     },
     {
@@ -4319,12 +4889,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal complete sentences within sections for research-style answers.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-section-sentence-stream"
     },
     {
@@ -4372,12 +4949,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Highlight the active section briefly, retaining earlier sections in normal ink.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-section-focus"
     },
     {
@@ -4425,12 +5009,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Long action descriptions become readable progressively without marking them as done.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-checklist-phrase-stream"
     },
     {
@@ -4478,12 +5069,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Briefly mark the latest generated task; checkbox notation remains unchecked.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-checklist-row-focus"
     },
     {
@@ -4531,12 +5129,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Deliver a coherent task list together when completeness is important.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#structured-buffered-checklist"
     },
     {
@@ -4582,12 +5188,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Highlight only the newest complete aligned row so partial values are never shown.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-data-row-focus"
     },
     {
@@ -4633,12 +5247,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Present the header first, then deliver complete rows in a stable monospace layout.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-data-header-first"
     },
     {
@@ -4684,12 +5306,21 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": true,
       "dedicatedGradient": false,
       "whenToUse": "Hold incomplete data until the entire aligned block is ready.",
-      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "whenNotToUse": [
+        "Avoid highlight/glow treatments that wash syntax colors.",
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#structured-buffered-data"
     },
     {
@@ -4737,12 +5368,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Emphasize top-level headings as they arrive; preserve indentation of child entries.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-outline-hierarchy"
     },
     {
@@ -4790,12 +5428,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "A temporary highlight follows the newest outline entry.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-outline-active-branch"
     },
     {
@@ -4843,12 +5488,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal the complete hierarchy atomically to preserve relationships.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#structured-buffered-outline"
     },
     {
@@ -4896,12 +5549,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal longer quoted passages gently in readable phrases.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-quote-phrase-reveal"
     },
     {
@@ -4949,12 +5609,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": true,
       "whenToUse": "A soft sweep distinguishes each new passage, then clears.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-quote-highlight"
     },
     {
@@ -5002,12 +5669,20 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Show all quotations together when exact context matters.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading.",
+        "Prefer token/word patterns for progressive streaming UX."
+      ],
       "documentationRef": "/docs/patterns.md#structured-buffered-quotation"
     },
     {
@@ -5055,12 +5730,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": true,
+        "spatial": true,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Reveal complete words at a steady conversational pace.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-explanation-word-stream"
     },
     {
@@ -5108,12 +5790,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Indicate when a complete explanatory sentence has arrived.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-explanation-checkpoints"
     },
     {
@@ -5161,12 +5850,19 @@
       ],
       "reducedMotion": "honored",
       "reviewBehavior": "none",
+      "motionCapabilities": {
+        "usesSpring": false,
+        "spatial": false,
+        "supportsMotionPresets": true
+      },
       "cancellationBehavior": "preserve-partial",
       "preservesSemanticColors": false,
       "preservesSyntaxHighlight": false,
       "dedicatedGradient": false,
       "whenToUse": "Temporarily emphasize incoming phrases without disturbing prior text.",
-      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "whenNotToUse": [
+        "Avoid if decorative motion would interrupt dense reading."
+      ],
       "documentationRef": "/docs/patterns.md#structured-explanation-emphasis"
     }
   ]
