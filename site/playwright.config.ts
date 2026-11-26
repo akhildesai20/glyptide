@@ -18,5 +18,13 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // Optional: enable via `npx playwright test --project=firefox|webkit`
+    // after `npx playwright install firefox webkit` (see .github/workflows/browsers.yml).
+    ...(process.env.GLYPTIDE_E2E_ALL_BROWSERS === "1"
+      ? [
+          { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+          { name: "webkit", use: { ...devices["Desktop Safari"] } },
+        ]
+      : []),
   ],
 });
