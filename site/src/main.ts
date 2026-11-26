@@ -22,6 +22,14 @@ import { syncThemeSwitch, initTheme } from "./theme";
 import { buildCopyForAiPrompt } from "./copy-ai";
 import { buildExportHtml, INTEGRATE_SNIPPETS } from "./export";
 import { readPlaygroundParams, writePlaygroundParams } from "./url-state";
+import { isStressScenario, stressOverrides } from "./stress";
+import {
+  MOTION_HINTS,
+  cacheEnglish,
+  englishFromCache,
+  urduForCase,
+  type SampleLang,
+} from "./locale-samples";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
@@ -64,6 +72,7 @@ $("copyIntegrate").onclick = async () => {
 let currentCase = 0;
 let selectedPattern = 1;
 let structuredFilter = "All";
+let sampleLang: SampleLang = "en";
 const cardEngines: {
   engine: ReturnType<typeof makeEngine>;
   start: () => void;
@@ -163,17 +172,37 @@ function buildConfig(
   text = ($("sample") as HTMLTextAreaElement).value,
 ): ResolvedConfig {
   const appearanceCfg = appearanceToConfig(appearance.getState());
+  const motionEl = document.getElementById("motionPreset") as HTMLSelectElement | null;
+  const catchUpEl = document.getElementById("catchUp") as HTMLSelectElement | null;
+  const waitThreshEl = document.getElementById("waitingThreshold") as HTMLInputElement | null;
+  const rawScenario = ($("scenario") as HTMLSelectElement).value;
+  let speed = +($("speed") as HTMLInputElement).value;
+  let latency = +($("latency") as HTMLInputElement).value;
+  let scenario: ResolvedConfig["scenario"] = rawScenario as ResolvedConfig["scenario"];
+  if (isStressScenario(rawScenario)) {
+    const o = stressOverrides(rawScenario);
+    scenario = o.scenario;
+    speed = o.speed;
+    latency = o.latency;
+  }
   return {
     caseId: c.id as CaseId,
+    patternId: p.id,
     patternName: p.name,
     kind: p.kind,
     effect: p.effect,
     source,
     text,
-    speed: +($("speed") as HTMLInputElement).value,
-    latency: +($("latency") as HTMLInputElement).value,
-    scenario: ($("scenario") as HTMLSelectElement).value as ResolvedConfig["scenario"],
+    speed,
+    latency,
+    waitingThresholdMs: waitThreshEl ? +waitThreshEl.value : 180,
+    stallMs: 2500,
+    catchUp: (catchUpEl?.value as ResolvedConfig["catchUp"]) || "catchUp",
+    scenario,
     reduce: reduced(),
+    motion: motionEl?.value
+      ? { preset: motionEl.value as NonNullable<ResolvedConfig["motion"]>["preset"] }
+      : null,
     colors: null,
     preset: appearanceCfg.preset,
     palette: appearanceCfg.palette,
@@ -214,7 +243,13 @@ function setCase(i: number): void {
   patternSelect.refresh();
   $("patternNote").textContent = casePatterns(i)[selectedPattern].description;
   updateAppearanceVisibility();
-  main.reset(buildConfig());
+  // Re-apply language pack for the new case (keeps EN/UR toggle sticky)
+  if (sampleLang === "ur") {
+    setSampleLang("ur", { force: true });
+  } else {
+    cacheEnglish(c.id, ($("sample") as HTMLTextAreaElement).value, ($("source") as HTMLTextAreaElement).value);
+    main.reset(buildConfig());
+  }
   renderCards();
   writePlaygroundParams({
     case: c.id,
@@ -228,7 +263,11 @@ function choose(i: number, run = false): void {
   const list = casePatterns();
   $("patternNote").textContent = list[i].description;
   if (cases[currentCase].id === "structured") {
-    ($("sample") as HTMLTextAreaElement).value = list[i].sample;
+    if (sampleLang === "ur") {
+      ($("sample") as HTMLTextAreaElement).value = urduForCase("structured").sample;
+    } else {
+      ($("sample") as HTMLTextAreaElement).value = list[i].sample;
+    }
   }
   updateAppearanceVisibility();
   main.reset(buildConfig());
@@ -474,6 +513,7 @@ syncSpeed();
 syncLatency();
 
 ($("reduce") as HTMLInputElement).onchange = () => {
+  syncReduceHint();
   main.reset(buildConfig());
   renderCards();
 };
@@ -483,9 +523,18 @@ syncLatency();
   latency.value = String(defaults.latency);
   ($("scenario") as HTMLSelectElement).value = defaults.scenario;
   ($("reduce") as HTMLInputElement).checked = false;
+  if (motionPresetEl) motionPresetEl.value = "natural";
+  const waitEl = document.getElementById("waitingThreshold") as HTMLInputElement | null;
+  if (waitEl) waitEl.value = "180";
+  const catchEl = document.getElementById("catchUp") as HTMLSelectElement | null;
+  if (catchEl) catchEl.value = "catchUp";
   appearance.setState(resetAppearanceDefaults());
+  setSampleLang("en", { force: true });
   syncSpeed();
   syncLatency();
+  syncWaitingThreshold();
+  syncMotionHint();
+  syncReduceHint();
   main.reset(buildConfig());
 };
 
@@ -593,8 +642,178 @@ if (params.case) {
 if (params.speed) speed.value = params.speed;
 if (params.latency) latency.value = params.latency;
 if (params.scenario) ($("scenario") as HTMLSelectElement).value = params.scenario;
+if (params.motion) {
+  const motionEl = document.getElementById("motionPreset") as HTMLSelectElement | null;
+  if (motionEl) motionEl.value = params.motion;
+}
 syncSpeed();
 syncLatency();
+
+const waitingThreshold = document.getElementById(
+  "waitingThreshold",
+) as HTMLInputElement | null;
+const waitingThresholdValue = document.getElementById("waitingThresholdValue");
+function syncWaitingThreshold(): void {
+  if (waitingThreshold && waitingThresholdValue) {
+    waitingThresholdValue.textContent = `${waitingThreshold.value} ms`;
+  }
+}
+waitingThreshold?.addEventListener("input", syncWaitingThreshold);
+syncWaitingThreshold();
+
+/* Host environment simulation */
+const hostFg = document.getElementById("hostFg") as HTMLInputElement | null;
+const hostBg = document.getElementById("hostBg") as HTMLInputElement | null;
+function applyHostColors(): void {
+  const stage = document.querySelector(".stage") as HTMLElement | null;
+  if (!stage) return;
+  if (hostFg) stage.style.color = hostFg.value;
+  if (hostBg) stage.style.background = hostBg.value;
+}
+hostFg?.addEventListener("input", applyHostColors);
+hostBg?.addEventListener("input", applyHostColors);
+
+/* Sample language: English ↔ Urdu (RTL) */
+function setSampleLang(lang: SampleLang, opts?: { force?: boolean }): void {
+  if (lang === sampleLang && !opts?.force) return;
+  const sampleEl = $("sample") as HTMLTextAreaElement;
+  const sourceEl = $("source") as HTMLTextAreaElement;
+  const out = $("output");
+  const caseId = cases[currentCase].id;
+
+  if (sampleLang === "en") {
+    cacheEnglish(caseId, sampleEl.value, sourceEl.value);
+  }
+
+  sampleLang = lang;
+  document.querySelectorAll<HTMLButtonElement>(".lang-btn").forEach((btn) => {
+    btn.setAttribute("aria-pressed", String(btn.dataset.lang === lang));
+  });
+
+  if (lang === "ur") {
+    const ur = urduForCase(caseId);
+    sampleEl.value = ur.sample;
+    sampleEl.dir = "rtl";
+    sampleEl.lang = "ur";
+    if (ur.source != null && !($("sourceField") as HTMLElement).hidden) {
+      sourceEl.value = ur.source;
+      sourceEl.dir = "rtl";
+      sourceEl.lang = "ur";
+    }
+    out.dir = "rtl";
+    out.lang = "ur";
+  } else {
+    const cached = englishFromCache(caseId);
+    const c = cases[currentCase];
+    const p = currentPattern();
+    sampleEl.value = cached?.sample ?? (c.id === "structured" ? p.sample : c.text);
+    sampleEl.dir = "ltr";
+    sampleEl.lang = "en";
+    if (!($("sourceField") as HTMLElement).hidden) {
+      sourceEl.value = cached?.source ?? c.source;
+      sourceEl.dir = "ltr";
+      sourceEl.lang = "en";
+    }
+    out.dir = "ltr";
+    out.lang = "en";
+  }
+  main.reset(buildConfig());
+}
+
+document.querySelectorAll<HTMLButtonElement>(".lang-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setSampleLang((btn.dataset.lang as SampleLang) || "en");
+  });
+});
+
+/* Motion preset feedback */
+const motionPresetEl = document.getElementById(
+  "motionPreset",
+) as HTMLSelectElement | null;
+const motionHint = document.getElementById("motionHint");
+const reduceHint = document.getElementById("reduceHint");
+
+function syncMotionHint(): void {
+  if (!motionHint || !motionPresetEl) return;
+  motionHint.textContent =
+    MOTION_HINTS[motionPresetEl.value] ?? MOTION_HINTS.natural;
+  writePlaygroundParams({ motion: motionPresetEl.value });
+}
+
+function syncReduceHint(): void {
+  const on = ($("reduce") as HTMLInputElement).checked;
+  if (reduceHint) reduceHint.hidden = !on;
+}
+
+motionPresetEl?.addEventListener("change", syncMotionHint);
+($("reduce") as HTMLInputElement).addEventListener("change", syncReduceHint);
+syncMotionHint();
+syncReduceHint();
+
+/* Compare mode — second stage sharing the same config clock */
+const compareMode = document.getElementById("compareMode") as HTMLInputElement | null;
+let compareEngine: ReturnType<typeof makeEngine> | null = null;
+compareMode?.addEventListener("change", () => {
+  const stage = document.querySelector(".stage") as HTMLElement | null;
+  let compareOut = document.getElementById("compareOutput");
+  let compareWait = document.getElementById("compareWaiting");
+  if (compareMode.checked) {
+    if (!compareOut && stage?.parentElement) {
+      const wrap = document.createElement("div");
+      wrap.className = "stage compare-stage";
+      wrap.id = "compareStage";
+      wrap.innerHTML =
+        '<div class="document glyptide-document" id="compareOutput"></div><div class="waiting glyptide-waiting" id="compareWaiting"></div>';
+      stage.parentElement.append(wrap);
+      compareOut = document.getElementById("compareOutput");
+      compareWait = document.getElementById("compareWaiting");
+    }
+    if (compareOut && compareWait) {
+      compareEngine = makeEngine({
+        out: compareOut as HTMLElement,
+        wait: compareWait as HTMLElement,
+      });
+      const cfg = buildConfig();
+      const alt = getPatternsByCase(cfg.caseId)[Math.min(selectedPattern + 1, casePatterns().length - 1)];
+      compareEngine.reset({
+        ...cfg,
+        patternId: alt.id,
+        patternName: alt.name,
+        kind: alt.kind,
+        effect: alt.effect,
+      });
+    }
+  } else {
+    compareEngine?.destroy();
+    compareEngine = null;
+    document.getElementById("compareStage")?.remove();
+  }
+});
+
+const _origPlay = ($("play") as HTMLButtonElement).onclick;
+($("play") as HTMLButtonElement).addEventListener("click", () => {
+  if (compareEngine && compareMode?.checked) {
+    const cfg = buildConfig();
+    const alt = getPatternsByCase(cfg.caseId)[
+      Math.min(selectedPattern + 1, casePatterns().length - 1)
+    ];
+    compareEngine.start({
+      ...cfg,
+      patternId: alt.id,
+      patternName: alt.name,
+      kind: alt.kind,
+      effect: alt.effect,
+    });
+  }
+});
+void _origPlay;
+
+/* Embed mode — chrome-less playground */
+if (params.embed === "1") {
+  document.documentElement.classList.add("embed-mode");
+  document.body.classList.add("embed-mode");
+  writePlaygroundParams({ embed: "1" });
+}
 
 /* Hash deep-link to pattern card */
 if (location.hash.startsWith("#pattern-")) {

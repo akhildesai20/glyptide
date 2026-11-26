@@ -50,7 +50,8 @@
         <nav class="nav" aria-label="Primary">
           <a href="#library">Library</a>
           <a href="#playground">Playground</a>
-          <a href="#docs">Documentation</a>
+          <a href="#recipes">Recipes</a>
+          <a href="#docs">Docs</a>
           <a href="/for-ai.html">For AI</a>
           <a
             href="https://github.com/akhildesai20/glyptide"
@@ -97,7 +98,7 @@
           <a class="btn btn-secondary" href="#docs">Get started</a>
           <a
             class="btn btn-ghost"
-            href="https://github.com/glyptide/glyptide"
+            href="https://github.com/akhildesai20/glyptide"
             rel="noopener noreferrer"
             target="_blank"
             >GitHub</a
@@ -212,12 +213,54 @@
               </button>
             </div>
             <div class="field">
-              <label for="sample" id="sampleLabel">Incoming text</label>
-              <textarea id="sample" spellcheck="false" rows="5"></textarea>
+              <div class="field-head">
+                <label for="sample" id="sampleLabel">Incoming text</label>
+                <div
+                  class="lang-switch"
+                  role="group"
+                  aria-label="Sample language"
+                >
+                  <button
+                    type="button"
+                    class="lang-btn"
+                    data-lang="en"
+                    aria-pressed="true"
+                    id="langEn"
+                  >
+                    EN
+                  </button>
+                  <button
+                    type="button"
+                    class="lang-btn"
+                    data-lang="ur"
+                    aria-pressed="false"
+                    id="langUr"
+                    title="Urdu"
+                  >
+                    اردو
+                  </button>
+                </div>
+              </div>
+              <textarea id="sample" spellcheck="false" rows="5" dir="ltr" lang="en"></textarea>
             </div>
 
-            <details class="advanced" open>
-              <summary>Timing &amp; stream</summary>
+            <details class="advanced" id="motionDetails" open>
+              <summary>Motion</summary>
+              <div class="field">
+                <label for="motionPreset">Preset</label>
+                <select id="motionPreset">
+                  <option value="natural">Natural</option>
+                  <option value="quiet">Quiet</option>
+                  <option value="instant">Instant</option>
+                  <option value="fluid">Fluid</option>
+                  <option value="precise">Precise</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="expressive">Expressive</option>
+                </select>
+                <p class="hint" id="motionHint">
+                  Soft fade-in · ~210ms reveal. Applies on Generate.
+                </p>
+              </div>
               <div class="field">
                 <label for="speed"
                   >Delivery rate <span id="speedValue" class="muted"></span
@@ -237,15 +280,12 @@
                   value="600"
                 />
               </div>
-              <div class="field">
-                <label for="scenario">Stream behavior</label>
-                <select id="scenario">
-                  <option value="steady">Steady</option>
-                  <option value="bursts">Bursty</option>
-                  <option value="stall">Temporary stall</option>
-                  <option value="interrupt">Connection interrupted</option>
-                </select>
-              </div>
+              <label class="check">
+                <input type="checkbox" id="reduce" /> Reduce motion
+              </label>
+              <p class="hint" id="reduceHint" hidden>
+                Reduced motion disables presets — turn off to compare motion.
+              </p>
             </details>
 
             <details class="advanced" id="colorDetails" open>
@@ -253,18 +293,89 @@
               <div id="appearanceRoot"></div>
             </details>
 
-            <label class="check">
-              <input type="checkbox" id="reduce" /> Reduce motion
-            </label>
-            <button type="button" class="btn btn-ghost btn-sm" id="defaults">
-              Reset to defaults
-            </button>
-            <p class="hint control-note">
-              Motion follows content arrival. Existing text stays readable.
-              Controls apply on the next run.
-            </p>
+            <details class="advanced">
+              <summary>Stream &amp; host</summary>
+              <div class="field">
+                <label for="scenario">Stream behavior</label>
+                <select id="scenario">
+                  <option value="steady">Steady</option>
+                  <option value="bursts">Bursty</option>
+                  <option value="stall">Temporary stall</option>
+                  <option value="interrupt">Connection interrupted</option>
+                  <option value="stress-fast">Stress: fast</option>
+                  <option value="stress-slow">Stress: slow</option>
+                  <option value="stress-burst">Stress: irregular bursts</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="waitingThreshold"
+                  >Waiting threshold <span id="waitingThresholdValue" class="muted"></span
+                ></label>
+                <input
+                  type="range"
+                  id="waitingThreshold"
+                  min="0"
+                  max="800"
+                  step="20"
+                  value="180"
+                />
+              </div>
+              <div class="field">
+                <label for="catchUp">Catch-up policy</label>
+                <select id="catchUp">
+                  <option value="catchUp">Catch up</option>
+                  <option value="pace">Pace (bounded)</option>
+                  <option value="flush">Flush</option>
+                </select>
+              </div>
+              <div class="field host-colors">
+                <label>Host colors</label>
+                <div class="host-color-row">
+                  <label class="host-swatch" for="hostFg"
+                    ><span>Text</span>
+                    <input type="color" id="hostFg" value="#1a1a1a" />
+                  </label>
+                  <label class="host-swatch" for="hostBg"
+                    ><span>Bg</span>
+                    <input type="color" id="hostBg" value="#ffffff" />
+                  </label>
+                </div>
+              </div>
+              <label class="check">
+                <input type="checkbox" id="compareMode" /> Compare next pattern
+              </label>
+            </details>
+
+            <div class="controls-footer">
+              <button type="button" class="btn btn-ghost btn-sm" id="defaults">
+                Reset to defaults
+              </button>
+              <p class="hint control-note">
+                Motion &amp; appearance apply on the next Generate.
+              </p>
+            </div>
           </aside>
         </div>
+      </section>
+
+      <section class="docs-section wrap" id="recipes" aria-labelledby="recipes-heading">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Recipes</p>
+            <h2 id="recipes-heading">Production-oriented compositions</h2>
+            <p class="section-sub">
+              Offline mocks in <code>examples/recipes/</code> — chat, editor,
+              research, coding, composer. No live providers.
+            </p>
+          </div>
+        </div>
+        <ul class="doc-list">
+          <li><strong>Chat</strong> — anticipation thresholds, AbortSignal, streaming</li>
+          <li><strong>Editor</strong> — insert + ghost review accept/reject</li>
+          <li><strong>Research</strong> — structured outline sections</li>
+          <li><strong>Coding</strong> — code line stream</li>
+          <li><strong>Composer</strong> — draft + regenerate via reset/start</li>
+        </ul>
       </section>
 
       <!-- Pattern library -->
@@ -381,7 +492,7 @@ import "glyptide/styles.css";
         <p class="docs-more">
           Full API reference:
           <a href="/docs/api.md">docs/api.md</a> ·
-          <a href="https://github.com/glyptide/glyptide">Contributing</a>
+          <a href="https://github.com/akhildesai20/glyptide">Contributing</a>
         </p>
       </section>
     </main>

@@ -15,6 +15,8 @@
     "test:e2e": "npm run test:e2e -w site",
     "typecheck": "npm run typecheck -w glyptide",
     "size": "node scripts/bundle-size.mjs",
+    "inventory": "node scripts/generate-pattern-inventory.mjs",
+    "test:clean-room": "node scripts/clean-room-smoke.mjs",
     "check:ai-docs": "npm run generate:ai-docs && git diff --exit-code -- site/public/llms.txt site/public/llms-full.txt site/public/registry site/public/schemas site/public/docs site/public/skills || (echo 'AI docs out of date — run npm run generate:ai-docs' && exit 1)"
   },
   "engines": {

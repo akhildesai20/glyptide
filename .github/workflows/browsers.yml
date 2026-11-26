@@ -1,0 +1,32 @@
+name: Multi-browser smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "packages/**"
+      - "site/e2e/**"
+      - ".github/workflows/browsers.yml"
+
+jobs:
+  firefox-webkit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build:lib
+      - run: npm run generate:ai-docs
+      - run: npx playwright install --with-deps firefox webkit
+      - name: Smoke Firefox + WebKit
+        working-directory: site
+        env:
+          CI: true
+          GLYPTIDE_E2E_ALL_BROWSERS: "1"
+        run: npx playwright test e2e/smoke.spec.ts --project=firefox --project=webkit

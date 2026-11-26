@@ -4,6 +4,9 @@ export interface PlaygroundParams {
   speed?: string;
   latency?: string;
   scenario?: string;
+  embed?: string;
+  compare?: string;
+  motion?: string;
 }
 
 export function readPlaygroundParams(): PlaygroundParams {
@@ -14,6 +17,9 @@ export function readPlaygroundParams(): PlaygroundParams {
     speed: q.get("speed") || undefined,
     latency: q.get("latency") || undefined,
     scenario: q.get("scenario") || undefined,
+    embed: q.get("embed") || undefined,
+    compare: q.get("compare") || undefined,
+    motion: q.get("motion") || undefined,
   };
 }
 

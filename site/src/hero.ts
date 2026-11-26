@@ -77,6 +77,7 @@ export function initHero(
     sentenceEl.dataset.preset = preset;
     return {
       caseId: "new",
+      patternId: "new-gradient-ink",
       patternName: "Gradient ink",
       kind: "phrase",
       effect: prefersReduced() ? "none" : "gradientInk",
@@ -84,8 +85,12 @@ export function initHero(
       text: beat.text,
       speed: 42,
       latency: 220,
+      waitingThresholdMs: 180,
+      stallMs: 2500,
+      catchUp: "catchUp",
       scenario: "steady",
       reduce: prefersReduced(),
+      motion: null,
       colors: null,
       preset,
       palette: null,
