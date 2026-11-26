@@ -1,0 +1,5173 @@
+{
+  "name": "glyptide",
+  "version": "0.1.0",
+  "generatedAt": "2026-11-26T15:04:10.384Z",
+  "patternCount": 96,
+  "cases": [
+    {
+      "id": "new",
+      "title": "New response",
+      "desc": "An empty answer surface becomes readable as text arrives.",
+      "surface": "Assistant response",
+      "source": "",
+      "text": "A well-designed interface makes uncertainty easier to manage. When a system needs time to prepare an answer, a small and meaningful signal can reassure the reader that their request has been received. As the response begins to appear, the words that have already arrived should remain stable, allowing someone to read at their own pace without being distracted by unnecessary movement.\n\nThe goal is not to make the interface feel faster than it really is, but to make the waiting experience feel understandable and predictable."
+    },
+    {
+      "id": "insert",
+      "title": "Inline insertion",
+      "desc": "Generate missing text inside an existing sentence or between paragraphs.",
+      "surface": "Document editor",
+      "source": "Good interfaces communicate what is happening without demanding the user’s attention at every step. [[]] This is especially important when an automated system needs several seconds to produce a meaningful response. The reader should always understand what has changed and what remains untouched.",
+      "text": "A small status indicator can establish that the request is being processed, while a carefully paced reveal makes the eventual result easier to follow."
+    },
+    {
+      "id": "replace",
+      "title": "Selection rewrite",
+      "desc": "Replace a selected phrase or sentence without losing its surrounding context.",
+      "surface": "Document editor / selection",
+      "source": "Our team has been working on a new customer dashboard for the past several weeks. [[The dashboard is really nice and has lots of different things that people can use to do their work better.]] We will validate the revised experience through usability testing before releasing it to all customers.",
+      "text": "The dashboard brings essential account information and frequently used actions into a single, easy-to-navigate workspace, helping customers complete everyday tasks with fewer interruptions."
+    },
+    {
+      "id": "rewrite",
+      "title": "Multi-paragraph rewrite",
+      "desc": "Revise larger blocks while keeping the rest of a document available.",
+      "surface": "Document editor / revision",
+      "source": "Project update — November\n\n[[We have completed a lot of work on the dashboard, and the team is happy with the direction. There are still a few problems with the navigation that we need to solve.\n\nWe also talked to some customers and got useful feedback about how they find their documents and make payments. We will use this feedback in the next version.]]\n\nNext milestone: share the revised prototype with the wider team.",
+      "text": "The dashboard redesign has reached its first internal milestone. The core experience is in place, with navigation and account discovery identified as the remaining priorities.\n\nEarly customer feedback highlighted two recurring needs: easier access to important documents and more direct payment actions. These findings will inform the next iteration before wider validation."
+    },
+    {
+      "id": "continue",
+      "title": "Continue writing",
+      "desc": "Extend existing prose or suggest the next sentence without rewriting the prefix.",
+      "surface": "Writing assistant",
+      "source": "The next version of the dashboard should give customers a clearer overview of their financial commitments. Rather than adding more cards to the homepage, the design should prioritize information that helps people decide what to do next.",
+      "text": " For example, upcoming repayments could be grouped by due date, with relevant account details and payment actions available in the same place. This would make the experience more useful without increasing its visual complexity."
+    },
+    {
+      "id": "structured",
+      "title": "Structured output",
+      "desc": "Generate text with meaningful boundaries, such as lists, code, and document sections.",
+      "surface": "Structured response",
+      "source": "",
+      "text": "Recommended next steps\n\n1. Review the customer journey and identify the points where people are most likely to need assistance.\n2. Prioritize the actions that resolve the most common issues without adding unnecessary navigation.\n3. Test the revised interface with a small group of customers and record where they hesitate.\n4. Refine the design based on observed behavior before expanding the release."
+    }
+  ],
+  "presets": [
+    {
+      "id": "intelligence",
+      "name": "Intelligence",
+      "category": "ai"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "category": "ai"
+    },
+    {
+      "id": "copilot",
+      "name": "Copilot",
+      "category": "ai"
+    },
+    {
+      "id": "terracotta",
+      "name": "Terracotta",
+      "category": "ai"
+    },
+    {
+      "id": "jade",
+      "name": "Jade",
+      "category": "ai"
+    },
+    {
+      "id": "prism",
+      "name": "Prism",
+      "category": "ai"
+    },
+    {
+      "id": "graphite",
+      "name": "Graphite",
+      "category": "minimal"
+    },
+    {
+      "id": "paper",
+      "name": "Paper",
+      "category": "minimal"
+    },
+    {
+      "id": "iris",
+      "name": "Iris",
+      "category": "minimal"
+    },
+    {
+      "id": "electric",
+      "name": "Electric",
+      "category": "minimal"
+    },
+    {
+      "id": "sakura",
+      "name": "Sakura",
+      "category": "minimal"
+    },
+    {
+      "id": "matcha",
+      "name": "Matcha",
+      "category": "minimal"
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "category": "expressive"
+    },
+    {
+      "id": "sunset",
+      "name": "Sunset",
+      "category": "expressive"
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean",
+      "category": "expressive"
+    },
+    {
+      "id": "twilight",
+      "name": "Twilight",
+      "category": "expressive"
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "category": "expressive"
+    },
+    {
+      "id": "botanical",
+      "name": "Botanical",
+      "category": "expressive"
+    }
+  ],
+  "presetCategories": [
+    {
+      "id": "ai",
+      "label": "AI-inspired"
+    },
+    {
+      "id": "minimal",
+      "label": "Minimal"
+    },
+    {
+      "id": "expressive",
+      "label": "Expressive"
+    }
+  ],
+  "patterns": [
+    {
+      "id": "new-token-stream",
+      "name": "Token stream",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Immediate token-like delivery for conversational responses. Partial words are allowed, as in real model streams.",
+      "kind": "token",
+      "effect": "none",
+      "index": 0,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "token",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Immediate token-like delivery for conversational responses. Partial words are allowed, as in real model streams.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-token-stream"
+    },
+    {
+      "id": "new-word-settle",
+      "name": "Word settle",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Complete words enter with a tiny damped rise. A readable default for prose.",
+      "kind": "word",
+      "effect": "spring",
+      "index": 1,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Complete words enter with a tiny damped rise. A readable default for prose.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-word-settle"
+    },
+    {
+      "id": "new-phrase-fade",
+      "name": "Phrase fade",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Short phrases arrive as a unit, with a gentle opacity ramp for natural reading.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 2,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Short phrases arrive as a unit, with a gentle opacity ramp for natural reading.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-phrase-fade"
+    },
+    {
+      "id": "new-sentence-reveal",
+      "name": "Sentence reveal",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Complete sentences reveal in reading order; useful when output is buffered into meaningful thoughts.",
+      "kind": "sentence",
+      "effect": "wipe",
+      "index": 3,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Complete sentences reveal in reading order; useful when output is buffered into meaningful thoughts.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-sentence-reveal"
+    },
+    {
+      "id": "new-paragraph-arrival",
+      "name": "Paragraph arrival",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Whole paragraphs arrive together, suitable for a structured research answer.",
+      "kind": "paragraph",
+      "effect": "block",
+      "index": 4,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Whole paragraphs arrive together, suitable for a structured research answer.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-paragraph-arrival"
+    },
+    {
+      "id": "new-quiet-cursor",
+      "name": "Quiet cursor",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A steady insertion caret indicates the exact edge of a live response.",
+      "kind": "token",
+      "effect": "cursor",
+      "index": 5,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "token",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A steady insertion caret indicates the exact edge of a live response.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-quiet-cursor"
+    },
+    {
+      "id": "new-buffered-words",
+      "name": "Buffered words",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Wait for a complete word before showing it; avoids distracting partial words.",
+      "kind": "word",
+      "effect": "none",
+      "index": 6,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Wait for a complete word before showing it; avoids distracting partial words.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-buffered-words"
+    },
+    {
+      "id": "new-reading-line",
+      "name": "Reading line",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A thin guide follows the actual last rendered line as text wraps, then clears.",
+      "kind": "phrase",
+      "effect": "guide",
+      "index": 7,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A thin guide follows the actual last rendered line as text wraps, then clears.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-reading-line"
+    },
+    {
+      "id": "new-progressive-emphasis",
+      "name": "Progressive emphasis",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Each incoming phrase is highlighted in readable ink, then settles independently without recoloring earlier text.",
+      "kind": "phrase",
+      "effect": "emphasis",
+      "index": 8,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Each incoming phrase is highlighted in readable ink, then settles independently without recoloring earlier text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-progressive-emphasis"
+    },
+    {
+      "id": "new-skeleton-to-prose",
+      "name": "Skeleton to prose",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Reserve a short answer preview before streaming actual words.",
+      "kind": "word",
+      "effect": "skeleton",
+      "index": 9,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reserve a short answer preview before streaming actual words.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-skeleton-to-prose"
+    },
+    {
+      "id": "new-sentence-checkpoint",
+      "name": "Sentence checkpoint",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Reveal a complete thought, briefly mark only that sentence and count completed sentences in the status area.",
+      "kind": "sentence",
+      "effect": "checkpoint",
+      "index": 10,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal a complete thought, briefly mark only that sentence and count completed sentences in the status area.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-sentence-checkpoint"
+    },
+    {
+      "id": "new-instant-answer",
+      "name": "Instant answer",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "Buffer a short answer completely before presenting it; useful for concise answers.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 11,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Buffer a short answer completely before presenting it; useful for concise answers.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-instant-answer"
+    },
+    {
+      "id": "new-gradient-ink",
+      "name": "Gradient ink",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A single colored sweep travels through each incoming phrase, then returns to normal ink.",
+      "kind": "phrase",
+      "effect": "gradientInk",
+      "index": 12,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A single colored sweep travels through each incoming phrase, then returns to normal ink.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-gradient-ink"
+    },
+    {
+      "id": "new-gradient-highlight",
+      "name": "Gradient highlight",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A localized traveling highlight marks new words while preserving readable foreground text.",
+      "kind": "phrase",
+      "effect": "gradientHighlight",
+      "index": 13,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "highlight",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A localized traveling highlight marks new words while preserving readable foreground text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-gradient-highlight"
+    },
+    {
+      "id": "new-diffused-glow",
+      "name": "Diffused glow",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A soft gradient glow blooms around a complete thought, then dissipates without moving text.",
+      "kind": "sentence",
+      "effect": "gradientGlow",
+      "index": 14,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "glow",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A soft gradient glow blooms around a complete thought, then dissipates without moving text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-diffused-glow"
+    },
+    {
+      "id": "new-luminous-underline",
+      "name": "Luminous underline",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A moving underline identifies the active generation range without changing glyph color.",
+      "kind": "phrase",
+      "effect": "gradientUnderline",
+      "index": 15,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "underline",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A moving underline identifies the active generation range without changing glyph color.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-luminous-underline"
+    },
+    {
+      "id": "new-thinking-shimmer",
+      "name": "Thinking shimmer",
+      "version": "0.1.0",
+      "category": "new",
+      "categoryLabel": "New response",
+      "subcategory": null,
+      "description": "A gradient sweeps across the waiting label only; incoming text streams quietly.",
+      "kind": "word",
+      "effect": "shimmer",
+      "index": 16,
+      "recommendedUseCases": [
+        "new"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A gradient sweeps across the waiting label only; incoming text streams quietly.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#new-thinking-shimmer"
+    },
+    {
+      "id": "insert-caret-insertion",
+      "name": "Caret insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A live caret marks the insertion point while surrounding text remains intact.",
+      "kind": "word",
+      "effect": "none",
+      "index": 0,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A live caret marks the insertion point while surrounding text remains intact.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-caret-insertion"
+    },
+    {
+      "id": "insert-marked-insertion",
+      "name": "Marked insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A subtle temporary highlight identifies exactly what was added within the paragraph.",
+      "kind": "phrase",
+      "effect": "mark",
+      "index": 1,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A subtle temporary highlight identifies exactly what was added within the paragraph.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-marked-insertion"
+    },
+    {
+      "id": "insert-reserved-gap",
+      "name": "Reserved gap",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A short reserved space signals an incoming sentence before the surrounding text reflows.",
+      "kind": "sentence",
+      "effect": "block",
+      "index": 2,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A short reserved space signals an incoming sentence before the surrounding text reflows.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-reserved-gap"
+    },
+    {
+      "id": "insert-colored-insertion",
+      "name": "Colored insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Keep inserted prose in high-contrast green until generation completes.",
+      "kind": "phrase",
+      "effect": "color",
+      "index": 3,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep inserted prose in high-contrast green until generation completes.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-colored-insertion"
+    },
+    {
+      "id": "insert-underline-insertion",
+      "name": "Underline insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Mark the exact added range without relying on color.",
+      "kind": "word",
+      "effect": "underline",
+      "index": 4,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Mark the exact added range without relying on color.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-underline-insertion"
+    },
+    {
+      "id": "insert-insertion-preview",
+      "name": "Insertion preview",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Preview the new text in context; accept or discard it.",
+      "kind": "phrase",
+      "effect": "ghost",
+      "index": 5,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Preview the new text in context; accept or discard it.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#insert-insertion-preview"
+    },
+    {
+      "id": "insert-atomic-insertion",
+      "name": "Atomic insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Keep surrounding text intact until the entire insertion is available.",
+      "kind": "all",
+      "effect": "spring",
+      "index": 6,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep surrounding text intact until the entire insertion is available.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-atomic-insertion"
+    },
+    {
+      "id": "insert-inline-placeholder",
+      "name": "Inline placeholder",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A short inline placeholder marks the pending insertion point.",
+      "kind": "word",
+      "effect": "placeholder",
+      "index": 7,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A short inline placeholder marks the pending insertion point.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-inline-placeholder"
+    },
+    {
+      "id": "insert-tracked-addition",
+      "name": "Tracked addition",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Keep the added text visibly marked after generation; accept or discard.",
+      "kind": "phrase",
+      "effect": "addition",
+      "index": 8,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep the added text visibly marked after generation; accept or discard.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#insert-tracked-addition"
+    },
+    {
+      "id": "insert-sentence-insertion",
+      "name": "Sentence insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "Insert complete sentences to avoid incomplete thoughts inside existing prose.",
+      "kind": "sentence",
+      "effect": "fade",
+      "index": 9,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Insert complete sentences to avoid incomplete thoughts inside existing prose.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-sentence-insertion"
+    },
+    {
+      "id": "insert-gradient-insertion",
+      "name": "Gradient insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A traveling highlight marks the exact inline insertion; existing text remains unchanged.",
+      "kind": "phrase",
+      "effect": "gradientHighlight",
+      "index": 10,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "highlight",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A traveling highlight marks the exact inline insertion; existing text remains unchanged.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-gradient-insertion"
+    },
+    {
+      "id": "insert-luminous-insertion",
+      "name": "Luminous insertion",
+      "version": "0.1.0",
+      "category": "insert",
+      "categoryLabel": "Inline insertion",
+      "subcategory": null,
+      "description": "A localized luminous underline follows incoming words inside the paragraph.",
+      "kind": "word",
+      "effect": "gradientUnderline",
+      "index": 11,
+      "recommendedUseCases": [
+        "insert"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "underline",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A localized luminous underline follows incoming words inside the paragraph.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#insert-luminous-insertion"
+    },
+    {
+      "id": "replace-direct-replacement",
+      "name": "Direct replacement",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Keep the selection visible during the wait, then replace only that range as new text arrives.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 0,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep the selection visible during the wait, then replace only that range as new text arrives.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-direct-replacement"
+    },
+    {
+      "id": "replace-atomic-rewrite",
+      "name": "Atomic rewrite",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Keep the old sentence readable until the complete replacement is ready, then swap it in one step.",
+      "kind": "all",
+      "effect": "spring",
+      "index": 1,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep the old sentence readable until the complete replacement is ready, then swap it in one step.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-atomic-rewrite"
+    },
+    {
+      "id": "replace-review-in-place",
+      "name": "Review in place",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Show the proposed replacement beside the struck-out original; accept or discard explicitly.",
+      "kind": "phrase",
+      "effect": "review",
+      "index": 2,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Show the proposed replacement beside the struck-out original; accept or discard explicitly.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#replace-review-in-place"
+    },
+    {
+      "id": "replace-tracked-replacement",
+      "name": "Tracked replacement",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Strike through original text and underline the proposed replacement for explicit review.",
+      "kind": "phrase",
+      "effect": "diff",
+      "index": 3,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Strike through original text and underline the proposed replacement for explicit review.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#replace-tracked-replacement"
+    },
+    {
+      "id": "replace-replacement-ink",
+      "name": "Replacement ink",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Keep the replacement distinctly colored and underlined during generation, then settle after completion.",
+      "kind": "word",
+      "effect": "replacementInk",
+      "index": 4,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep the replacement distinctly colored and underlined during generation, then settle after completion.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-replacement-ink"
+    },
+    {
+      "id": "replace-keep-original-until-ready",
+      "name": "Keep original until ready",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Preserve the selected text and reveal the complete alternative for review.",
+      "kind": "all",
+      "effect": "review",
+      "index": 5,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Preserve the selected text and reveal the complete alternative for review.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#replace-keep-original-until-ready"
+    },
+    {
+      "id": "replace-rewrite-placeholder",
+      "name": "Rewrite placeholder",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Reserve an inline target while the replacement is being prepared.",
+      "kind": "phrase",
+      "effect": "placeholder",
+      "index": 6,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reserve an inline target while the replacement is being prepared.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-rewrite-placeholder"
+    },
+    {
+      "id": "replace-underline-replacement",
+      "name": "Underline replacement",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Identify the exact rewritten range with an underline independent of color.",
+      "kind": "phrase",
+      "effect": "underline",
+      "index": 7,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Identify the exact rewritten range with an underline independent of color.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-underline-replacement"
+    },
+    {
+      "id": "replace-sentence-by-sentence",
+      "name": "Sentence-by-sentence",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Replace with complete sentences, useful for longer selections.",
+      "kind": "sentence",
+      "effect": "fade",
+      "index": 8,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Replace with complete sentences, useful for longer selections.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-sentence-by-sentence"
+    },
+    {
+      "id": "replace-word-level-diff",
+      "name": "Word-level diff",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Keep matching words intact and mark only changed words for review. Useful for small corrections.",
+      "kind": "all",
+      "effect": "worddiff",
+      "index": 9,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep matching words intact and mark only changed words for review. Useful for small corrections.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#replace-word-level-diff"
+    },
+    {
+      "id": "replace-gradient-rewrite",
+      "name": "Gradient rewrite",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "Revised phrases briefly arrive in gradient ink to distinguish them from the surrounding paragraph.",
+      "kind": "phrase",
+      "effect": "gradientInk",
+      "index": 10,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "Revised phrases briefly arrive in gradient ink to distinguish them from the surrounding paragraph.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-gradient-rewrite"
+    },
+    {
+      "id": "replace-revision-glow",
+      "name": "Revision glow",
+      "version": "0.1.0",
+      "category": "replace",
+      "categoryLabel": "Selection rewrite",
+      "subcategory": null,
+      "description": "A temporary soft glow locates each newly replaced sentence.",
+      "kind": "sentence",
+      "effect": "gradientGlow",
+      "index": 11,
+      "recommendedUseCases": [
+        "replace"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "glow",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A temporary soft glow locates each newly replaced sentence.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#replace-revision-glow"
+    },
+    {
+      "id": "rewrite-block-by-block",
+      "name": "Block-by-block",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Replace one original paragraph at a time, so unfinished sections remain readable.",
+      "kind": "paragraph",
+      "effect": "block",
+      "index": 0,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Replace one original paragraph at a time, so unfinished sections remain readable.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#rewrite-block-by-block"
+    },
+    {
+      "id": "rewrite-original-and-revised",
+      "name": "Original and revised",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Keep the original selected blocks alongside the proposed version until the reader accepts.",
+      "kind": "paragraph",
+      "effect": "review",
+      "index": 1,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep the original selected blocks alongside the proposed version until the reader accepts.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#rewrite-original-and-revised"
+    },
+    {
+      "id": "rewrite-complete-document-swap",
+      "name": "Complete document swap",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Buffer the entire selected section, then replace it atomically for a coherent editorial change.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 2,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Buffer the entire selected section, then replace it atomically for a coherent editorial change.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#rewrite-complete-document-swap"
+    },
+    {
+      "id": "rewrite-tracked-blocks",
+      "name": "Tracked blocks",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Show removed and added document blocks using both color and explicit decoration.",
+      "kind": "paragraph",
+      "effect": "diff",
+      "index": 3,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Show removed and added document blocks using both color and explicit decoration.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#rewrite-tracked-blocks"
+    },
+    {
+      "id": "rewrite-paragraph-checkpoints",
+      "name": "Paragraph checkpoints",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Signal each completed paragraph before proceeding to the next.",
+      "kind": "paragraph",
+      "effect": "checkpoint",
+      "index": 4,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Signal each completed paragraph before proceeding to the next.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#rewrite-paragraph-checkpoints"
+    },
+    {
+      "id": "rewrite-revision-preview",
+      "name": "Revision preview",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Generate a provisional document section that requires acceptance.",
+      "kind": "paragraph",
+      "effect": "ghost",
+      "index": 5,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Generate a provisional document section that requires acceptance.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#rewrite-revision-preview"
+    },
+    {
+      "id": "rewrite-buffered-section-review",
+      "name": "Buffered section review",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Keep all original blocks visible until the complete proposed section is available.",
+      "kind": "all",
+      "effect": "review",
+      "index": 6,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Keep all original blocks visible until the complete proposed section is available.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#rewrite-buffered-section-review"
+    },
+    {
+      "id": "rewrite-revision-margin",
+      "name": "Revision margin",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Mark the revised section with a temporary change bar.",
+      "kind": "paragraph",
+      "effect": "linebar",
+      "index": 7,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Mark the revised section with a temporary change bar.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#rewrite-revision-margin"
+    },
+    {
+      "id": "rewrite-document-diff",
+      "name": "Document diff",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "Compare original and revised wording without marking unchanged text as a replacement.",
+      "kind": "all",
+      "effect": "worddiff",
+      "index": 8,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Compare original and revised wording without marking unchanged text as a replacement.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#rewrite-document-diff"
+    },
+    {
+      "id": "rewrite-gradient-revision-blocks",
+      "name": "Gradient revision blocks",
+      "version": "0.1.0",
+      "category": "rewrite",
+      "categoryLabel": "Multi-paragraph rewrite",
+      "subcategory": null,
+      "description": "A restrained gradient marks each new paragraph without animating the surrounding document.",
+      "kind": "paragraph",
+      "effect": "gradientHighlight",
+      "index": 9,
+      "recommendedUseCases": [
+        "rewrite"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "highlight",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A restrained gradient marks each new paragraph without animating the surrounding document.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#rewrite-gradient-revision-blocks"
+    },
+    {
+      "id": "continue-append-stream",
+      "name": "Append stream",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Continue directly at the end of the existing prose with no motion on the prefix.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 0,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Continue directly at the end of the existing prose with no motion on the prefix.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-append-stream"
+    },
+    {
+      "id": "continue-ghost-suggestion",
+      "name": "Ghost suggestion",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Present a faint, uncommitted continuation. It becomes ordinary text only after acceptance.",
+      "kind": "sentence",
+      "effect": "ghost",
+      "index": 1,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Present a faint, uncommitted continuation. It becomes ordinary text only after acceptance.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#continue-ghost-suggestion"
+    },
+    {
+      "id": "continue-next-paragraph",
+      "name": "Next paragraph",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Start a new paragraph and deliver the continuation as a coherent block.",
+      "kind": "paragraph",
+      "effect": "block",
+      "index": 2,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Start a new paragraph and deliver the continuation as a coherent block.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-next-paragraph"
+    },
+    {
+      "id": "continue-inline-prediction",
+      "name": "Inline prediction",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Offer a word-by-word continuation that remains uncommitted until accepted.",
+      "kind": "word",
+      "effect": "ghost",
+      "index": 3,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Offer a word-by-word continuation that remains uncommitted until accepted.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#continue-inline-prediction"
+    },
+    {
+      "id": "continue-colored-continuation",
+      "name": "Colored continuation",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Separate newly generated prose from the author’s existing text.",
+      "kind": "phrase",
+      "effect": "color",
+      "index": 4,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Separate newly generated prose from the author’s existing text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-colored-continuation"
+    },
+    {
+      "id": "continue-paragraph-suggestion",
+      "name": "Paragraph suggestion",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Offer a complete next paragraph for review before committing it.",
+      "kind": "paragraph",
+      "effect": "ghost",
+      "index": 5,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "review-bound",
+      "appearanceSettlement": "accept",
+      "expectedFinalAppearance": "review-chrome-until-decision",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "accept-or-reject",
+      "cancellationBehavior": "restore-original",
+      "preservesSemanticColors": true,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Offer a complete next paragraph for review before committing it.",
+      "whenNotToUse": "Do not auto-commit without an accept/discard UI.",
+      "documentationRef": "/docs/patterns.md#continue-paragraph-suggestion"
+    },
+    {
+      "id": "continue-sentence-continuation",
+      "name": "Sentence continuation",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Append complete thoughts without additional motion.",
+      "kind": "sentence",
+      "effect": "none",
+      "index": 6,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Append complete thoughts without additional motion.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-sentence-continuation"
+    },
+    {
+      "id": "continue-continuation-boundary",
+      "name": "Continuation boundary",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Temporarily underline the newly appended range.",
+      "kind": "phrase",
+      "effect": "underline",
+      "index": 7,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Temporarily underline the newly appended range.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-continuation-boundary"
+    },
+    {
+      "id": "continue-buffered-ending",
+      "name": "Buffered ending",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "Present a complete conclusion at once, preserving the original prefix.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 8,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Present a complete conclusion at once, preserving the original prefix.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-buffered-ending"
+    },
+    {
+      "id": "continue-gradient-continuation",
+      "name": "Gradient continuation",
+      "version": "0.1.0",
+      "category": "continue",
+      "categoryLabel": "Continue writing",
+      "subcategory": null,
+      "description": "A gradient underline shows the boundary of newly appended writing.",
+      "kind": "phrase",
+      "effect": "gradientUnderline",
+      "index": 9,
+      "recommendedUseCases": [
+        "continue"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "underline",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A gradient underline shows the boundary of newly appended writing.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#continue-gradient-continuation"
+    },
+    {
+      "id": "structured-list-item-arrival",
+      "name": "List item arrival",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Lists",
+      "description": "Reveal each complete list item, keeping numbering and text together.",
+      "kind": "line",
+      "effect": "spring",
+      "index": 0,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal each complete list item, keeping numbering and text together.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-list-item-arrival"
+    },
+    {
+      "id": "structured-code-line-stream",
+      "name": "Code line stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "Deliver complete lines with preserved indentation and a stable monospace layout.",
+      "kind": "line",
+      "effect": "none",
+      "index": 1,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Deliver complete lines with preserved indentation and a stable monospace layout.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-code-line-stream"
+    },
+    {
+      "id": "structured-section-assembly",
+      "name": "Section assembly",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Sections",
+      "description": "Deliver whole sections with headings and supporting prose as coherent blocks.",
+      "kind": "paragraph",
+      "effect": "block",
+      "index": 2,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Deliver whole sections with headings and supporting prose as coherent blocks.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-section-assembly"
+    },
+    {
+      "id": "structured-checklist-assembly",
+      "name": "Checklist assembly",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Checklists",
+      "description": "Reveal complete actionable checklist rows with a restrained completion cue.",
+      "kind": "line",
+      "effect": "checkpoint",
+      "index": 3,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal complete actionable checklist rows with a restrained completion cue.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-checklist-assembly"
+    },
+    {
+      "id": "structured-data-rows",
+      "name": "Data rows",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Data",
+      "description": "Deliver complete aligned rows in a monospace layout.",
+      "kind": "line",
+      "effect": "none",
+      "index": 4,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Deliver complete aligned rows in a monospace layout.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-data-rows"
+    },
+    {
+      "id": "structured-outline-generation",
+      "name": "Outline generation",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Outlines",
+      "description": "Reveal hierarchical outline entries with a temporary reading guide.",
+      "kind": "line",
+      "effect": "linebar",
+      "index": 5,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "generation",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal hierarchical outline entries with a temporary reading guide.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-outline-generation"
+    },
+    {
+      "id": "structured-buffered-code-block",
+      "name": "Buffered code block",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "Present complete code together to avoid showing invalid partial snippets.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 6,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Present complete code together to avoid showing invalid partial snippets.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-buffered-code-block"
+    },
+    {
+      "id": "structured-quoted-passages",
+      "name": "Quoted passages",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Quotes",
+      "description": "Reveal complete passages with temporary emphasis on the incoming excerpt.",
+      "kind": "paragraph",
+      "effect": "ink",
+      "index": 7,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal complete passages with temporary emphasis on the incoming excerpt.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-quoted-passages"
+    },
+    {
+      "id": "structured-progressive-explanation",
+      "name": "Progressive explanation",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Explanations",
+      "description": "Deliver complete explanatory sentences without distracting motion.",
+      "kind": "sentence",
+      "effect": "none",
+      "index": 8,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Deliver complete explanatory sentences without distracting motion.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-progressive-explanation"
+    },
+    {
+      "id": "structured-list-token-stream",
+      "name": "List token stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Lists",
+      "description": "A continuous list stream for short items; a caret marks the current insertion point.",
+      "kind": "token",
+      "effect": "cursor",
+      "index": 9,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "token",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A continuous list stream for short items; a caret marks the current insertion point.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-list-token-stream"
+    },
+    {
+      "id": "structured-list-phrase-reveal",
+      "name": "List phrase reveal",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Lists",
+      "description": "Long list items become readable in phrases rather than arriving all at once.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 10,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Long list items become readable in phrases rather than arriving all at once.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-list-phrase-reveal"
+    },
+    {
+      "id": "structured-list-item-focus",
+      "name": "List item focus",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Lists",
+      "description": "Each completed item receives temporary ink emphasis; earlier items settle.",
+      "kind": "line",
+      "effect": "rowFocus",
+      "index": 11,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Each completed item receives temporary ink emphasis; earlier items settle.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-list-item-focus"
+    },
+    {
+      "id": "structured-list-checkpoint",
+      "name": "List checkpoint",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Lists",
+      "description": "Confirm each complete list entry in the status area, without adding characters to the list.",
+      "kind": "line",
+      "effect": "checkpoint",
+      "index": 12,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Confirm each complete list entry in the status area, without adding characters to the list.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-list-checkpoint"
+    },
+    {
+      "id": "structured-code-token-stream",
+      "name": "Code token stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "Stream raw code incrementally with indentation preserved and a caret at the live edge.",
+      "kind": "token",
+      "effect": "cursor",
+      "index": 13,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "token",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Stream raw code incrementally with indentation preserved and a caret at the live edge.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-code-token-stream"
+    },
+    {
+      "id": "structured-code-active-line",
+      "name": "Code active line",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "Highlight only the latest complete code line so readers can follow the live edge.",
+      "kind": "line",
+      "effect": "rowAccent",
+      "index": 14,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Highlight only the latest complete code line so readers can follow the live edge.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-code-active-line"
+    },
+    {
+      "id": "structured-code-function-blocks",
+      "name": "Code function blocks",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "Reveal logically grouped code blocks separated by blank lines.",
+      "kind": "paragraph",
+      "effect": "block",
+      "index": 15,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal logically grouped code blocks separated by blank lines.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-code-function-blocks"
+    },
+    {
+      "id": "structured-code-line-glow",
+      "name": "Code line glow",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Code",
+      "description": "A transient gradient marks each complete incoming code line without recoloring syntax.",
+      "kind": "line",
+      "effect": "gradientHighlight",
+      "index": 16,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "highlight",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": true,
+      "whenToUse": "A transient gradient marks each complete incoming code line without recoloring syntax.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-code-line-glow"
+    },
+    {
+      "id": "structured-heading-then-body",
+      "name": "Heading then body",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Sections",
+      "description": "Reveal section headings distinctly before their supporting text.",
+      "kind": "line",
+      "effect": "heading",
+      "index": 17,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "persistent",
+      "appearanceSettlement": "none",
+      "expectedFinalAppearance": "persistent-intentional-formatting",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal section headings distinctly before their supporting text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-heading-then-body"
+    },
+    {
+      "id": "structured-section-sentence-stream",
+      "name": "Section sentence stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Sections",
+      "description": "Reveal complete sentences within sections for research-style answers.",
+      "kind": "sentence",
+      "effect": "fade",
+      "index": 18,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal complete sentences within sections for research-style answers.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-section-sentence-stream"
+    },
+    {
+      "id": "structured-section-focus",
+      "name": "Section focus",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Sections",
+      "description": "Highlight the active section briefly, retaining earlier sections in normal ink.",
+      "kind": "paragraph",
+      "effect": "rowAccent",
+      "index": 19,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Highlight the active section briefly, retaining earlier sections in normal ink.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-section-focus"
+    },
+    {
+      "id": "structured-checklist-phrase-stream",
+      "name": "Checklist phrase stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Checklists",
+      "description": "Long action descriptions become readable progressively without marking them as done.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 20,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Long action descriptions become readable progressively without marking them as done.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-checklist-phrase-stream"
+    },
+    {
+      "id": "structured-checklist-row-focus",
+      "name": "Checklist row focus",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Checklists",
+      "description": "Briefly mark the latest generated task; checkbox notation remains unchecked.",
+      "kind": "line",
+      "effect": "rowFocus",
+      "index": 21,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Briefly mark the latest generated task; checkbox notation remains unchecked.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-checklist-row-focus"
+    },
+    {
+      "id": "structured-buffered-checklist",
+      "name": "Buffered checklist",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Checklists",
+      "description": "Deliver a coherent task list together when completeness is important.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 22,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Deliver a coherent task list together when completeness is important.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-buffered-checklist"
+    },
+    {
+      "id": "structured-data-row-focus",
+      "name": "Data row focus",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Data",
+      "description": "Highlight only the newest complete aligned row so partial values are never shown.",
+      "kind": "line",
+      "effect": "rowAccent",
+      "index": 23,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Highlight only the newest complete aligned row so partial values are never shown.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-data-row-focus"
+    },
+    {
+      "id": "structured-data-header-first",
+      "name": "Data header first",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Data",
+      "description": "Present the header first, then deliver complete rows in a stable monospace layout.",
+      "kind": "line",
+      "effect": "heading",
+      "index": 24,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "persistent",
+      "appearanceSettlement": "none",
+      "expectedFinalAppearance": "persistent-intentional-formatting",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Present the header first, then deliver complete rows in a stable monospace layout.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-data-header-first"
+    },
+    {
+      "id": "structured-buffered-data",
+      "name": "Buffered data",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Data",
+      "description": "Hold incomplete data until the entire aligned block is ready.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 25,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "underline"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": true,
+      "dedicatedGradient": false,
+      "whenToUse": "Hold incomplete data until the entire aligned block is ready.",
+      "whenNotToUse": "Avoid highlight/glow treatments that wash syntax colors.",
+      "documentationRef": "/docs/patterns.md#structured-buffered-data"
+    },
+    {
+      "id": "structured-outline-hierarchy",
+      "name": "Outline hierarchy",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Outlines",
+      "description": "Emphasize top-level headings as they arrive; preserve indentation of child entries.",
+      "kind": "line",
+      "effect": "heading",
+      "index": 26,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "persistent",
+      "appearanceSettlement": "none",
+      "expectedFinalAppearance": "persistent-intentional-formatting",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Emphasize top-level headings as they arrive; preserve indentation of child entries.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-outline-hierarchy"
+    },
+    {
+      "id": "structured-outline-active-branch",
+      "name": "Outline active branch",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Outlines",
+      "description": "A temporary highlight follows the newest outline entry.",
+      "kind": "line",
+      "effect": "rowAccent",
+      "index": 27,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "line",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "A temporary highlight follows the newest outline entry.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-outline-active-branch"
+    },
+    {
+      "id": "structured-buffered-outline",
+      "name": "Buffered outline",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Outlines",
+      "description": "Reveal the complete hierarchy atomically to preserve relationships.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 28,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal the complete hierarchy atomically to preserve relationships.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-buffered-outline"
+    },
+    {
+      "id": "structured-quote-phrase-reveal",
+      "name": "Quote phrase reveal",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Quotes",
+      "description": "Reveal longer quoted passages gently in readable phrases.",
+      "kind": "phrase",
+      "effect": "fade",
+      "index": 29,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal longer quoted passages gently in readable phrases.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-quote-phrase-reveal"
+    },
+    {
+      "id": "structured-quote-highlight",
+      "name": "Quote highlight",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Quotes",
+      "description": "A soft sweep distinguishes each new passage, then clears.",
+      "kind": "paragraph",
+      "effect": "gradientHighlight",
+      "index": 30,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "paragraph",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "gradient",
+        "treatment": "highlight",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": true,
+      "whenToUse": "A soft sweep distinguishes each new passage, then clears.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-quote-highlight"
+    },
+    {
+      "id": "structured-buffered-quotation",
+      "name": "Buffered quotation",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Quotes",
+      "description": "Show all quotations together when exact context matters.",
+      "kind": "all",
+      "effect": "fade",
+      "index": 31,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "all",
+      "streamingCompatible": false,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Show all quotations together when exact context matters.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-buffered-quotation"
+    },
+    {
+      "id": "structured-explanation-word-stream",
+      "name": "Explanation word stream",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Explanations",
+      "description": "Reveal complete words at a steady conversational pace.",
+      "kind": "word",
+      "effect": "spring",
+      "index": 32,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "word",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Reveal complete words at a steady conversational pace.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-explanation-word-stream"
+    },
+    {
+      "id": "structured-explanation-checkpoints",
+      "name": "Explanation checkpoints",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Explanations",
+      "description": "Indicate when a complete explanatory sentence has arrived.",
+      "kind": "sentence",
+      "effect": "checkpoint",
+      "index": 33,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "sentence",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Indicate when a complete explanatory sentence has arrived.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-explanation-checkpoints"
+    },
+    {
+      "id": "structured-explanation-emphasis",
+      "name": "Explanation emphasis",
+      "version": "0.1.0",
+      "category": "structured",
+      "categoryLabel": "Structured output",
+      "subcategory": "Explanations",
+      "description": "Temporarily emphasize incoming phrases without disturbing prior text.",
+      "kind": "phrase",
+      "effect": "emphasis",
+      "index": 34,
+      "recommendedUseCases": [
+        "structured"
+      ],
+      "deliveryGranularity": "phrase",
+      "streamingCompatible": true,
+      "supportedAppearanceTreatments": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "supportedColorModes": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "defaultAppearance": {
+        "colorMode": "default",
+        "treatment": "ink",
+        "intensity": 1,
+        "gradientDirection": 110,
+        "gradientMotion": "animated"
+      },
+      "appearanceLifecycle": "transient",
+      "appearanceSettlement": "piece",
+      "expectedFinalAppearance": "inherited-host-styles",
+      "themeSupport": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "reducedMotion": "honored",
+      "reviewBehavior": "none",
+      "cancellationBehavior": "preserve-partial",
+      "preservesSemanticColors": false,
+      "preservesSyntaxHighlight": false,
+      "dedicatedGradient": false,
+      "whenToUse": "Temporarily emphasize incoming phrases without disturbing prior text.",
+      "whenNotToUse": "Avoid if decorative motion would interrupt dense reading.",
+      "documentationRef": "/docs/patterns.md#structured-explanation-emphasis"
+    }
+  ]
+}

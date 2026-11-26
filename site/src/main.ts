@@ -19,6 +19,7 @@ import {
 import { mountPatternSelect } from "./pattern-select";
 import { initHero } from "./hero";
 import { syncThemeSwitch, initTheme } from "./theme";
+import { buildCopyForAiPrompt } from "./copy-ai";
 import { buildExportHtml, INTEGRATE_SNIPPETS } from "./export";
 import { readPlaygroundParams, writePlaygroundParams } from "./url-state";
 
@@ -312,7 +313,7 @@ function renderCards(): void {
           <button type="button" class="btn btn-secondary btn-sm miniaccept" hidden>Accept</button>
           <button type="button" class="btn btn-secondary btn-sm minireject" hidden>Discard</button>
           <button type="button" class="btn btn-ghost btn-sm use">Try ↗</button>
-          <button type="button" class="btn btn-ghost btn-sm copy-snip">Copy</button>
+          <button type="button" class="btn btn-ghost btn-sm copy-snip">Copy for AI</button>
         </div>
       </div>`;
 
@@ -363,14 +364,18 @@ function renderCards(): void {
     (article.querySelector(".use") as HTMLButtonElement).onclick = () =>
       choose(i, true);
     (article.querySelector(".copy-snip") as HTMLButtonElement).onclick = async () => {
-      const snip = `import { createGlyptide } from "glyptide";\nimport "glyptide/styles.css";\n\nconst g = createGlyptide({\n  element: document.querySelector("#out"),\n  pattern: "${p.id}",\n});\n\ng.start({\n  text: ${JSON.stringify(p.sample.slice(0, 120) + (p.sample.length > 120 ? "…" : ""))},\n});`;
+      const snip = buildCopyForAiPrompt({
+        pattern: p,
+        config: demo(),
+        appearanceState: appearance.getState(),
+      });
       try {
         await navigator.clipboard.writeText(snip);
         (article.querySelector(".copy-snip") as HTMLButtonElement).textContent =
-          "Copied";
+          "Copied for AI";
         setTimeout(() => {
           (article.querySelector(".copy-snip") as HTMLButtonElement).textContent =
-            "Copy";
+            "Copy for AI";
         }, 1400);
       } catch {
         /* ignore */
@@ -547,6 +552,26 @@ document.addEventListener("keydown", (e) => {
     }, 1400);
   } catch {
     /* ignore */
+  }
+};
+
+($("copyForAi") as HTMLButtonElement).onclick = async () => {
+  const prompt = buildCopyForAiPrompt({
+    pattern: currentPattern(),
+    config: buildConfig(),
+    appearanceState: appearance.getState(),
+  });
+  try {
+    await navigator.clipboard.writeText(prompt);
+    ($("copyForAi") as HTMLButtonElement).textContent = "Copied for AI";
+    setTimeout(() => {
+      ($("copyForAi") as HTMLButtonElement).textContent = "Copy for AI";
+    }, 1600);
+  } catch {
+    ($("copyForAi") as HTMLButtonElement).textContent = "Copy failed";
+    setTimeout(() => {
+      ($("copyForAi") as HTMLButtonElement).textContent = "Copy for AI";
+    }, 1600);
   }
 };
 

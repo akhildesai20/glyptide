@@ -110,6 +110,20 @@ export {
   presetsByCategory,
   resolvePresetPalette,
 } from "./presets";
+export {
+  consumeTextStream,
+  iterateTextStream,
+  pipeTextToGlyptide,
+  type ConsumeTextStreamOptions,
+  type StreamMode,
+} from "./stream";
+export {
+  recommendPatterns,
+  type PatternRecommendation,
+  type RecommendContentType,
+  type RecommendInput,
+  type RecommendUseCase,
+} from "./recommend";
 
 function prefersReducedMotion(): boolean {
   if (typeof matchMedia !== "function") return false;

@@ -7,13 +7,15 @@
     "site"
   ],
   "scripts": {
-    "build": "npm run build -w glyptide && npm run build -w @glyptide/react && npm run build -w site",
+    "build": "npm run build:lib && npm run generate:ai-docs && npm run build -w site",
     "build:lib": "npm run build -w glyptide && npm run build -w @glyptide/react",
-    "dev": "npm run build -w glyptide && npm run dev -w site",
+    "generate:ai-docs": "node scripts/generate-ai-docs.mjs",
+    "dev": "npm run build:lib && npm run generate:ai-docs && npm run dev -w site",
     "test": "npm run test -w site",
     "test:e2e": "npm run test:e2e -w site",
     "typecheck": "npm run typecheck -w glyptide",
-    "size": "node scripts/bundle-size.mjs"
+    "size": "node scripts/bundle-size.mjs",
+    "check:ai-docs": "npm run generate:ai-docs && git diff --exit-code -- site/public/llms.txt site/public/llms-full.txt site/public/registry site/public/schemas site/public/docs site/public/skills || (echo 'AI docs out of date — run npm run generate:ai-docs' && exit 1)"
   },
   "engines": {
     "node": ">=18"

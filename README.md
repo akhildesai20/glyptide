@@ -101,10 +101,25 @@ The playground lives in `site/` and is intended for local development (`npm run 
 
 The original interaction study is preserved at [`prototype/text-in-motion-v5.html`](./prototype/text-in-motion-v5.html) as historical reference. The production source of truth is `packages/glyptide`.
 
+## AI-native developer experience
+
+- [`AGENTS.md`](./AGENTS.md) — instructions for coding agents in this repo
+- [`design.md`](./design.md) — motion / lifecycle UX guidance
+- [`skills/glyptide/`](./skills/glyptide/) — portable Agent Skill
+- Playground site serves `/llms.txt`, `/llms-full.txt`, `/registry/patterns.json`, `/schemas/*`, and [`/for-ai.html`](./site/for-ai.html)
+- Runtime helpers: `pipeTextToGlyptide`, `recommendPatterns` (no LLM required)
+
+Regenerate derived AI docs after registry changes:
+
+```bash
+npm run build:lib && npm run generate:ai-docs
+```
+
 ## Documentation
 
 - [API reference](./docs/api.md)
 - [Appearance system](./APPEARANCE.md)
+- [Provider notes](./docs/providers.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Changelog](./CHANGELOG.md)
 - [Audit notes](./AUDIT.md)

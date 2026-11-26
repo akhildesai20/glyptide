@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://glyptide.local/schemas/appearance.json",
+  "title": "GlyptideAppearance",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "colorMode": {
+      "type": "string",
+      "enum": [
+        "default",
+        "solid",
+        "gradient"
+      ],
+      "default": "default"
+    },
+    "treatment": {
+      "type": "string",
+      "enum": [
+        "ink",
+        "highlight",
+        "underline",
+        "glow"
+      ],
+      "default": "ink"
+    },
+    "intensity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 1
+    },
+    "gradientDirection": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 360,
+      "default": 110
+    },
+    "gradientMotion": {
+      "type": "string",
+      "enum": [
+        "static",
+        "animated"
+      ],
+      "default": "animated"
+    }
+  },
+  "required": [
+    "colorMode",
+    "treatment"
+  ]
+}

@@ -877,6 +877,58 @@ html[data-theme="dark"] .preset-popover {
   padding-top: var(--space-3);
 }
 
+/* For AI page */
+.for-ai {
+  padding: var(--space-9) 0 var(--space-10);
+  max-width: 720px;
+}
+
+.for-ai-hero {
+  margin-bottom: var(--space-8);
+}
+
+.for-ai-hero h1 {
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 var(--space-3);
+}
+
+.for-ai-section {
+  padding: var(--space-6) 0;
+  border-top: 1px solid var(--border);
+}
+
+.for-ai-section h2 {
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+}
+
+.for-ai-section p {
+  color: var(--ink-secondary);
+  margin: 0 0 var(--space-4);
+  line-height: 1.55;
+}
+
+.for-ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.for-ai-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--ink-secondary);
+  line-height: 1.7;
+}
+
+.for-ai-list a {
+  color: var(--ink);
+}
+
 /* Library */
 .library-section {
   padding: var(--space-9) 0;

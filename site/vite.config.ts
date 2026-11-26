@@ -30,6 +30,12 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     target: "es2020",
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        forAi: resolve(__dirname, "for-ai.html"),
+      },
+    },
   },
   server: {
     port: 5173,

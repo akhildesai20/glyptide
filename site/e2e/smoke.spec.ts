@@ -113,6 +113,18 @@ test.describe("Glyptide site", () => {
     await expect(page.locator("#output .ghost")).toHaveCount(0);
   });
 
+  test("for AI page and llms.txt are available", async ({ page }) => {
+    const llms = await page.request.get("/llms.txt");
+    expect(llms.ok()).toBeTruthy();
+    expect(await llms.text()).toContain("# Glyptide");
+    const registry = await page.request.get("/registry/patterns.json");
+    expect(registry.ok()).toBeTruthy();
+    await page.goto("/for-ai.html");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Built for humans",
+    );
+  });
+
   test("structured pattern selector groups and searches", async ({ page }) => {
     await page.goto("/?case=structured");
     await page.locator("#patternTrigger").click();

@@ -1,0 +1,41 @@
+# Glyptide
+
+> Thoughtful text motion for generative interfaces — 96 patterns across 6 use cases. Model-independent presentation layer for AI streaming UIs.
+
+Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
+The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
+
+## Docs
+
+- [Getting started](/docs/getting-started.md): Install (local package) and first `createGlyptide` call
+- [Public API](/docs/api.md): `createGlyptide`, instance methods, appearance lifecycle
+- [Patterns](/docs/patterns.md): All 96 pattern ids with lifecycle metadata
+- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
+- [Streaming](/docs/streaming.md): `append` / `pipeTextToGlyptide`, delta vs snapshot
+- [Accessibility](/docs/accessibility.md): Reduced motion, semantics, announcements
+- [Design guidance](/docs/design.md): Motion and reading-comfort principles
+- [Full documentation](/llms-full.txt): Consolidated AI-readable reference
+
+## Machine-readable
+
+- [Pattern registry JSON](/registry/patterns.json): Versioned metadata for every pattern
+- [Config JSON Schema](/schemas/config.json): Validate Glyptide configuration
+- [Appearance JSON Schema](/schemas/appearance.json): Appearance options
+- [Pattern meta schema](/schemas/pattern-meta.json): Registry entry shape
+
+## Agent resources
+
+- [Agent skill](/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
+- [For AI page](/for-ai.html): Human + agent discovery page in the playground site
+
+## Examples
+
+- [Vanilla JS](/skills/glyptide/examples/vanilla-js.md)
+- [React](/skills/glyptide/examples/react.md)
+- [AI SDK streaming](/skills/glyptide/examples/ai-sdk.md)
+- [Provider notes](/docs/providers.md)
+
+## Optional
+
+- [Repository README](https://github.com/akhildesai20/glyptide/blob/main/README.md): Human overview (private until public release)
+- [AGENTS.md](https://github.com/akhildesai20/glyptide/blob/main/AGENTS.md): Instructions for agents working in this repo

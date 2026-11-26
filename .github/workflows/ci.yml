@@ -17,8 +17,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:lib
+      - run: npm run generate:ai-docs
       - run: npm run typecheck
       - run: npm test
+      - name: Ensure AI docs committed
+        run: |
+          git add -N site/public
+          git diff --exit-code -- site/public/llms.txt site/public/llms-full.txt site/public/registry site/public/schemas site/public/docs site/public/skills
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
         working-directory: site

@@ -1,0 +1,196 @@
+# Glyptide — full AI reference
+
+> Version 0.1.0. 96 patterns. MIT. Presentation layer only — no model calls, no API keys.
+
+## Overview
+
+Glyptide is an open-source library of text generation, insertion, rewriting, and transformation motion patterns for generative interfaces.
+
+Separate concerns: **Pattern** (behavior) · **Motion** (timing) · **Appearance** (paint) · **Lifecycle** (when paint clears).
+
+## Installation
+
+The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
+
+```bash
+npm install /path/to/glyptide/packages/glyptide
+# or from a monorepo clone:
+npm install
+npm run build:lib
+```
+
+Import styles once: `import "glyptide/styles.css"`.
+
+## Quick start
+
+```js
+import { createGlyptide, pipeTextToGlyptide } from "glyptide";
+import "glyptide/styles.css";
+
+const g = createGlyptide({
+  element: document.querySelector("#out"),
+  pattern: "new-word-settle",
+  preset: "aurora",
+  theme: "inherit",
+  config: {
+    appearance: { colorMode: "gradient", treatment: "ink", gradientMotion: "animated" },
+  },
+});
+
+// Simulated
+g.start({ text: "Hello from Glyptide." });
+
+// Or real stream (delta chunks)
+// await pipeTextToGlyptide(g, asyncIterableOfStrings, { signal });
+```
+
+## Public API (summary)
+
+- `createGlyptide({ element, pattern?, config?, speed?, latency?, reduce?, preset?, palette?, theme?, onStatus?, onChange?, onAnnounce? })`
+- Instance: `start`, `append`, `finish`, `reset`, `pause`, `resume`, `stop`, `accept`, `reject`, `palette`, `setAppearance`, `destroy`
+- Registry: `patterns`, `getPattern`, `getPatternsByCase`, `searchPatterns`, `recommendPatterns`
+- Streams: `iterateTextStream`, `consumeTextStream`, `pipeTextToGlyptide`
+- Appearance: `appearanceCapabilities`, `appearanceLifecycleFor`, `defaultAppearanceConfig`, `PALETTE_PRESETS`
+
+## Appearance lifecycle
+
+| Lifecycle | Settlement | Final state |
+|-----------|------------|-------------|
+| transient | piece \| generation | Inherited host styles — no leftover gradient/solid paint |
+| persistent | none | Intentional formatting kept (e.g. heading weight) |
+| review-bound | accept | Review chrome until Accept/Discard |
+
+Aesthetic presets never override lifecycle.
+
+## Pattern identifiers
+
+- `new-token-stream` — Token stream (new, token, lifecycle transient)
+- `new-word-settle` — Word settle (new, word, lifecycle transient)
+- `new-phrase-fade` — Phrase fade (new, phrase, lifecycle transient)
+- `new-sentence-reveal` — Sentence reveal (new, sentence, lifecycle transient)
+- `new-paragraph-arrival` — Paragraph arrival (new, paragraph, lifecycle transient)
+- `new-quiet-cursor` — Quiet cursor (new, token, lifecycle transient)
+- `new-buffered-words` — Buffered words (new, word, lifecycle transient)
+- `new-reading-line` — Reading line (new, phrase, lifecycle transient)
+- `new-progressive-emphasis` — Progressive emphasis (new, phrase, lifecycle transient)
+- `new-skeleton-to-prose` — Skeleton to prose (new, word, lifecycle transient)
+- `new-sentence-checkpoint` — Sentence checkpoint (new, sentence, lifecycle transient)
+- `new-instant-answer` — Instant answer (new, all, lifecycle transient)
+- `new-gradient-ink` — Gradient ink (new, phrase, lifecycle transient)
+- `new-gradient-highlight` — Gradient highlight (new, phrase, lifecycle transient)
+- `new-diffused-glow` — Diffused glow (new, sentence, lifecycle transient)
+- `new-luminous-underline` — Luminous underline (new, phrase, lifecycle transient)
+- `new-thinking-shimmer` — Thinking shimmer (new, word, lifecycle transient)
+- `insert-caret-insertion` — Caret insertion (insert, word, lifecycle transient)
+- `insert-marked-insertion` — Marked insertion (insert, phrase, lifecycle transient)
+- `insert-reserved-gap` — Reserved gap (insert, sentence, lifecycle transient)
+- `insert-colored-insertion` — Colored insertion (insert, phrase, lifecycle transient)
+- `insert-underline-insertion` — Underline insertion (insert, word, lifecycle transient)
+- `insert-insertion-preview` — Insertion preview (insert, phrase, lifecycle review-bound)
+- `insert-atomic-insertion` — Atomic insertion (insert, all, lifecycle transient)
+- `insert-inline-placeholder` — Inline placeholder (insert, word, lifecycle transient)
+- `insert-tracked-addition` — Tracked addition (insert, phrase, lifecycle review-bound)
+- `insert-sentence-insertion` — Sentence insertion (insert, sentence, lifecycle transient)
+- `insert-gradient-insertion` — Gradient insertion (insert, phrase, lifecycle transient)
+- `insert-luminous-insertion` — Luminous insertion (insert, word, lifecycle transient)
+- `replace-direct-replacement` — Direct replacement (replace, phrase, lifecycle transient)
+- `replace-atomic-rewrite` — Atomic rewrite (replace, all, lifecycle transient)
+- `replace-review-in-place` — Review in place (replace, phrase, lifecycle review-bound)
+- `replace-tracked-replacement` — Tracked replacement (replace, phrase, lifecycle review-bound)
+- `replace-replacement-ink` — Replacement ink (replace, word, lifecycle transient)
+- `replace-keep-original-until-ready` — Keep original until ready (replace, all, lifecycle review-bound)
+- `replace-rewrite-placeholder` — Rewrite placeholder (replace, phrase, lifecycle transient)
+- `replace-underline-replacement` — Underline replacement (replace, phrase, lifecycle transient)
+- `replace-sentence-by-sentence` — Sentence-by-sentence (replace, sentence, lifecycle transient)
+- `replace-word-level-diff` — Word-level diff (replace, all, lifecycle review-bound)
+- `replace-gradient-rewrite` — Gradient rewrite (replace, phrase, lifecycle transient)
+- `replace-revision-glow` — Revision glow (replace, sentence, lifecycle transient)
+- `rewrite-block-by-block` — Block-by-block (rewrite, paragraph, lifecycle transient)
+- `rewrite-original-and-revised` — Original and revised (rewrite, paragraph, lifecycle review-bound)
+- `rewrite-complete-document-swap` — Complete document swap (rewrite, all, lifecycle transient)
+- `rewrite-tracked-blocks` — Tracked blocks (rewrite, paragraph, lifecycle review-bound)
+- `rewrite-paragraph-checkpoints` — Paragraph checkpoints (rewrite, paragraph, lifecycle transient)
+- `rewrite-revision-preview` — Revision preview (rewrite, paragraph, lifecycle review-bound)
+- `rewrite-buffered-section-review` — Buffered section review (rewrite, all, lifecycle review-bound)
+- `rewrite-revision-margin` — Revision margin (rewrite, paragraph, lifecycle transient)
+- `rewrite-document-diff` — Document diff (rewrite, all, lifecycle review-bound)
+- `rewrite-gradient-revision-blocks` — Gradient revision blocks (rewrite, paragraph, lifecycle transient)
+- `continue-append-stream` — Append stream (continue, phrase, lifecycle transient)
+- `continue-ghost-suggestion` — Ghost suggestion (continue, sentence, lifecycle review-bound)
+- `continue-next-paragraph` — Next paragraph (continue, paragraph, lifecycle transient)
+- `continue-inline-prediction` — Inline prediction (continue, word, lifecycle review-bound)
+- `continue-colored-continuation` — Colored continuation (continue, phrase, lifecycle transient)
+- `continue-paragraph-suggestion` — Paragraph suggestion (continue, paragraph, lifecycle review-bound)
+- `continue-sentence-continuation` — Sentence continuation (continue, sentence, lifecycle transient)
+- `continue-continuation-boundary` — Continuation boundary (continue, phrase, lifecycle transient)
+- `continue-buffered-ending` — Buffered ending (continue, all, lifecycle transient)
+- `continue-gradient-continuation` — Gradient continuation (continue, phrase, lifecycle transient)
+- `structured-list-item-arrival` — List item arrival (structured, line, lifecycle transient)
+- `structured-code-line-stream` — Code line stream (structured, line, lifecycle transient)
+- `structured-section-assembly` — Section assembly (structured, paragraph, lifecycle transient)
+- `structured-checklist-assembly` — Checklist assembly (structured, line, lifecycle transient)
+- `structured-data-rows` — Data rows (structured, line, lifecycle transient)
+- `structured-outline-generation` — Outline generation (structured, line, lifecycle transient)
+- `structured-buffered-code-block` — Buffered code block (structured, all, lifecycle transient)
+- `structured-quoted-passages` — Quoted passages (structured, paragraph, lifecycle transient)
+- `structured-progressive-explanation` — Progressive explanation (structured, sentence, lifecycle transient)
+- `structured-list-token-stream` — List token stream (structured, token, lifecycle transient)
+- `structured-list-phrase-reveal` — List phrase reveal (structured, phrase, lifecycle transient)
+- `structured-list-item-focus` — List item focus (structured, line, lifecycle transient)
+- `structured-list-checkpoint` — List checkpoint (structured, line, lifecycle transient)
+- `structured-code-token-stream` — Code token stream (structured, token, lifecycle transient)
+- `structured-code-active-line` — Code active line (structured, line, lifecycle transient)
+- `structured-code-function-blocks` — Code function blocks (structured, paragraph, lifecycle transient)
+- `structured-code-line-glow` — Code line glow (structured, line, lifecycle transient)
+- `structured-heading-then-body` — Heading then body (structured, line, lifecycle persistent)
+- `structured-section-sentence-stream` — Section sentence stream (structured, sentence, lifecycle transient)
+- `structured-section-focus` — Section focus (structured, paragraph, lifecycle transient)
+- `structured-checklist-phrase-stream` — Checklist phrase stream (structured, phrase, lifecycle transient)
+- `structured-checklist-row-focus` — Checklist row focus (structured, line, lifecycle transient)
+- `structured-buffered-checklist` — Buffered checklist (structured, all, lifecycle transient)
+- `structured-data-row-focus` — Data row focus (structured, line, lifecycle transient)
+- `structured-data-header-first` — Data header first (structured, line, lifecycle persistent)
+- `structured-buffered-data` — Buffered data (structured, all, lifecycle transient)
+- `structured-outline-hierarchy` — Outline hierarchy (structured, line, lifecycle persistent)
+- `structured-outline-active-branch` — Outline active branch (structured, line, lifecycle transient)
+- `structured-buffered-outline` — Buffered outline (structured, all, lifecycle transient)
+- `structured-quote-phrase-reveal` — Quote phrase reveal (structured, phrase, lifecycle transient)
+- `structured-quote-highlight` — Quote highlight (structured, paragraph, lifecycle transient)
+- `structured-buffered-quotation` — Buffered quotation (structured, all, lifecycle transient)
+- `structured-explanation-word-stream` — Explanation word stream (structured, word, lifecycle transient)
+- `structured-explanation-checkpoints` — Explanation checkpoints (structured, sentence, lifecycle transient)
+- `structured-explanation-emphasis` — Explanation emphasis (structured, phrase, lifecycle transient)
+
+## Color presets
+
+- `intelligence` — Intelligence (ai)
+- `gemini` — Gemini (ai)
+- `copilot` — Copilot (ai)
+- `terracotta` — Terracotta (ai)
+- `jade` — Jade (ai)
+- `prism` — Prism (ai)
+- `graphite` — Graphite (minimal)
+- `paper` — Paper (minimal)
+- `iris` — Iris (minimal)
+- `electric` — Electric (minimal)
+- `sakura` — Sakura (minimal)
+- `matcha` — Matcha (minimal)
+- `aurora` — Aurora (expressive)
+- `sunset` — Sunset (expressive)
+- `ocean` — Ocean (expressive)
+- `twilight` — Twilight (expressive)
+- `ember` — Ember (expressive)
+- `botanical` — Botanical (expressive)
+
+## Common mistakes
+
+1. Recreating animations manually instead of using a pattern id
+2. Leaving gradient classes after completion (use lifecycle — already handled by engine)
+3. Using `mode: "delta"` with snapshot SDKs (causes duplicated text)
+4. Embedding provider API keys in the browser
+5. Assuming npm `glyptide` is published — install from the repo until release
+6. Overriding host foreground with hardcoded black/white after settle
+
+## Performance
+
+Prefer CSS + Web Animations. Pause off-screen previews. Avoid new runtime dependencies in core.

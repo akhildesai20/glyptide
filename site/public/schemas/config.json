@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://glyptide.local/schemas/config.json",
+  "title": "GlyptideConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "caseId": {
+      "type": "string",
+      "enum": [
+        "new",
+        "insert",
+        "replace",
+        "rewrite",
+        "continue",
+        "structured"
+      ]
+    },
+    "patternName": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "token",
+        "word",
+        "phrase",
+        "sentence",
+        "paragraph",
+        "line",
+        "all"
+      ]
+    },
+    "effect": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "speed": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 500,
+      "default": 54
+    },
+    "latency": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10000,
+      "default": 600
+    },
+    "scenario": {
+      "type": "string",
+      "enum": [
+        "steady",
+        "bursts",
+        "stall",
+        "interrupt"
+      ],
+      "default": "steady"
+    },
+    "reduce": {
+      "type": "boolean",
+      "default": false
+    },
+    "preset": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark",
+        "system",
+        "inherit"
+      ],
+      "default": "inherit"
+    },
+    "palette": {
+      "type": "object",
+      "properties": {
+        "light": {
+          "$ref": "#/$defs/palette"
+        },
+        "dark": {
+          "$ref": "#/$defs/palette"
+        }
+      },
+      "required": [
+        "light",
+        "dark"
+      ],
+      "additionalProperties": false
+    },
+    "appearance": {
+      "$ref": "appearance.json"
+    },
+    "persistGradient": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "$defs": {
+    "palette": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ink",
+        "highlight",
+        "gradientMiddle",
+        "gradientEnd"
+      ],
+      "properties": {
+        "ink": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+        },
+        "highlight": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+        },
+        "gradientMiddle": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+        },
+        "gradientEnd": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+        }
+      }
+    }
+  }
+}

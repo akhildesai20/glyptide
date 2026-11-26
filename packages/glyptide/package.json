@@ -51,12 +51,12 @@
   "author": "Glyptide",
   "repository": {
     "type": "git",
-    "url": "https://github.com/glyptide/glyptide.git"
+    "url": "https://github.com/akhildesai20/glyptide.git"
   },
   "bugs": {
-    "url": "https://github.com/glyptide/glyptide/issues"
+    "url": "https://github.com/akhildesai20/glyptide/issues"
   },
-  "homepage": "https://glyptide.dev",
+  "homepage": "https://github.com/akhildesai20/glyptide",
   "engines": {
     "node": ">=18"
   },

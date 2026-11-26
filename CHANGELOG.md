@@ -10,7 +10,10 @@
 - Decoupled appearance configuration (color mode, treatment, intensity, gradient motion)
 - Centralized appearance lifecycle (`transient` / `persistent` / `review-bound`)
 - Grouped searchable structured-output pattern selector in the playground
-- Vitest unit suite and Playwright smoke tests
+- AI-native docs: `AGENTS.md`, `llms.txt`, `llms-full.txt`, Agent Skill, registry JSON, JSON Schema
+- Stream helpers (`pipeTextToGlyptide`) and `recommendPatterns`
+- For AI playground page and Copy for AI prompts
+- Vitest unit suite and Playwright smoke / registry tests
 
 ### Notes
 

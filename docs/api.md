@@ -52,6 +52,30 @@ const g = createGlyptide({
 | `setAppearance({ preset, palette, theme, colors, appearance })` | Update palette / aesthetic appearance without restarting the stream. |
 | `destroy()` | Clean up timers, animations, DOM. |
 
+## Streaming helpers
+
+```ts
+import { createGlyptide, pipeTextToGlyptide } from "glyptide";
+
+const g = createGlyptide({ element, pattern: "new-word-settle" });
+await pipeTextToGlyptide(g, readableOrAsyncIterable, {
+  mode: "delta", // or "snapshot" when the provider re-sends full text
+  signal: abortController.signal,
+});
+```
+
+Also: `iterateTextStream`, `consumeTextStream`. Glyptide does not call model APIs.
+
+## Pattern recommendations
+
+```ts
+import { recommendPatterns } from "glyptide";
+
+recommendPatterns({ useCase: "new", readingComfort: "high", limit: 3 });
+```
+
+Deterministic rules only — no network / LLM.
+
 ## Appearance lifecycle
 
 ```ts

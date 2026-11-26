@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Glyptide — For AI</title>
+    <meta
+      name="description"
+      content="AI-readable docs, agent skill, pattern registry, and streaming integrations for Glyptide."
+    />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="llms.txt" />
+    <link rel="describedby" href="/llms.txt" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("glyptide-theme") || "system";
+          var dark =
+            t === "dark" ||
+            (t === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+          document.documentElement.dataset.themePref = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/site.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="wordmark" href="/">
+          <span class="mark" aria-hidden="true"></span>
+          Glyptide
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/#library">Library</a>
+          <a href="/#playground">Playground</a>
+          <a href="/#docs">Documentation</a>
+          <a href="/for-ai.html" aria-current="page">For AI</a>
+          <a
+            href="https://github.com/akhildesai20/glyptide"
+            rel="noopener noreferrer"
+            target="_blank"
+            >GitHub</a
+          >
+        </nav>
+        <div class="header-actions">
+          <div class="theme-switch" role="group" aria-label="Color theme">
+            <button type="button" data-theme-set="light" title="Light" aria-label="Light theme">
+              <span aria-hidden="true">☀</span>
+            </button>
+            <button type="button" data-theme-set="system" title="System" aria-label="System theme">
+              <span aria-hidden="true">◐</span>
+            </button>
+            <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark theme">
+              <span aria-hidden="true">☾</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap for-ai">
+      <header class="for-ai-hero">
+        <p class="section-kicker">For AI</p>
+        <h1>Built for humans. Ready for agents.</h1>
+        <p class="section-sub">
+          Use Glyptide with your existing AI models, coding assistants and agentic
+          workflows. No additional API or backend required.
+        </p>
+      </header>
+
+      <section class="for-ai-section" aria-labelledby="ai-docs">
+        <h2 id="ai-docs">AI-readable documentation</h2>
+        <p>
+          Standards-aligned discovery files. Prefer these over scraping the HTML
+          playground.
+        </p>
+        <div class="for-ai-actions">
+          <a class="btn btn-secondary btn-sm" href="/llms.txt">Open llms.txt</a>
+          <a class="btn btn-secondary btn-sm" href="/llms-full.txt">Open llms-full.txt</a>
+          <button type="button" class="btn btn-ghost btn-sm" id="copyLlms">
+            Copy llms.txt
+          </button>
+          <span class="hint" id="copyLlmsStatus" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="for-ai-section" aria-labelledby="ai-skill">
+        <h2 id="ai-skill">Agent skill</h2>
+        <p>
+          Portable Agent Skills package for compatible coding agents. Progressive
+          disclosure — load references only when needed.
+        </p>
+        <div class="for-ai-actions">
+          <a class="btn btn-secondary btn-sm" href="/skills/glyptide/SKILL.md"
+            >View SKILL.md</a
+          >
+          <a class="btn btn-ghost btn-sm" href="/skills/glyptide/examples/vanilla-js.md"
+            >Vanilla example</a
+          >
+          <a class="btn btn-ghost btn-sm" href="/skills/glyptide/examples/ai-sdk.md"
+            >AI SDK example</a
+          >
+        </div>
+      </section>
+
+      <section class="for-ai-section" aria-labelledby="ai-registry">
+        <h2 id="ai-registry">Machine-readable registry &amp; schemas</h2>
+        <p>
+          Generated from the canonical pattern registry. Use for search,
+          validation, and tool-calling agents.
+        </p>
+        <div class="for-ai-actions">
+          <a class="btn btn-secondary btn-sm" href="/registry/patterns.json"
+            >Pattern registry</a
+          >
+          <a class="btn btn-ghost btn-sm" href="/schemas/config.json">Config schema</a>
+          <a class="btn btn-ghost btn-sm" href="/schemas/appearance.json"
+            >Appearance schema</a
+          >
+        </div>
+      </section>
+
+      <section class="for-ai-section" aria-labelledby="ai-stream">
+        <h2 id="ai-stream">Model streaming &amp; frameworks</h2>
+        <p>
+          Glyptide consumes normalized text — string chunks, async iterables, or
+          ReadableStreams. Provider SDKs stay in your app.
+        </p>
+        <ul class="for-ai-list">
+          <li><a href="/docs/streaming.md">Streaming guide</a></li>
+          <li><a href="/docs/providers.md">Provider notes</a></li>
+          <li><a href="/skills/glyptide/examples/react.md">React</a></li>
+          <li><a href="/docs/mcp.md">MCP (deferred architecture)</a></li>
+        </ul>
+      </section>
+
+      <section class="for-ai-section" aria-labelledby="ai-copy">
+        <h2 id="ai-copy">Copy AI context</h2>
+        <p>
+          In the playground, use <strong>Copy for AI</strong> to export the selected
+          pattern, appearance, and verification steps as an implementation prompt.
+        </p>
+        <div class="for-ai-actions">
+          <a class="btn btn-primary btn-sm" href="/#playground">Open playground</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer wrap">
+      <p>
+        Glyptide remains backend-independent and free to integrate. Package install
+        is local until npm publication.
+      </p>
+    </footer>
+
+    <script type="module">
+      import { initTheme, syncThemeSwitch } from "/src/theme.ts";
+      initTheme();
+      syncThemeSwitch();
+      const btn = document.getElementById("copyLlms");
+      const status = document.getElementById("copyLlmsStatus");
+      btn?.addEventListener("click", async () => {
+        try {
+          const res = await fetch("/llms.txt");
+          const text = await res.text();
+          await navigator.clipboard.writeText(text);
+          status.textContent = "Copied";
+          setTimeout(() => (status.textContent = ""), 1600);
+        } catch {
+          status.textContent = "Open llms.txt and copy manually";
+        }
+      });
+    </script>
+  </body>
+</html>

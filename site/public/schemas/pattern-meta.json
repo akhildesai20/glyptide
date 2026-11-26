@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://glyptide.local/schemas/pattern-meta.json",
+  "title": "GlyptidePatternMeta",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "category",
+    "kind",
+    "effect",
+    "appearanceLifecycle"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "subcategory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "effect": {
+      "type": "string"
+    },
+    "appearanceLifecycle": {
+      "type": "string",
+      "enum": [
+        "transient",
+        "persistent",
+        "review-bound"
+      ]
+    },
+    "appearanceSettlement": {
+      "type": "string",
+      "enum": [
+        "piece",
+        "generation",
+        "accept",
+        "none"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
