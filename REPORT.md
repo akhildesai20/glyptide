@@ -1,79 +1,83 @@
-# Glyptide — delivery report
+# Glyptide — quality audit & initial push report
 
-## What changed
+Date: 2026-11-26
 
-- Preserved the v5 prototype at `prototype/text-in-motion-v5.html` (behavioral source of truth).
-- Extracted a production library `glyptide` with engine, pattern registry (96), styles, ESM/CJS/IIFE builds, and TypeScript types.
-- Added optional `@glyptide/react` adapter.
-- Built a polished static website (`site/`) with design tokens, Light/Dark/System theme, hero powered by the real engine, playground, searchable library, docs, code export, and URL sharing.
-- Added unit tests, Playwright smoke suite, README, API docs, MIT license, contributing guide, and audit notes.
+## Pattern audit
 
-## Architecture decisions
+| Metric | Count |
+|--------|------:|
+| Patterns audited (registry) | **96** |
+| Transient | **79** |
+| Persistent | **3** (heading / header hierarchy) |
+| Review-bound | **14** |
 
-- **Monorepo** with npm workspaces: `packages/glyptide`, `packages/glyptide-react`, `site`.
-- **No Next.js / backend** — Vite static site.
-- **Engine port** preserves v5 playback, spring, streaming scenarios, review flows, and palette logic.
-- **Pattern data** extracted to JSON and loaded by the registry; website aliases source for HMR.
-- **npm not published** — install paths document local packages only.
+Lifecycle is centralized in `appearanceLifecycleFor()` / `packages/glyptide/src/lifecycle.ts` and enforced by the engine. Aesthetic `colorMode` / presets no longer keep paint after transient settlement.
 
-## Dependencies added
+### Corrected in this pass
 
-| Dependency | Why |
-|------------|-----|
-| `typescript`, `tsup` | Typed library builds (ESM/CJS/IIFE + d.ts) |
-| `vite` | Static site bundler |
-| `vitest` | Unit tests for split/registry |
-| `@playwright/test` | Browser regression smoke tests |
-| `react` (dev/peer, react package only) | Optional adapter peers |
+- Transient cleanup ignored aesthetic mode (gradients/solids no longer stick after Complete)
+- Settlement restores **inherited** host color (not `--ink` / black / white)
+- Piece-level settle for emphasis, checkpoints, row cues, gradients
+- Generation-level settle for color / underline / replacement ink / mark / change bar
+- Review-bound chrome remains until Accept / Discard
+- `persistGradient` reserved for hero/showcase only
 
-No Motion, Streamdown, or other animation/markdown runtimes — native WAAPI + CSS.
+### Remaining known limits
 
-## Pattern count
+- Full normal-speed visual review of all 96 patterns was not done frame-by-frame by a human
+- Multi-browser visual matrix (Firefox / WebKit) not run — Chromium only
+- Long-content / RTL / CJK streaming edge cases covered by splitter unit tests, not full e2e matrix
+- Gallery IntersectionObserver pause verified in smoke, not under load profiling
 
-**96** (derived from registry, shown in hero meta).
+## Quality assurance
 
-## Bundle sizes (approximate, unminified map-inclusive ESM)
+| Suite | Result |
+|-------|--------|
+| `tsc` (glyptide) | Pass |
+| Vitest | **26/26** pass |
+| Playwright smoke | **11/11** pass (Chromium) |
+| Playwright registry sweep | **6/6** case suites pass (all 96 patterns, reduced motion) |
+| Production `vite build` | Pass |
+| Package build (`tsup`) | Pass |
 
-| File | Size |
-|------|------|
-| `index.js` (engine + registry + samples) | ~103 KB |
-| `patterns.js` | ~77 KB |
-| `glyptide.iife.js` (minified) | ~85 KB |
-| `styles.css` | ~10 KB |
-| Site JS (gzip) | ~22 KB |
-| Site CSS (gzip) | ~5 KB |
+Browsers tested: **Chromium only**. Firefox and WebKit were not installed/run.
 
-Note: sample text embedded in the registry dominates package size. A follow-up can ship metadata-only entry points.
+## Repository hygiene
 
-## Test results
+- Removed duplicate root `text-in-motion-v5.html` (kept `prototype/`)
+- Ignored `node_modules`, `dist`, `test-results`, env files
+- No credentials / tokens found in staged tree
+- MIT license present; no Generative Loaders fork claim
+- npm install docs correctly state package is **not published**
 
-- Unit (`vitest`): **5/5 passed** (split + registry).
-- Playwright Chromium smoke: **6/6 passed** (hero count, playground generate→complete, theme persistence, library play, reduced motion, Escape discard on ghost suggestion).
-- Production build: succeeds (`site/dist`).
+### Bundle sizes (measured, uncompressed)
 
-## Accessibility findings
+| Artifact | Size |
+|----------|------|
+| `index.js` | 127.5 KB |
+| `glyptide.iife.js` | 99.4 KB |
+| `styles.css` | 12.9 KB |
+| `patterns.js` | 77.0 KB |
+| `presets.js` | 4.8 KB |
 
-- Theme FOUC prevented via inline boot script.
-- Skip link, focus-visible, semantic tabs, live region for status (completion — not per-token).
-- Hero motion is `aria-hidden` with static `sr-only` summary; pause control provided.
-- Reduced-motion preference + playground checkbox.
-- Remaining: full axe audit across all 96 previews; verify contrast of custom generation colors at extremes.
+## GitHub
 
-## Remaining issues
+| Field | Value |
+|-------|-------|
+| URL | https://github.com/akhildesai20/glyptide |
+| Visibility | **Private** (HTTPS fetch of HTML returns 404 without session; push succeeded to private remote) |
+| Branch | `main` |
+| Commit | `feat: initialize Glyptide text motion library` |
+| SHA | `6e9cf14c62a45340184ccc28108b4f8845f1d23d` |
+| Push | **Succeeded** (`main` → `origin/main`) |
+| CI | Workflow added (`.github/workflows/ci.yml`); status not verified — `gh` CLI not authenticated |
 
-1. Pattern samples inflate the core bundle — split metadata vs samples.
-2. Structured output still uses monospace text (prototype parity); semantic `<table>` / list DOM is a follow-up.
-3. Playwright coverage is smoke-level, not all 96 patterns / viewports / browsers yet.
-4. Social OG is SVG; some networks prefer PNG — convert before launch.
-5. GitHub org/repo URL placeholders (`glyptide/glyptide`) need a real remote before publish.
-6. Do not run `npm publish` until explicitly approved.
+## Remaining work before public release
 
-## Steps to publish
+Needs your involvement:
 
-1. Create GitHub repository and update package `repository` fields.
-2. Host `site/dist` (Vercel config included) and set homepage URL.
-3. Convert OG image to PNG; verify favicon.
-4. Expand Playwright matrix (Firefox/WebKit, 320–1440 widths, all patterns).
-5. Optionally slim pattern entry points.
-6. `npm publish` for `glyptide` then `@glyptide/react` after approval.
-7. Update site snippets from local install paths to `npm install glyptide`.
+1. Authenticate `gh` (optional) and confirm Actions run on `main`
+2. Decide public website hosting (Vercel config present but not required)
+3. Publish to npm when ready (docs already warn it is unpublished)
+4. Optional: expand Playwright to Firefox/WebKit
+5. Optional: human visual pass at normal speed for motion-critical patterns
