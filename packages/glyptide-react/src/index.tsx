@@ -41,19 +41,21 @@ export interface GlyptideProps extends Omit<HTMLAttributes<HTMLDivElement>, "chi
 export interface GlyptideHandle {
   instance: GlyptideInstance | null;
   start: (text?: string) => void;
+  beginStream: () => number;
   stop: () => void;
   pause: () => void;
   resume: () => void;
   reset: () => void;
   accept: () => void;
   reject: () => void;
-  append: (chunk: string) => void;
-  applySnapshot: (fullText: string) => void;
-  finish: () => void;
+  append: (chunk: string, session?: number) => void;
+  applySnapshot: (fullText: string, session?: number) => void;
+  finish: (session?: number) => void;
   setAppearance: GlyptideInstance["setAppearance"];
   on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
   readonly state: EngineState | null;
   readonly rendered: string;
+  readonly session: number;
 }
 
 /**
@@ -181,6 +183,7 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
           motion: p.motion ?? undefined,
         });
       },
+      beginStream: () => instanceRef.current?.beginStream() ?? 0,
       stop: () => instanceRef.current?.stop(),
       pause: () => instanceRef.current?.pause(),
       resume: () => instanceRef.current?.resume(),
@@ -195,9 +198,10 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
       },
       accept: () => instanceRef.current?.accept(),
       reject: () => instanceRef.current?.reject(),
-      append: (chunk) => instanceRef.current?.append(chunk),
-      applySnapshot: (full) => instanceRef.current?.applySnapshot(full),
-      finish: () => instanceRef.current?.finish(),
+      append: (chunk, session) => instanceRef.current?.append(chunk, session),
+      applySnapshot: (full, session) =>
+        instanceRef.current?.applySnapshot(full, session),
+      finish: (session) => instanceRef.current?.finish(session),
       setAppearance: (opts) => instanceRef.current?.setAppearance(opts),
       on: (event, handler) =>
         instanceRef.current?.on(event, handler) ?? (() => {}),
@@ -207,16 +211,15 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
       get rendered() {
         return instanceRef.current?.rendered ?? "";
       },
+      get session() {
+        return instanceRef.current?.session ?? 0;
+      },
     }));
 
     return (
       <div className={className} {...rest}>
-        <div ref={outRef} className="document glyptide-document" />
-        <div
-          ref={waitRef}
-          className="waiting glyptide-waiting"
-          aria-hidden="true"
-        />
+        <div ref={outRef} className="glyptide-document" />
+        <div ref={waitRef} className="glyptide-waiting" aria-hidden="true" />
       </div>
     );
   },

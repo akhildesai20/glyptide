@@ -16,6 +16,7 @@ import {
   showsCaret,
 } from "./pattern-flags";
 import { springFrames } from "./spring";
+import { createIncrementalSplitter } from "./incremental-split";
 import { createStreamIngress } from "./stream-ingress";
 import { splitText } from "./split";
 import { normalizeSnapshot } from "./text-ops";
@@ -58,14 +59,19 @@ export interface InternalEngine {
       >
     >,
   ) => void;
-  /** Real-stream append (cancels simulator if dual-feed) */
-  append: (chunk: string) => void;
-  applySnapshot: (fullText: string) => void;
-  finish: () => void;
+  /** Open a new live generation session; invalidates prior sessions */
+  beginStream: () => number;
+  /** Real-stream append (optional session rejects stale producers) */
+  append: (chunk: string, session?: number) => void;
+  applySnapshot: (fullText: string, session?: number) => void;
+  finish: (session?: number) => void;
   on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
   destroy: () => void;
   readonly state: EngineState;
   readonly rendered: string;
+  readonly session: number;
+  readonly queueSize: number;
+  readonly activeAnimationCount: number;
 }
 
 function put(el: Node, t: string): void {
@@ -127,16 +133,22 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   let snapshotAccum = "";
   /** Monotonic generation id — stale async work from prior runs is ignored */
   let generation = 0;
+  /** Active live session; 0 means no authorized live session */
+  let activeSession = 0;
   let destroyed = false;
+  let sourceComplete = false;
+  let drainTimer = 0;
+  let splitter = createIncrementalSplitter("word");
   const settleTimers = new Set<number>();
   const bus = createEventBus();
+  const MAX_ACTIVE_ANIMATIONS = 48;
   const ingress = createStreamIngress({
     maxQueue: 256,
     policy: "catchUp",
     stallMs: 2500,
     onStall: () => {
       if (destroyed) return;
-      if (liveMode && state === "Generating") {
+      if (liveMode && (state === "Generating" || state === "Waiting for text")) {
         set("Waiting for text");
         cue("Waiting for more text…");
         emit("stalled");
@@ -144,6 +156,77 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     },
   });
   let stallWatch = 0;
+
+  function sessionOk(session?: number): boolean {
+    if (destroyed) return false;
+    if (session == null) return true;
+    return session === activeSession && activeSession !== 0;
+  }
+
+  function invalidateSession(): void {
+    generation += 1;
+    activeSession = 0;
+    sourceComplete = false;
+    stopDrain();
+    splitter.clear();
+  }
+
+  function stopDrain(): void {
+    if (drainTimer) {
+      clearTimeout(drainTimer);
+      drainTimer = 0;
+    }
+  }
+
+  function revealIntervalMs(): number {
+    const motion = resolveMotion(opt?.motion);
+    const policy = opt?.catchUp ?? "catchUp";
+    if (policy === "flush" || opt?.reduce || motion.preset === "instant") return 0;
+    const base =
+      motion.deliveryIntervalMs > 0
+        ? motion.deliveryIntervalMs
+        : Math.max(8, Math.round(1000 / Math.max(12, opt?.speed ?? 54)));
+    if (policy === "catchUp" && ingress.size > 32) {
+      return Math.max(0, Math.floor(base / 4));
+    }
+    if (policy === "catchUp" && ingress.size > 8) {
+      return Math.max(0, Math.floor(base / 2));
+    }
+    return base;
+  }
+
+  function scheduleDrain(): void {
+    if (destroyed || !liveMode || state === "Paused") return;
+    if (drainTimer) return;
+    if (ingress.size === 0) {
+      if (sourceComplete) {
+        sourceComplete = false;
+        finalize();
+        liveMode = false;
+        simulated = false;
+      }
+      return;
+    }
+    const delay = revealIntervalMs();
+    drainTimer = window.setTimeout(() => {
+      drainTimer = 0;
+      if (destroyed || !liveMode || state === "Paused") return;
+      // Bound concurrent decorative animations
+      if (activeAnimations.size >= MAX_ACTIVE_ANIMATIONS) {
+        const batch = ingress.take(Math.max(1, ingress.suggestedTake()));
+        for (const u of batch) add(u, { skipAnim: true });
+      } else {
+        const n = ingress.suggestedTake();
+        const batch = ingress.take(n);
+        const policy = opt.catchUp ?? "catchUp";
+        const skipAnim =
+          policy === "flush" ||
+          (policy === "catchUp" && ingress.size + batch.length > 64);
+        for (const u of batch) add(u, { skipAnim });
+      }
+      scheduleDrain();
+    }, delay);
+  }
 
   const status = (s: EngineState) => cb.status?.(s);
   const announce = (m: string) => cb.announce?.(m);
@@ -229,9 +312,9 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     activeAnimations.clear();
     for (const id of settleTimers) clearTimeout(id);
     settleTimers.clear();
-    out.classList.remove("paused");
-    wait.classList.remove("paused");
-    wait.replaceChildren();
+    out?.classList.remove("paused");
+    wait?.classList.remove("paused");
+    wait?.replaceChildren();
   }
 
   function animate(el: HTMLElement, effect: string): void {
@@ -386,8 +469,9 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     put(out, range.after);
   }
 
-  function add(t: string): void {
+  function add(t: string, opts?: { skipAnim?: boolean }): void {
     if (destroyed || !chunk) return;
+    const skipAnim = !!opts?.skipAnim;
 
     if (opt.effect === "worddiff") {
       rendered += t;
@@ -470,7 +554,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     ].includes(effect);
 
     if (visual.className || specialMotion) {
-      const e = node("span", "piece", t);
+      const e = node("span", "glyptide-piece piece", t);
       chunk.append(e);
       if (effect === "heading") {
         const mode = headingWeightMode(opt.patternId, opt.patternName);
@@ -482,7 +566,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
               : t.trim() && !/[.!?]\s*$/.test(t) && t.trim().length < 50;
         if (weight) e.style.fontWeight = "650";
       }
-      if (!opt.reduce) {
+      if (!opt.reduce && !skipAnim) {
         if (visual.className) {
           for (const cls of visual.className.split(/\s+/)) {
             if (cls) e.classList.add(cls);
@@ -622,16 +706,16 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     ) {
       put(chunk, t);
     } else if (effect === "block" && opt.caseId !== "insert") {
-      const e = node("span", "piece", t);
+      const e = node("span", "glyptide-piece piece", t);
       chunk.append(e);
-      animate(e, "fade");
+      if (!skipAnim) animate(e, "fade");
     } else {
       for (const bit of t.match(/\S+|\s+/g) || []) {
         if (!bit.trim()) put(chunk, bit);
         else {
-          const e = node("span", "piece", bit);
+          const e = node("span", "glyptide-piece piece", bit);
           chunk.append(e);
-          animate(e, effect);
+          if (!skipAnim) animate(e, effect);
         }
       }
     }
@@ -798,7 +882,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     if (destroyed) return;
     clear();
     stopStallWatch();
-    generation += 1;
+    stopDrain();
+    invalidateSession();
     liveMode = false;
     simulated = false;
     firstContentEmitted = false;
@@ -806,6 +891,10 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     snapshotAccum = "";
     ingress.clear();
     ingress.setPolicy(config.catchUp ?? "catchUp");
+    ingress.setStallMs(config.stallMs ?? 0);
+    splitter = createIncrementalSplitter(
+      config.kind === "all" ? "all" : config.kind,
+    );
     chunk = null;
     blockTail = null;
     oldBlocks = [];
@@ -874,6 +963,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     index = 0;
     didStall = false;
     didInterrupt = false;
+    // Ghost on continue/insert uses .ghost chrome (not reviewblock); finalize
+    // still treats effect === "ghost" as review-bound.
     review =
       ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
       (opt.effect === "ghost" && ["replace", "rewrite"].includes(opt.caseId));
@@ -943,9 +1034,11 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
   function startStallWatch(): void {
     stopStallWatch();
+    ingress.setStallMs(opt?.stallMs ?? 0);
     if (!opt?.stallMs) return;
     stallWatch = window.setInterval(() => {
-      ingress.checkStall();
+      // Only stall when the source is idle AND visual queue is empty
+      ingress.checkSourceStall(ingress.size > 0 || !!drainTimer);
     }, Math.min(500, Math.max(100, opt.stallMs / 5)));
   }
 
@@ -957,10 +1050,12 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   }
 
   function pause(): void {
-    if (!next) return;
-    left = Math.max(0, due - performance.now());
-    clearTimeout(timer);
     previous = state;
+    stopDrain();
+    if (next) {
+      left = Math.max(0, due - performance.now());
+      clearTimeout(timer);
+    }
     out.classList.add("paused");
     wait.classList.add("paused");
     for (const a of activeAnimations) a.pause();
@@ -974,18 +1069,24 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       tick();
       return;
     }
-    if (state !== "Paused" || !next) return;
+    if (state !== "Paused") return;
     out.classList.remove("paused");
     wait.classList.remove("paused");
     for (const a of activeAnimations) a.play();
-    set(previous);
-    schedule(next, left);
+    set(previous === "Paused" ? "Generating" : previous);
+    if (next) schedule(next, left);
+    if (liveMode) scheduleDrain();
   }
 
   function stop(): void {
     const wasWaiting =
       state === "Waiting" || (state === "Paused" && previous === "Waiting");
+    stopDrain();
+    sourceComplete = false;
+    invalidateSession();
     clear();
+    liveMode = false;
+    simulated = false;
     if (
       wasWaiting ||
       ["replace", "rewrite"].includes(opt.caseId) ||
@@ -1018,60 +1119,116 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     announce("Suggestion discarded.");
   }
 
-  /** Begin or continue a real (non-simulated) stream */
-  function append(chunkText: string): void {
-    if (destroyed || !chunkText) return;
-    // Dual-feed guard: cancel simulated scheduler when live chunks arrive
-    if (simulated || (state === "Generating" && !liveMode) || state === "Waiting") {
-      cancelSimulatorForLive();
+  /**
+   * Open a new live generation session. Invalidates prior sessions so delayed
+   * chunks from a stopped/replaced stream cannot restart generation.
+   */
+  function beginStream(): number {
+    if (destroyed) return 0;
+    stopDrain();
+    cancelSimulatorForLive();
+    clearTimeout(timer);
+    next = null;
+    generation += 1;
+    activeSession = generation;
+    sourceComplete = false;
+    liveMode = false;
+    simulated = false;
+    splitter.clear();
+    ingress.clear();
+    // Always prepare a clean live surface for the new session
+    clear();
+    rendered = "";
+    snapshotAccum = "";
+    chunk = null;
+    blockTail = null;
+    oldBlocks = [];
+    firstContentEmitted = false;
+    waitingShown = false;
+    if (state !== "Ready" && state !== "Waiting") {
+      set("Ready");
     }
+    return activeSession;
+  }
+
+  function ensureLiveSession(session?: number): boolean {
+    if (destroyed) return false;
+    if (session != null && !sessionOk(session)) return false;
 
     if (!liveMode) {
+      // Terminal states require beginStream() — refuse stale auto-restart
       if (
-        state === "Ready" ||
-        state === "Complete" ||
         state === "Stopped" ||
-        state === "Waiting" ||
-        state === "Generating"
+        state === "Complete" ||
+        state === "Interrupted" ||
+        state === "Review"
       ) {
-        if (!chunk) {
-          const cfg = { ...opt };
-          if (state === "Ready" || state === "Complete" || state === "Stopped") {
-            reset(cfg);
-          }
+        if (session == null || session !== activeSession || activeSession === 0) {
+          return false;
+        }
+      }
+
+      if (simulated || state === "Waiting" || state === "Generating") {
+        cancelSimulatorForLive();
+      }
+
+      if (activeSession === 0) {
+        generation += 1;
+        activeSession = generation;
+      }
+
+      if (!chunk) {
+        if (state === "Ready") {
           review =
             ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
             (opt.effect === "ghost" &&
               ["replace", "rewrite"].includes(opt.caseId));
-          setup();
         }
-        liveMode = true;
-        simulated = false;
-        set("Generating");
-        startStallWatch();
-      } else {
-        liveMode = true;
-        simulated = false;
+        setup();
       }
+      liveMode = true;
+      simulated = false;
+      sourceComplete = false;
+      splitter = createIncrementalSplitter(
+        opt.kind === "all" ? "all" : opt.kind,
+      );
+      ingress.setPolicy(opt.catchUp ?? "catchUp");
+      ingress.setStallMs(opt.stallMs ?? 0);
+      set("Generating");
+      startStallWatch();
     }
     if (!chunk) setup();
+    return true;
+  }
+
+  /** Begin or continue a real (non-simulated) stream */
+  function append(chunkText: string, session?: number): void {
+    if (destroyed || !chunkText) return;
+    if (!ensureLiveSession(session)) return;
+
     ingress.setPolicy(opt.catchUp ?? "catchUp");
-    const units = splitText(chunkText, opt.kind === "all" ? "word" : opt.kind);
-    const ready = ingress.push(units);
+    const kind = opt.kind === "all" ? "all" : opt.kind;
+    const units =
+      kind === "all"
+        ? splitter.push(chunkText)
+        : splitter.push(chunkText);
+    // kind all retains until finish; others emit complete units
+    void kind;
+    const ready = units.length ? ingress.push(units) : [];
     for (const u of ready) add(u);
-    // Drain remaining immediately under flush / catch-up backlog
-    if ((opt.catchUp ?? "catchUp") !== "pace") {
-      for (const u of ingress.flush()) add(u);
-    }
+    scheduleDrain();
   }
 
   /**
    * Replace live rendered content without leaving live mode.
    * Never implements replacement via append of the full snapshot.
+   * Preserves unchanged common prefix text in `rendered` accounting only —
+   * DOM rebuild is used for correctness across patterns (documented limit).
    */
   function replaceRenderedContent(fullText: string): void {
     clearTimeout(timer);
     next = null;
+    stopDrain();
     cursor?.remove();
     cursor = null;
     for (const a of activeAnimations) a.cancel();
@@ -1079,35 +1236,13 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     for (const id of settleTimers) clearTimeout(id);
     settleTimers.clear();
     ingress.clear();
+    splitter.clear();
 
-    // Bootstrap live mode like append, without reset() (which clears liveMode)
-    if (!liveMode) {
-      if (
-        state === "Ready" ||
-        state === "Complete" ||
-        state === "Stopped" ||
-        state === "Waiting" ||
-        state === "Generating"
-      ) {
-        if (
-          !chunk &&
-          (state === "Ready" || state === "Complete" || state === "Stopped")
-        ) {
-          clear();
-          waitingShown = false;
-          review =
-            ["review", "diff", "addition", "worddiff"].includes(opt.effect) ||
-            (opt.effect === "ghost" &&
-              ["replace", "rewrite"].includes(opt.caseId));
-        }
-        liveMode = true;
-        simulated = false;
-        set("Generating");
-        startStallWatch();
-      } else {
-        liveMode = true;
-        simulated = false;
-      }
+    if (!ensureLiveSession(activeSession || undefined)) {
+      // Force live bootstrap for in-session replace
+      liveMode = true;
+      simulated = false;
+      set("Generating");
     }
 
     rendered = "";
@@ -1118,16 +1253,18 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     setup();
 
     if (fullText) {
-      const units = splitText(fullText, opt.kind === "all" ? "word" : opt.kind);
-      for (const u of units) add(u);
+      const units = splitText(fullText, opt.kind === "all" ? "all" : opt.kind);
+      const policy = opt.catchUp ?? "catchUp";
+      for (const u of units) add(u, { skipAnim: policy === "flush" });
     }
     snapshotAccum = fullText;
   }
 
-  function applySnapshot(fullText: string): void {
+  function applySnapshot(fullText: string, session?: number): void {
     if (destroyed) return;
-    // Prefer snapshotAccum; fall back to rendered so a prior delta append
-    // cannot make a divergent snapshot look like a cold start.
+    if (session != null && !sessionOk(session)) return;
+    if (!liveMode && !ensureLiveSession(session)) return;
+
     const previous = snapshotAccum || rendered;
     const op = normalizeSnapshot(previous, fullText);
     if (op.type === "noop") {
@@ -1135,45 +1272,51 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       return;
     }
     if (op.type === "append") {
-      if (op.text) append(op.text);
+      if (op.text) append(op.text, session ?? activeSession);
       snapshotAccum = fullText;
       return;
     }
-    // Divergent, shrinking, or empty — replace, never append
     replaceRenderedContent(fullText);
   }
 
-  function finish(): void {
+  function finish(session?: number): void {
     if (destroyed || !liveMode) return;
+    if (session != null && !sessionOk(session)) return;
     emit("stream-end");
     stopStallWatch();
-    for (const u of ingress.flush()) add(u);
-    finalize();
-    liveMode = false;
-    simulated = false;
+    const rem = splitter.flush();
+    if (rem.length) {
+      const ready = ingress.push(rem);
+      for (const u of ready) add(u);
+    }
+    sourceComplete = true;
+    const policy = opt.catchUp ?? "catchUp";
+    if (policy === "flush" || opt.reduce) {
+      for (const u of ingress.flush()) add(u, { skipAnim: true });
+      sourceComplete = false;
+      finalize();
+      liveMode = false;
+      simulated = false;
+      return;
+    }
+    // Pace / catchUp: drain remaining units then settle
+    scheduleDrain();
   }
 
   function destroy(): void {
     if (destroyed) return;
     destroyed = true;
-    generation += 1;
+    invalidateSession();
     stopStallWatch();
+    stopDrain();
     clear();
     bus.clear();
     ingress.clear();
     liveMode = false;
     simulated = false;
-    // Clear Glyptide-owned generated content; do not strip host classes beyond ours
+    // Clear Glyptide-generated content only; class removal is owned by createGlyptide
     out.replaceChildren();
     wait.replaceChildren();
-    out.classList.remove(
-      "document",
-      "glyptide-document",
-      "code",
-      "reduced",
-      "paused",
-    );
-    wait.classList.remove("waiting", "glyptide-waiting", "reduced", "paused");
   }
 
   function on(
@@ -1229,6 +1372,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     reject,
     palette,
     updateAppearance,
+    beginStream,
     append,
     applySnapshot,
     finish,
@@ -1239,6 +1383,15 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     },
     get rendered() {
       return rendered;
+    },
+    get session() {
+      return activeSession;
+    },
+    get queueSize() {
+      return ingress.size;
+    },
+    get activeAnimationCount() {
+      return activeAnimations.size;
     },
   };
 }

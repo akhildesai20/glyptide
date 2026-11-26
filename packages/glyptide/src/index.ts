@@ -131,10 +131,18 @@ export {
   normalizeSnapshot,
   applyTextOperation,
   commonPrefixLength,
+  raceAbort,
+  __resetAbortListenerStats,
+  __abortListenerAdds,
+  __abortListenerRemoves,
   type ConsumeTextStreamOptions,
   type StreamMode,
   type TextOperation,
 } from "./stream";
+export {
+  createIncrementalSplitter,
+  type IncrementalSplitter,
+} from "./incremental-split";
 export {
   GlyptideConfigError,
   assertValidPatternId,
@@ -248,7 +256,7 @@ function ensureWaiting(
 ): { el: HTMLElement; owned: boolean } {
   if (waiting) return { el: waiting, owned: false };
   const el = document.createElement("div");
-  el.className = "glyptide-waiting waiting";
+  el.className = "glyptide-waiting";
   el.setAttribute("aria-hidden", "true");
   el.dataset.glyptideOwned = "true";
   parent.insertAdjacentElement("afterend", el);
@@ -263,12 +271,22 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
   validateCreateOptions(options);
 
   const element = options.element;
-  element.classList.add("document", "glyptide-document");
+  /** Classes Glyptide added (never remove host-preexisting classes) */
+  const addedOutClasses: string[] = [];
+  const addOutClass = (name: string) => {
+    if (!element.classList.contains(name)) {
+      element.classList.add(name);
+      addedOutClasses.push(name);
+    }
+  };
+  addOutClass("glyptide-document");
 
   const { el: waiting, owned: ownedWaiting } = ensureWaiting(
     element,
     options.waiting ?? null,
   );
+  const addedWaitClasses: string[] = [];
+  // Host-supplied waiting nodes are not class-mutated here.
   const engine: InternalEngine = makeEngine({
     out: element,
     wait: waiting,
@@ -336,19 +354,25 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
       if (config) validatePartialConfig(config);
       engine.start(resolveConfig({ ...base, ...config }, base, element));
     },
-    append(chunk) {
-      engine.append(chunk);
+    beginStream() {
+      return engine.beginStream();
     },
-    applySnapshot(fullText) {
-      engine.applySnapshot(fullText);
+    append(chunk, session) {
+      engine.append(chunk, session);
     },
-    finish() {
-      engine.finish();
+    applySnapshot(fullText, session) {
+      engine.applySnapshot(fullText, session);
+    },
+    finish(session) {
+      engine.finish(session);
     },
     reset(config) {
       if (config) {
         validatePartialConfig(config);
-        base = { ...base, ...config };
+        const proposed = { ...base, ...config };
+        // Validate resolved shape before mutating base
+        resolveConfig({ text: proposed.text ?? "" }, proposed, element);
+        base = proposed;
       }
       engine.reset(resolveConfig({ text: base.text ?? "" }, base, element));
     },
@@ -359,16 +383,26 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
     reject: () => engine.reject(),
     palette: () => engine.palette(),
     setAppearance(next) {
-      if ("preset" in next) base.preset = next.preset ?? null;
-      if ("palette" in next) base.palette = next.palette ?? null;
-      if ("theme" in next) base.theme = next.theme;
-      if ("colors" in next) base.colors = next.colors ?? null;
-      if ("appearance" in next) base.appearance = next.appearance ?? null;
-      if ("motion" in next) base.motion = next.motion ?? null;
-      const resolved = resolveConfig({ text: base.text ?? "" }, base, element);
-      base.colors = resolved.colors;
-      base.appearance = resolved.appearance;
-      base.motion = resolved.motion;
+      const proposed: Partial<GlyptideConfig> = { ...base };
+      if ("preset" in next) proposed.preset = next.preset ?? null;
+      if ("palette" in next) proposed.palette = next.palette ?? null;
+      if ("theme" in next) proposed.theme = next.theme;
+      if ("colors" in next) proposed.colors = next.colors ?? null;
+      if ("appearance" in next) proposed.appearance = next.appearance ?? null;
+      if ("motion" in next) proposed.motion = next.motion ?? null;
+      validatePartialConfig(proposed);
+      const resolved = resolveConfig(
+        { text: proposed.text ?? base.text ?? "" },
+        proposed,
+        element,
+      );
+      // Atomic apply only after validation + resolve succeed
+      base = {
+        ...proposed,
+        colors: resolved.colors,
+        appearance: resolved.appearance,
+        motion: resolved.motion,
+      };
       engine.updateAppearance({
         colors: resolved.colors,
         preset: resolved.preset,
@@ -389,13 +423,23 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
       }
       engine.destroy();
       if (ownedWaiting) waiting.remove();
-      element.classList.remove("document", "glyptide-document", "code", "reduced");
+      else {
+        for (const name of addedWaitClasses) waiting.classList.remove(name);
+      }
+      for (const name of addedOutClasses) element.classList.remove(name);
+      // Engine may toggle these during playback — only remove if we own the surface class
+      if (addedOutClasses.includes("glyptide-document")) {
+        element.classList.remove("code", "reduced", "paused");
+      }
     },
     get state() {
       return engine.state;
     },
     get rendered() {
       return engine.rendered;
+    },
+    get session() {
+      return engine.session;
     },
   };
 

@@ -294,17 +294,27 @@ export interface CreateGlyptideOptions {
 export interface GlyptideInstance {
   /** Begin simulated generation with the current or provided config */
   start: (config?: Partial<GlyptideConfig>) => void;
-  /** Append text from a real stream (cancels simulator if dual-feed) */
-  append: (chunk: string) => void;
+  /**
+   * Open a new live stream session. Invalidates prior sessions so delayed
+   * chunks from a stopped stream cannot restart generation.
+   * @returns session id to pass to append / applySnapshot / finish
+   */
+  beginStream: () => number;
+  /**
+   * Append text from a real stream (cancels simulator if dual-feed).
+   * Optional `session` rejects stale producers after stop/reset/destroy.
+   * Auto-starts only from Ready/Waiting/Generating — not from Stopped/Complete.
+   */
+  append: (chunk: string, session?: number) => void;
   /**
    * Apply a full accumulated text snapshot.
    * Append-only growth becomes a suffix append; divergent / shrinking /
    * empty snapshots replace rendered content (never append a full rewrite).
    */
-  applySnapshot: (fullText: string) => void;
-  /** Signal that real streaming has finished */
-  finish: () => void;
-  /** Reset surface to ready state */
+  applySnapshot: (fullText: string, session?: number) => void;
+  /** Signal that real streaming has finished for this session */
+  finish: (session?: number) => void;
+  /** Reset surface to ready state (invalidates live sessions) */
   reset: (config?: Partial<GlyptideConfig>) => void;
   pause: () => void;
   resume: () => void;
@@ -324,10 +334,15 @@ export interface GlyptideInstance {
   }) => void;
   /** Subscribe to lifecycle events; returns unsubscribe */
   on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
-  /** Tear down timers, animations, and owned waiting node */
+  /**
+   * Tear down timers, animations, and owned waiting node.
+   * Removes only classes Glyptide added; clears generated content in the target.
+   */
   destroy: () => void;
   readonly state: EngineState;
   readonly rendered: string;
+  /** Active live session id (0 = none) */
+  readonly session: number;
 }
 
 export interface EngineCallbacks {

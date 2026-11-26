@@ -39,33 +39,144 @@ function isAsyncIterable(v: unknown): v is AsyncIterable<unknown> {
   return !!v && typeof (v as AsyncIterable<unknown>)[Symbol.asyncIterator] === "function";
 }
 
+function isSyncIterable(v: unknown): v is Iterable<unknown> {
+  return !!v && typeof (v as Iterable<unknown>)[Symbol.iterator] === "function";
+}
+
 function abortError(): DOMException {
   return new DOMException("Aborted", "AbortError");
 }
 
 /**
- * Reject when `signal` aborts — races against pending reader.read() / iter.next()
- * so cancellation is not stuck waiting forever on a blocked upstream.
+ * Race a promise against AbortSignal with guaranteed listener cleanup.
+ * One listener is attached for the race and removed when either side settles.
  */
-function whenAborted(signal?: AbortSignal): Promise<never> {
-  return new Promise((_, reject) => {
-    if (!signal) return;
-    if (signal.aborted) {
-      reject(abortError());
-      return;
-    }
-    signal.addEventListener("abort", () => reject(abortError()), { once: true });
-  });
-}
-
-async function raceAbort<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> {
+export async function raceAbort<T>(
+  promise: Promise<T>,
+  signal?: AbortSignal,
+): Promise<T> {
   if (!signal) return promise;
   if (signal.aborted) {
-    // Prevent unhandled rejection from the abandoned promise
     void promise.catch(() => undefined);
     throw abortError();
   }
-  return Promise.race([promise, whenAborted(signal)]);
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+    const onAbort = () => {
+      if (settled) return;
+      settled = true;
+      signal.removeEventListener("abort", onAbort);
+      void promise.catch(() => undefined);
+      reject(abortError());
+    };
+    signal.addEventListener("abort", onAbort);
+    promise.then(
+      (value) => {
+        if (settled) return;
+        settled = true;
+        signal.removeEventListener("abort", onAbort);
+        resolve(value);
+      },
+      (err) => {
+        if (settled) return;
+        settled = true;
+        signal.removeEventListener("abort", onAbort);
+        reject(err);
+      },
+    );
+  });
+}
+
+/** Test/instrumentation hook: count addEventListener("abort") calls when set */
+export let __abortListenerAdds = 0;
+export let __abortListenerRemoves = 0;
+export function __resetAbortListenerStats(): void {
+  __abortListenerAdds = 0;
+  __abortListenerRemoves = 0;
+}
+
+function instrumentedAdd(
+  signal: AbortSignal,
+  fn: EventListener,
+  opts?: AddEventListenerOptions,
+): void {
+  __abortListenerAdds += 1;
+  signal.addEventListener("abort", fn, opts);
+}
+
+function instrumentedRemove(signal: AbortSignal, fn: EventListener): void {
+  __abortListenerRemoves += 1;
+  signal.removeEventListener("abort", fn);
+}
+
+/** Instrumented race used by stream consumption (same cleanup guarantees) */
+async function raceAbortTracked<T>(
+  promise: Promise<T>,
+  signal?: AbortSignal,
+): Promise<T> {
+  if (!signal) return promise;
+  if (signal.aborted) {
+    void promise.catch(() => undefined);
+    throw abortError();
+  }
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+    const onAbort = () => {
+      if (settled) return;
+      settled = true;
+      instrumentedRemove(signal, onAbort);
+      void promise.catch(() => undefined);
+      reject(abortError());
+    };
+    instrumentedAdd(signal, onAbort);
+    promise.then(
+      (value) => {
+        if (settled) return;
+        settled = true;
+        instrumentedRemove(signal, onAbort);
+        resolve(value);
+      },
+      (err) => {
+        if (settled) return;
+        settled = true;
+        instrumentedRemove(signal, onAbort);
+        reject(err);
+      },
+    );
+  });
+}
+
+/**
+ * Decode mixed string/Uint8Array streams.
+ * Policy: when switching from binary → string, flush the decoder first so
+ * pending multibyte state is never reordered after a string chunk.
+ */
+function createMixedDecoder() {
+  const dec = new TextDecoder();
+  let binaryOpen = false;
+  return {
+    push(value: string | Uint8Array): string[] {
+      const out: string[] = [];
+      if (typeof value === "string") {
+        if (binaryOpen) {
+          const tail = dec.decode();
+          binaryOpen = false;
+          if (tail) out.push(tail);
+        }
+        out.push(value);
+      } else {
+        binaryOpen = true;
+        const piece = dec.decode(value, { stream: true });
+        if (piece) out.push(piece);
+      }
+      return out;
+    },
+    flush(): string {
+      if (!binaryOpen) return "";
+      binaryOpen = false;
+      return dec.decode();
+    },
+  };
 }
 
 async function* fromReadableStream(
@@ -73,27 +184,30 @@ async function* fromReadableStream(
   signal?: AbortSignal,
 ): AsyncGenerator<string> {
   const reader = stream.getReader();
-  const dec = new TextDecoder();
+  const decoder = createMixedDecoder();
+  let cancelled = false;
   const onAbort = () => {
+    if (cancelled) return;
+    cancelled = true;
     void reader.cancel("aborted").catch(() => undefined);
   };
   if (signal?.aborted) {
     reader.releaseLock();
     throw abortError();
   }
-  signal?.addEventListener("abort", onAbort, { once: true });
+  if (signal) instrumentedAdd(signal, onAbort, { once: true });
   try {
     while (true) {
       if (signal?.aborted) throw abortError();
-      const { done, value } = await raceAbort(reader.read(), signal);
+      const { done, value } = await raceAbortTracked(reader.read(), signal);
       if (done) break;
       if (value == null) continue;
-      yield typeof value === "string" ? value : dec.decode(value, { stream: true });
+      for (const piece of decoder.push(value)) yield piece;
     }
-    const tail = dec.decode();
+    const tail = decoder.flush();
     if (tail) yield tail;
   } finally {
-    signal?.removeEventListener("abort", onAbort);
+    if (signal) instrumentedRemove(signal, onAbort);
     try {
       reader.releaseLock();
     } catch {
@@ -104,23 +218,19 @@ async function* fromReadableStream(
 
 /**
  * Normalize common text stream shapes into an async iterable of string pieces.
- * Uses one persistent TextDecoder for the lifetime of a binary stream.
- *
- * AbortSignal races pending reads. For async iterables, `iterator.return()` is
- * requested cooperatively — non-cooperative upstreams may keep running, but
- * Glyptide stops awaiting them and ignores subsequent values.
+ * Empty strings are preserved (required for snapshot deletion).
  */
 export async function* iterateTextStream(
   source:
     | string
     | AsyncIterable<string | Uint8Array>
     | ReadableStream<string | Uint8Array>
-    | Iterable<string>,
+    | Iterable<string | Uint8Array>,
   signal?: AbortSignal,
 ): AsyncGenerator<string> {
   if (signal?.aborted) throw abortError();
   if (typeof source === "string") {
-    if (source) yield source;
+    yield source;
     return;
   }
   if (isReadableStream(source)) {
@@ -128,42 +238,66 @@ export async function* iterateTextStream(
     return;
   }
   if (isAsyncIterable(source)) {
-    const dec = new TextDecoder();
+    const decoder = createMixedDecoder();
     const iter = source[Symbol.asyncIterator]();
-    const onAbort = () => {
+    let returned = false;
+    const returnOnce = () => {
+      if (returned) return;
+      returned = true;
       void Promise.resolve(iter.return?.("aborted")).catch(() => undefined);
     };
-    signal?.addEventListener("abort", onAbort, { once: true });
+    const onAbort = () => returnOnce();
+    if (signal) instrumentedAdd(signal, onAbort, { once: true });
     try {
       while (true) {
         if (signal?.aborted) throw abortError();
-        const next = raceAbort(iter.next(), signal);
         let result: IteratorResult<unknown>;
         try {
-          result = await next;
+          result = await raceAbortTracked(iter.next(), signal);
         } catch (err) {
-          void Promise.resolve(iter.return?.("aborted")).catch(() => undefined);
+          returnOnce();
           throw err;
         }
         const { done, value } = result;
         if (done) break;
         if (value == null) continue;
-        if (typeof value === "string") yield value;
-        else yield dec.decode(value as Uint8Array, { stream: true });
+        if (typeof value !== "string" && !(value instanceof Uint8Array)) {
+          throw new TypeError(
+            `Unsupported stream chunk type: ${Object.prototype.toString.call(value)}`,
+          );
+        }
+        for (const piece of decoder.push(value as string | Uint8Array)) {
+          yield piece;
+        }
       }
-      const tail = dec.decode();
+      const tail = decoder.flush();
       if (tail) yield tail;
     } finally {
-      signal?.removeEventListener("abort", onAbort);
+      if (signal) instrumentedRemove(signal, onAbort);
     }
     return;
   }
-  if (typeof (source as Iterable<string>)[Symbol.iterator] === "function") {
-    for (const part of source as Iterable<string>) {
+  if (isSyncIterable(source)) {
+    const decoder = createMixedDecoder();
+    for (const part of source) {
       if (signal?.aborted) throw abortError();
-      if (part) yield part;
+      if (part == null) continue;
+      if (typeof part !== "string" && !(part instanceof Uint8Array)) {
+        throw new TypeError(
+          `Unsupported stream chunk type: ${Object.prototype.toString.call(part)}`,
+        );
+      }
+      for (const piece of decoder.push(part as string | Uint8Array)) {
+        yield piece;
+      }
     }
+    const tail = decoder.flush();
+    if (tail) yield tail;
+    return;
   }
+  throw new TypeError(
+    "Unsupported stream source. Expected string, Iterable, AsyncIterable, or ReadableStream.",
+  );
 }
 
 function emitOp(op: TextOperation, options: ConsumeTextStreamOptions): void {
@@ -179,6 +313,7 @@ function emitOp(op: TextOperation, options: ConsumeTextStreamOptions): void {
 /**
  * Consume a stream and emit normalized append/replace operations.
  * Divergent snapshots never become append deltas.
+ * Upstream failures call onError and rethrow — never onDone / success.
  */
 export async function consumeTextStream(
   source: Parameters<typeof iterateTextStream>[0],
@@ -211,8 +346,7 @@ export async function consumeTextStream(
 
 /**
  * Pipe a text stream into a Glyptide instance.
- * Snapshot mode always feeds absolute text through applySnapshot so divergent
- * / shrinking snapshots replace rather than appending onto a stale buffer.
+ * Opens a generation session so delayed chunks after stop/reset are ignored.
  */
 export async function pipeTextToGlyptide(
   instance: GlyptideInstance,
@@ -221,6 +355,7 @@ export async function pipeTextToGlyptide(
 ): Promise<string> {
   const mode = options.mode ?? "delta";
   const signal = options.signal;
+  const session = instance.beginStream();
   const onAbort = () => {
     try {
       instance.stop();
@@ -232,7 +367,7 @@ export async function pipeTextToGlyptide(
     onAbort();
     throw abortError();
   }
-  signal?.addEventListener("abort", onAbort, { once: true });
+  if (signal) instrumentedAdd(signal, onAbort, { once: true });
   try {
     let absolute = "";
     const text = await consumeTextStream(source, {
@@ -244,11 +379,11 @@ export async function pipeTextToGlyptide(
         absolute = applyTextOperation(absolute, op);
         if (op.type !== "noop") {
           if (mode === "snapshot") {
-            instance.applySnapshot(absolute);
+            instance.applySnapshot(absolute, session);
           } else if (op.type === "append" && op.text) {
-            instance.append(op.text);
+            instance.append(op.text, session);
           } else if (op.type === "replace") {
-            instance.applySnapshot(op.text);
+            instance.applySnapshot(op.text, session);
           }
         }
         options.onOperation?.(op);
@@ -256,9 +391,19 @@ export async function pipeTextToGlyptide(
       onChunk: options.onChunk,
       onReplace: options.onReplace,
     });
-    if (!signal?.aborted) instance.finish();
+    if (!signal?.aborted) instance.finish(session);
     return text;
+  } catch (err) {
+    // Failure: stop this session without emitting successful settlement
+    try {
+      if (instance.state !== "Stopped" && instance.state !== "Complete") {
+        instance.stop();
+      }
+    } catch {
+      /* destroyed */
+    }
+    throw err;
   } finally {
-    signal?.removeEventListener("abort", onAbort);
+    if (signal) instrumentedRemove(signal, onAbort);
   }
 }
