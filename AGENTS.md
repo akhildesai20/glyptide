@@ -46,9 +46,12 @@ npm run test:clean-room      # pack + import smoke (no publish)
 
 - Prefer `createGlyptide({ pattern: "<id>" })` over hand-rolled animation.
 - **Unknown pattern ids throw** (`GlyptideConfigError`) — never silently substitute another pattern.
-- Real streams: `append` / `applySnapshot` / `finish` or `pipeTextToGlyptide` with `mode: "delta" | "snapshot"`.
+- Real streams: `beginStream()` → `append` / `applySnapshot` / `finish` (session id), or `pipeTextToGlyptide` with `mode: "delta" | "snapshot"`.
+- After `stop` / `Complete`, delayed chunks must not restart generation — open a new session.
 - Snapshots: divergent / shrinking / empty → **replace** (never append a full rewrite). See `docs/streaming.md`.
+- Catch-up: `pace` | `catchUp` | `flush` — paced drain continues during upstream pauses.
 - Subscribe with `g.on("settled" | "stream-end" | "review" | …, handler)`; pass the **same** `AbortSignal` to Glyptide and the model request.
+- CSS: `.glyptide-document` / `.glyptide-waiting` only — do not rely on bare `.document` / `.waiting`.
 - Optional `motion: { preset: "natural" | "quiet" | … }`, `waitingThresholdMs`, `catchUp`.
 - Lightweight entry: `import { makeEngine } from "glyptide/engine"` (no registry JSON).
 - Use `recommendPatterns({ useCase })` for deterministic suggestions (no LLM).

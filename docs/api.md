@@ -49,9 +49,10 @@ Invalid `pattern`, `preset`, `theme`, numeric ranges, or hex colors throw `Glypt
 | Method | Description |
 |--------|-------------|
 | `start(config?)` | Begin simulated generation. |
-| `append(chunk)` | Append text from a real stream (cancels simulator if dual-feed). |
-| `applySnapshot(fullText)` | Absolute snapshot: append suffix on growth; **replace** on divergent / shrink / empty (never append a full rewrite). |
-| `finish()` | Signal source completion (`stream-end`), flush ingress, then settle or enter review. |
+| `beginStream()` | Open a live session; invalidates prior sessions. Required after stop/complete before new appends. |
+| `append(chunk, session?)` | Append delta text. Stale sessions are ignored; will not auto-restart from Stopped/Complete. |
+| `applySnapshot(fullText, session?)` | Absolute snapshot: append suffix on growth; **replace** on divergent / shrink / empty. |
+| `finish(session?)` | Signal source completion (`stream-end`), drain remaining units per catch-up policy, then settle or review. |
 | `reset(config?)` | Restore ready state. |
 | `pause()` / `resume()` | Pause and resume simulation. |
 | `stop()` | Cancel; preserve original or partial text by case. |
