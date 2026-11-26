@@ -1,3 +1,4 @@
+import { isCodeSurfacePattern } from "./pattern-flags";
 import type {
   AppearanceCapabilities,
   AppearanceColorMode,
@@ -42,13 +43,15 @@ export function appearanceCapabilities(
   effect: Effect,
   caseId: CaseId,
   patternName?: string,
+  patternId?: string,
 ): AppearanceCapabilities {
   const dedicated = DEDICATED_GRADIENT[effect];
   const semantic = SEMANTIC_EFFECTS.has(effect);
   const isCode =
     caseId === "structured" &&
-    !!patternName &&
-    /^(Code|Buffered code|Data|Buffered data)/.test(patternName);
+    (isCodeSurfacePattern(patternId, patternName) ||
+      (!!patternName &&
+        /^(Code|Buffered code|Data|Buffered data)/.test(patternName)));
 
   // Opacity-only / cursor / skeleton: appearance optional
   const motionOnly = [
@@ -100,8 +103,9 @@ export function defaultAppearanceConfig(
   effect: Effect,
   caseId: CaseId,
   patternName?: string,
+  patternId?: string,
 ): AppearanceConfig {
-  const caps = appearanceCapabilities(effect, caseId, patternName);
+  const caps = appearanceCapabilities(effect, caseId, patternName, patternId);
   const dedicated = DEDICATED_GRADIENT[effect];
   return {
     colorMode: dedicated ? "gradient" : "default",

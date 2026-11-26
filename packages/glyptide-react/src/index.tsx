@@ -3,8 +3,11 @@ import {
   type AppearanceConfig,
   type CreateGlyptideOptions,
   type EngineState,
+  type GlyptideEvent,
+  type GlyptideEventHandler,
   type GlyptideInstance,
   type GenerationColors,
+  type MotionConfig,
   type ThemeAwarePalette,
   type ThemePreference,
 } from "glyptide";
@@ -28,8 +31,11 @@ export interface GlyptideProps extends Omit<HTMLAttributes<HTMLDivElement>, "chi
   palette?: ThemeAwarePalette | null;
   theme?: ThemePreference;
   appearance?: AppearanceConfig | null;
+  motion?: MotionConfig | null;
   autoPlay?: boolean;
+  signal?: AbortSignal;
   onStatus?: (state: EngineState) => void;
+  onEvent?: GlyptideEventHandler;
 }
 
 export interface GlyptideHandle {
@@ -38,15 +44,24 @@ export interface GlyptideHandle {
   stop: () => void;
   pause: () => void;
   resume: () => void;
+  reset: () => void;
   accept: () => void;
   reject: () => void;
   append: (chunk: string) => void;
+  applySnapshot: (fullText: string) => void;
   finish: () => void;
+  setAppearance: GlyptideInstance["setAppearance"];
+  on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;
+  readonly state: EngineState | null;
+  readonly rendered: string;
 }
 
 /**
  * React wrapper around createGlyptide.
  * Import `glyptide/styles.css` once in your app.
+ *
+ * Strict Mode safe: effect cleanup destroys the instance; a dedicated waiting
+ * element is owned by this component (never shared via parent queries).
  */
 export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
   function Glyptide(
@@ -62,8 +77,11 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
       palette,
       theme,
       appearance,
+      motion,
       autoPlay = false,
+      signal,
       onStatus,
+      onEvent,
       className,
       ...rest
     },
@@ -72,6 +90,26 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
     const outRef = useRef<HTMLDivElement>(null);
     const waitRef = useRef<HTMLDivElement>(null);
     const instanceRef = useRef<GlyptideInstance | null>(null);
+    const propsRef = useRef({
+      text,
+      source,
+      appearance,
+      speed,
+      latency,
+      motion,
+      onStatus,
+      onEvent,
+    });
+    propsRef.current = {
+      text,
+      source,
+      appearance,
+      speed,
+      latency,
+      motion,
+      onStatus,
+      onEvent,
+    };
 
     useEffect(() => {
       if (!outRef.current || !waitRef.current) return;
@@ -87,11 +125,15 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
         preset,
         palette,
         theme,
-        onStatus,
+        motion,
+        signal,
+        onStatus: (s) => propsRef.current.onStatus?.(s),
+        onEvent: (e, d) => propsRef.current.onEvent?.(e, d),
         config: {
           source,
           text,
           appearance: appearance ?? undefined,
+          motion: motion ?? undefined,
         },
       };
 
@@ -99,16 +141,21 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
       instanceRef.current = instance;
 
       if (autoPlay && text) {
-        instance.start({ text, source, appearance: appearance ?? undefined });
+        instance.start({
+          text,
+          source,
+          appearance: appearance ?? undefined,
+          motion: motion ?? undefined,
+        });
       }
 
       return () => {
         instance.destroy();
         instanceRef.current = null;
       };
-      // Re-create when pattern identity changes; appearance updates via setAppearance
+      // Re-create when pattern / signal identity changes; other props update hot
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pattern]);
+    }, [pattern, signal]);
 
     useEffect(() => {
       instanceRef.current?.setAppearance({
@@ -117,33 +164,59 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
         theme,
         colors,
         appearance: appearance ?? null,
+        motion: motion ?? null,
       });
-    }, [preset, palette, theme, colors, appearance]);
+    }, [preset, palette, theme, colors, appearance, motion]);
 
     useImperativeHandle(ref, () => ({
       get instance() {
         return instanceRef.current;
       },
       start(nextText) {
+        const p = propsRef.current;
         instanceRef.current?.start({
-          text: nextText ?? text ?? "",
-          source,
-          appearance: appearance ?? undefined,
+          text: nextText ?? p.text ?? "",
+          source: p.source,
+          appearance: p.appearance ?? undefined,
+          motion: p.motion ?? undefined,
         });
       },
       stop: () => instanceRef.current?.stop(),
       pause: () => instanceRef.current?.pause(),
       resume: () => instanceRef.current?.resume(),
+      reset: () => {
+        const p = propsRef.current;
+        instanceRef.current?.reset({
+          text: p.text ?? "",
+          source: p.source,
+          appearance: p.appearance ?? undefined,
+          motion: p.motion ?? undefined,
+        });
+      },
       accept: () => instanceRef.current?.accept(),
       reject: () => instanceRef.current?.reject(),
       append: (chunk) => instanceRef.current?.append(chunk),
+      applySnapshot: (full) => instanceRef.current?.applySnapshot(full),
       finish: () => instanceRef.current?.finish(),
+      setAppearance: (opts) => instanceRef.current?.setAppearance(opts),
+      on: (event, handler) =>
+        instanceRef.current?.on(event, handler) ?? (() => {}),
+      get state() {
+        return instanceRef.current?.state ?? null;
+      },
+      get rendered() {
+        return instanceRef.current?.rendered ?? "";
+      },
     }));
 
     return (
       <div className={className} {...rest}>
         <div ref={outRef} className="document glyptide-document" />
-        <div ref={waitRef} className="waiting glyptide-waiting" />
+        <div
+          ref={waitRef}
+          className="waiting glyptide-waiting"
+          aria-hidden="true"
+        />
       </div>
     );
   },
@@ -153,7 +226,9 @@ export { createGlyptide } from "glyptide";
 export type {
   AppearanceConfig,
   EngineState,
-  GenerationColors,
+  GlyptideEvent,
+  GlyptideEventHandler,
   GlyptideInstance,
-  ThemeAwarePalette,
+  GenerationColors,
+  ThemePreference,
 };

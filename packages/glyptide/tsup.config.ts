@@ -6,6 +6,7 @@ export default defineConfig([
       index: "src/index.ts",
       patterns: "src/patterns.ts",
       presets: "src/presets.ts",
+      engine: "src/engine-entry.ts",
     },
     format: ["esm", "cjs"],
     dts: true,

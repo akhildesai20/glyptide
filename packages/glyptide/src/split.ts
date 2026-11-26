@@ -8,7 +8,9 @@ type IntlWithSegmenter = typeof Intl & {
   Segmenter?: new (
     locales?: string | string[],
     options?: { granularity?: "grapheme" | "word" | "sentence" },
-  ) => SegmenterLike;
+  ) => SegmenterLike & {
+    segment: (input: string) => Iterable<{ segment: string; isWordLike?: boolean }>;
+  };
 };
 
 function getSegmenter(
@@ -45,7 +47,31 @@ export function splitText(text: string, kind: BufferKind): string[] {
     return text.match(/[^.!?]+(?:[.!?]+\s*|$)|[.!?]+/g) || [];
   }
 
-  const words = text.match(/\S+\s*|\s+/g) || [];
+  // Prefer Intl word segmentation for CJK / scripts without spaces
+  const wordSegmenter = (() => {
+    const IntlRef = Intl as IntlWithSegmenter;
+    if (typeof Intl === "undefined" || typeof IntlRef.Segmenter !== "function") {
+      return null;
+    }
+    try {
+      return new IntlRef.Segmenter(undefined, { granularity: "word" });
+    } catch {
+      return null;
+    }
+  })();
+
+  const words = (() => {
+    if (!wordSegmenter) return text.match(/\S+\s*|\s+/g) || [];
+    const segs = Array.from(wordSegmenter.segment(text), (x) => x.segment);
+    const out: string[] = [];
+    for (const s of segs) {
+      if (!s) continue;
+      // Coalesce whitespace onto previous unit (Latin UX + CJK-safe words)
+      if (/^\s+$/.test(s) && out.length) out[out.length - 1] += s;
+      else out.push(s);
+    }
+    return out.length ? out : [text];
+  })();
   if (kind === "word") return words;
 
   if (kind === "token") {
