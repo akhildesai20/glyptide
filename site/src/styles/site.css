@@ -345,7 +345,7 @@
   flex: 1;
 }
 
-.stage .document {
+.stage .glyptide-document {
   font-size: var(--text-lg);
   line-height: 1.76;
   max-width: 66ch;
@@ -991,7 +991,7 @@ html[data-theme="dark"] .preset-popover {
 }
 
 .controls textarea[dir="rtl"],
-.stage .document[dir="rtl"] {
+.stage .glyptide-document[dir="rtl"] {
   text-align: right;
 }
 
@@ -1136,12 +1136,12 @@ html[data-theme="dark"] .preset-popover {
   padding: 14px;
 }
 
-.mini .document {
+.mini .glyptide-document {
   font-size: 14px;
   line-height: 1.7;
 }
 
-.mini .document.code {
+.mini .glyptide-document.code {
   font-size: 11px;
 }
 
@@ -1307,7 +1307,7 @@ html[data-theme="dark"] .preset-popover {
     padding: var(--space-5);
   }
 
-  .stage .document {
+  .stage .glyptide-document {
     font-size: var(--text-md);
   }
 

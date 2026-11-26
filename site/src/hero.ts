@@ -47,7 +47,7 @@ export function initHero(
   sentenceEl: HTMLElement,
   pauseBtn: HTMLButtonElement,
 ): void {
-  sentenceEl.classList.add("document", "glyptide-document", "hero-sentence");
+  sentenceEl.classList.add("glyptide-document", "hero-sentence");
 
   const wait = document.createElement("div");
   wait.className = "waiting glyptide-waiting";

@@ -1,7 +1,6 @@
 /* Glyptide document surface — theme-independent generation styles */
 
-.glyptide-document,
-.document {
+.glyptide-document {
   --gen: var(--glyptide-gen, var(--added, #135b32));
   --hilite: var(--glyptide-hilite, var(--tint, #d6efdd));
   --grad2: var(--glyptide-grad2, #7852ad);
@@ -13,15 +12,13 @@
   line-height: 1.76;
 }
 
-.glyptide-document.code,
-.document.code {
+.glyptide-document.code {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 0.85em;
   line-height: 1.75;
 }
 
-.glyptide-document .selected,
-.document .selected {
+.glyptide-document .selected{
   background: var(--selection, #dbe8ff);
   border-radius: 3px;
   box-decoration-break: clone;
@@ -29,23 +26,20 @@
   padding: 1px 0;
 }
 
-.glyptide-document .newmark,
-.document .newmark {
+.glyptide-document .newmark{
   background: var(--hilite);
   border-radius: 3px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .ghost,
-.document .ghost {
+.glyptide-document .ghost{
   color: var(--muted, #737373);
   text-decoration: underline dotted;
   text-underline-offset: 4px;
 }
 
-.glyptide-document .oldstrike,
-.document .oldstrike {
+.glyptide-document .oldstrike{
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
   color: var(--removed, #a12228);
@@ -55,9 +49,7 @@
 }
 
 .glyptide-document .proposed,
-.glyptide-document .added,
-.document .proposed,
-.document .added {
+.glyptide-document .added{
   color: var(--gen);
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -67,20 +59,17 @@
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .ink,
-.document .ink {
+.glyptide-document .ink{
   color: var(--gen);
 }
 
-.glyptide-document .underlined,
-.document .underlined {
+.glyptide-document .underlined{
   text-decoration: underline;
   text-decoration-color: var(--gen);
   text-underline-offset: 4px;
 }
 
-.glyptide-document .piece,
-.document .piece {
+.glyptide-document .glyptide-piece, .glyptide-document .piece{
   display: inline;
   white-space: inherit;
   overflow-wrap: inherit;
@@ -88,14 +77,12 @@
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .piece.motion-block,
-.document .piece.motion-block {
+.glyptide-document .glyptide-piece.motion-block, .glyptide-document .piece.motion-block{
   display: inline;
   white-space: inherit;
 }
 
-.glyptide-document .caret,
-.document .caret {
+.glyptide-document .caret{
   display: inline-block;
   width: 2px;
   height: 1em;
@@ -106,20 +93,17 @@
   animation: none;
 }
 
-.glyptide-document .caret:not(.cursorsteady),
-.document .caret:not(.cursorsteady) {
+.glyptide-document .caret:not(.cursorsteady){
   animation: glyptide-blink 1s step-end infinite;
 }
 
-.glyptide-document .inlinewait,
-.document .inlinewait {
+.glyptide-document .inlinewait{
   color: var(--gen, var(--accent, #17633c));
   font-size: 0.85em;
   white-space: normal;
 }
 
-.glyptide-document .blockwait,
-.document .blockwait {
+.glyptide-document .blockwait{
   display: block;
   background: var(--hilite);
   border-radius: 6px;
@@ -129,13 +113,11 @@
   animation: glyptide-breath 1.8s ease-in-out infinite;
 }
 
-.glyptide-document .revision,
-.document .revision {
+.glyptide-document .revision{
   display: inline;
 }
 
-.glyptide-document .reviewblock,
-.document .reviewblock {
+.glyptide-document .reviewblock{
   display: block;
   border-left: 2px solid var(--gen, var(--accent, #17633c));
   padding: 8px 0 8px 13px;
@@ -143,20 +125,17 @@
   border-radius: 0 6px 6px 0;
 }
 
-.glyptide-document .reviewblock.stale,
-.document .reviewblock.stale {
+.glyptide-document .reviewblock.stale{
   border-color: var(--removed, #a12228);
   color: var(--removed, #a12228);
   text-decoration: line-through;
 }
 
-.glyptide-document .reviewblock.proposed,
-.document .reviewblock.proposed {
+.glyptide-document .reviewblock.proposed{
   color: var(--gen);
 }
 
-.glyptide-document .stale:not(.reviewblock),
-.document .stale:not(.reviewblock) {
+.glyptide-document .stale:not(.reviewblock){
   color: var(--muted, #737373);
   background: color-mix(in srgb, var(--selection, #dbe8ff) 40%, transparent);
   box-decoration-break: clone;
@@ -164,9 +143,7 @@
 }
 
 .glyptide-document .gapmark,
-.glyptide-document .placeholder,
-.document .gapmark,
-.document .placeholder {
+.glyptide-document .placeholder{
   background: var(--hilite);
   color: var(--gen);
   border-radius: 3px;
@@ -174,57 +151,49 @@
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .gapmark,
-.document .gapmark {
+.glyptide-document .gapmark{
   text-decoration: underline dotted;
   text-underline-offset: 3px;
 }
 
-.glyptide-document .changebar,
-.document .changebar {
+.glyptide-document .changebar{
   border-left: 2px solid var(--gen, var(--accent, #17633c));
   padding-left: 6px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .checkpoint,
-.document .checkpoint {
+.glyptide-document .checkpoint{
   color: var(--gen, var(--accent, #17633c));
   font-size: 0.75em;
   margin-left: 4px;
 }
 
-.glyptide-document .pending-target,
-.document .pending-target {
+.glyptide-document .pending-target{
   background: var(--selection, #dbe8ff);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   border-radius: 3px;
 }
 
-.glyptide-document .diff-kept,
-.document .diff-kept {
+.glyptide-document .diff-kept{
   color: inherit;
 }
 
-.glyptide-document .diff-removed,
-.document .diff-removed {
+.glyptide-document .diff-removed{
   color: var(--removed, #a12228);
   text-decoration: line-through;
   background: color-mix(in srgb, var(--removed, #a12228) 9%, transparent);
 }
 
-.glyptide-document .diff-added,
-.document .diff-added {
+.glyptide-document .diff-added{
   color: var(--gen);
   text-decoration: underline;
   text-underline-offset: 3px;
   background: var(--hilite);
 }
 
-.glyptide-document .ink-range,
-.document .ink-range {
+.glyptide-document .ink-range{
   color: var(--gen);
   background: var(--hilite);
   box-decoration-break: clone;
@@ -236,8 +205,7 @@
   text-underline-offset: 4px;
 }
 
-.glyptide-document .visual-guide,
-.document .visual-guide {
+.glyptide-document .visual-guide{
   position: absolute;
   pointer-events: none;
   height: 2px;
@@ -248,8 +216,7 @@
   z-index: 1;
 }
 
-.glyptide-document .piece.active-guide,
-.document .piece.active-guide {
+.glyptide-document .glyptide-piece.active-guide, .glyptide-document .piece.active-guide{
   background: var(--hilite);
   text-decoration: underline;
   text-decoration-color: var(--gen);
@@ -260,39 +227,33 @@
   border-radius: 3px;
 }
 
-.glyptide-document .piece.checkpoint-active,
-.glyptide-document .piece.row-accent,
-.document .piece.checkpoint-active,
-.document .piece.row-accent {
+.glyptide-document .glyptide-piece.checkpoint-active, .glyptide-document .piece.checkpoint-active,
+.glyptide-document .glyptide-piece.row-accent, .glyptide-document .piece.row-accent{
   background: var(--hilite);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   border-radius: 3px;
 }
 
-.glyptide-document .piece.row-focus,
-.document .piece.row-focus {
+.glyptide-document .glyptide-piece.row-focus, .glyptide-document .piece.row-focus{
   color: var(--gen);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
 @supports not (background-clip: text) {
-  .glyptide-document .grad-ink,
-  .document .grad-ink {
+  .glyptide-document .grad-ink{
     color: var(--gen) !important;
     background: none !important;
   }
 }
 
 /* Solid appearance treatments (decoupled from pattern motion) */
-.glyptide-document .appear-ink,
-.document .appear-ink {
+.glyptide-document .appear-ink{
   color: var(--gen);
 }
 
-.glyptide-document .appear-highlight,
-.document .appear-highlight {
+.glyptide-document .appear-highlight{
   background: color-mix(
     in srgb,
     var(--glyptide-highlight, var(--hilite))
@@ -304,8 +265,7 @@
   -webkit-box-decoration-break: clone;
 }
 
-.glyptide-document .appear-glow,
-.document .appear-glow {
+.glyptide-document .appear-glow{
   text-shadow:
     0 0 calc(10px * var(--appear-intensity, 1))
       color-mix(in srgb, var(--glyptide-gradient-middle, var(--grad2)) 40%, transparent),
@@ -313,13 +273,11 @@
       color-mix(in srgb, var(--glyptide-gradient-start, var(--gen)) 25%, transparent);
 }
 
-.glyptide-document .appear-underline,
-.document .appear-underline {
+.glyptide-document .appear-underline{
   text-decoration-color: var(--gen);
 }
 
-.glyptide-document .grad-ink,
-.document .grad-ink {
+.glyptide-document .grad-ink{
   /* Fallback */
   background: linear-gradient(
     var(--appear-angle, 105deg),
@@ -337,8 +295,7 @@
 }
 
 @supports (background: linear-gradient(in oklab, red, blue)) {
-  .glyptide-document .grad-ink,
-  .document .grad-ink {
+  .glyptide-document .grad-ink{
     background: linear-gradient(
       var(--appear-angle, 110deg) in oklab,
       var(--glyptide-gradient-start, var(--gen)) 8%,
@@ -352,8 +309,7 @@
   }
 }
 
-.glyptide-document .grad-highlight,
-.document .grad-highlight {
+.glyptide-document .grad-highlight{
   background: linear-gradient(
     100deg,
     transparent 5%,
@@ -368,8 +324,7 @@
 }
 
 @supports (background: linear-gradient(in oklab, red, blue)) {
-  .glyptide-document .grad-highlight,
-  .document .grad-highlight {
+  .glyptide-document .grad-highlight{
     background: linear-gradient(
       100deg in oklab,
       transparent 5%,
@@ -381,8 +336,7 @@
   }
 }
 
-.glyptide-document .grad-glow,
-.document .grad-glow {
+.glyptide-document .grad-glow{
   background: linear-gradient(
     105deg,
     transparent,
@@ -399,8 +353,7 @@
     0 0 5px color-mix(in srgb, var(--glyptide-gradient-start, var(--gen)) 25%, transparent);
 }
 
-.glyptide-document .grad-underline,
-.document .grad-underline {
+.glyptide-document .grad-underline{
   background-image: linear-gradient(
     90deg,
     var(--glyptide-gradient-start, var(--gen)),
@@ -417,8 +370,7 @@
 }
 
 @supports (background: linear-gradient(in oklab, red, blue)) {
-  .glyptide-document .grad-underline,
-  .document .grad-underline {
+  .glyptide-document .grad-underline{
     background-image: linear-gradient(
       90deg in oklab,
       var(--glyptide-gradient-start, var(--gen)),
@@ -432,8 +384,7 @@
   }
 }
 
-.glyptide-waiting,
-.waiting {
+.glyptide-waiting {
   --gen: var(--glyptide-gen, var(--added, #135b32));
   color: var(--muted, #737373);
   font-size: 12px;
@@ -445,18 +396,15 @@
   letter-spacing: 0.005em;
 }
 
-.glyptide-waiting:empty,
-.waiting:empty {
+.glyptide-waiting:empty {
   visibility: hidden;
 }
 
-.waiting .dots,
 .glyptide-waiting .dots {
   display: inline-flex;
   gap: 3px;
 }
 
-.waiting .dots i,
 .glyptide-waiting .dots i {
   width: 5px;
   height: 5px;
@@ -465,17 +413,14 @@
   animation: glyptide-breath 1.2s ease-in-out infinite;
 }
 
-.waiting .dots i:nth-child(2),
 .glyptide-waiting .dots i:nth-child(2) {
   animation-delay: 0.15s;
 }
 
-.waiting .dots i:nth-child(3),
 .glyptide-waiting .dots i:nth-child(3) {
   animation-delay: 0.3s;
 }
 
-.waiting .shimmer-label,
 .glyptide-waiting .shimmer-label {
   background: linear-gradient(
     100deg,
@@ -490,12 +435,14 @@
   animation: glyptide-label-sweep 1.7s linear infinite;
 }
 
-.paused * {
+.glyptide-document.paused *,
+.glyptide-waiting.paused * {
   animation-play-state: paused !important;
 }
 
-.reduced *,
-.reduced .shimmer-label {
+.glyptide-document.reduced *,
+.glyptide-waiting.reduced *,
+.glyptide-waiting.reduced .shimmer-label {
   animation: none !important;
 }
 
@@ -526,17 +473,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .glyptide-document .caret,
-  .document .caret,
-  .glyptide-document .blockwait,
-  .document .blockwait,
-  .waiting .dots i,
-  .glyptide-waiting .dots i,
-  .waiting .shimmer-label,
+  .glyptide-document .blockwait .dots i,
+  .glyptide-waiting .dots i .shimmer-label,
   .glyptide-waiting .shimmer-label {
     animation: none !important;
   }
 
-  .waiting .shimmer-label,
+  .glyptide-waiting .shimmer-label,
   .glyptide-waiting .shimmer-label {
     color: var(--muted, #737373);
   }

@@ -102,8 +102,8 @@ pre.palette{font:11px/1.45 ui-monospace,monospace;background:var(--page);border:
 <body>
 <main>
   <p id="status" role="status">Ready</p>
-  <div class="document glyptide-document" id="out"></div>
-  <div class="waiting glyptide-waiting" id="wait"></div>
+  <div class="glyptide-document" id="out"></div>
+  <div class="glyptide-waiting" id="wait"></div>
   <div class="toolbar">
     <button type="button" id="go">Generate</button>
     <button type="button" id="pause">Pause</button>

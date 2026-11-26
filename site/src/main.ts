@@ -216,10 +216,15 @@ function updateAppearanceVisibility(): void {
   appearance.syncEffect();
 }
 
-function setCase(i: number): void {
+function setCase(i: number, patternIndex?: number): void {
   currentCase = i;
   structuredFilter = "All";
-  selectedPattern = i === 0 ? 1 : 0;
+  selectedPattern =
+    patternIndex != null && patternIndex >= 0
+      ? patternIndex
+      : i === 0
+        ? 1
+        : 0;
   const c = cases[i];
   [...$("caseTabs").children].forEach((b, j) => {
     b.setAttribute("aria-selected", String(j === i));
@@ -341,8 +346,8 @@ function renderCards(): void {
         <span class="mono"></span>
       </div>
       <div class="mini glyptide-stage" tabindex="0" aria-label="Pattern preview">
-        <div class="document glyptide-document"></div>
-        <div class="waiting glyptide-waiting"></div>
+        <div class="glyptide-document"></div>
+        <div class="glyptide-waiting"></div>
       </div>
       <p class="carddesc"></p>
       <div class="cardfoot">
@@ -363,8 +368,8 @@ function renderCards(): void {
     article.querySelector(".carddesc")!.textContent = p.description;
     (article.querySelector(".cardfoot .mono") as HTMLElement).textContent = p.kind;
 
-    const out = article.querySelector(".document") as HTMLElement;
-    const wait = article.querySelector(".waiting") as HTMLElement;
+    const out = article.querySelector(".glyptide-document") as HTMLElement;
+    const wait = article.querySelector(".glyptide-waiting") as HTMLElement;
     const replay = article.querySelector(".replay") as HTMLButtonElement;
 
     const engine = makeEngine({
@@ -624,16 +629,15 @@ document.addEventListener("keydown", (e) => {
   }
 };
 
-/* Deep link */
+/* Deep link — apply case + pattern atomically (setCase alone would reset pattern) */
 const params = readPlaygroundParams();
 if (params.case) {
   const idx = cases.findIndex((c) => c.id === params.case);
   if (idx >= 0) {
-    setCase(idx);
-    if (params.pattern) {
-      const pi = casePatterns(idx).findIndex((p) => p.id === params.pattern);
-      if (pi >= 0) choose(pi);
-    }
+    const pi = params.pattern
+      ? casePatterns(idx).findIndex((p) => p.id === params.pattern)
+      : -1;
+    setCase(idx, pi >= 0 ? pi : undefined);
   } else setCase(0);
 } else {
   setCase(0);
@@ -642,10 +646,6 @@ if (params.case) {
 if (params.speed) speed.value = params.speed;
 if (params.latency) latency.value = params.latency;
 if (params.scenario) ($("scenario") as HTMLSelectElement).value = params.scenario;
-if (params.motion) {
-  const motionEl = document.getElementById("motionPreset") as HTMLSelectElement | null;
-  if (motionEl) motionEl.value = params.motion;
-}
 syncSpeed();
 syncLatency();
 
@@ -746,9 +746,15 @@ function syncReduceHint(): void {
 }
 
 motionPresetEl?.addEventListener("change", syncMotionHint);
+motionPresetEl?.addEventListener("input", syncMotionHint);
 ($("reduce") as HTMLInputElement).addEventListener("change", syncReduceHint);
 syncMotionHint();
 syncReduceHint();
+// Apply motion from URL after listeners exist
+if (params.motion && motionPresetEl) {
+  motionPresetEl.value = params.motion;
+  syncMotionHint();
+}
 
 /* Compare mode — second stage sharing the same config clock */
 const compareMode = document.getElementById("compareMode") as HTMLInputElement | null;
@@ -763,7 +769,7 @@ compareMode?.addEventListener("change", () => {
       wrap.className = "stage compare-stage";
       wrap.id = "compareStage";
       wrap.innerHTML =
-        '<div class="document glyptide-document" id="compareOutput"></div><div class="waiting glyptide-waiting" id="compareWaiting"></div>';
+        '<div class="glyptide-document" id="compareOutput"></div><div class="glyptide-waiting" id="compareWaiting"></div>';
       stage.parentElement.append(wrap);
       compareOut = document.getElementById("compareOutput");
       compareWait = document.getElementById("compareWaiting");
