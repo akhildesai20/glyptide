@@ -30,27 +30,27 @@ try {
     JSON.stringify({ name: "glyptide-clean-room", type: "module", private: true }, null, 2),
   );
   execSync(`npm install "${tarball}"`, { cwd: tmp, stdio: "inherit" });
+  // Node cannot load .css as ESM; assert the packaged stylesheet exists, then import JS.
+  const stylesPath = path.join(tmp, "node_modules/glyptide/dist/styles.css");
+  if (!fs.existsSync(stylesPath) || fs.statSync(stylesPath).size < 100) {
+    throw new Error("packaged styles.css missing or empty");
+  }
   const probe = `
-import { createGlyptide, PATTERN_COUNT, resolveMotion } from "glyptide";
-import "glyptide/styles.css";
+import { PATTERN_COUNT, resolveMotion, createStreamIngress } from "glyptide";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const engine = await import("glyptide/engine");
 if (!PATTERN_COUNT) throw new Error("missing patterns");
 if (!resolveMotion().preset) throw new Error("motion");
-console.log("clean-room ok", PATTERN_COUNT);
-`;
-  fs.writeFileSync(path.join(tmp, "probe.mjs"), probe);
-  // CSS import may fail in node — probe engine-only if needed
-  try {
-    execSync("node probe.mjs", { cwd: tmp, stdio: "inherit" });
-  } catch {
-    const probe2 = `
-import { PATTERN_COUNT, resolveMotion, createStreamIngress } from "glyptide";
-if (!PATTERN_COUNT) throw new Error("missing patterns");
+if (typeof engine.makeEngine !== "function") throw new Error("engine entry missing");
 createStreamIngress();
+// CJS require path
+const cjs = require("glyptide");
+if (!cjs.PATTERN_COUNT) throw new Error("cjs import failed");
 console.log("clean-room ok", PATTERN_COUNT, resolveMotion().preset);
 `;
-    fs.writeFileSync(path.join(tmp, "probe2.mjs"), probe2);
-    execSync("node probe2.mjs", { cwd: tmp, stdio: "inherit" });
-  }
+  fs.writeFileSync(path.join(tmp, "probe.mjs"), probe);
+  execSync("node probe.mjs", { cwd: tmp, stdio: "inherit" });
   fs.unlinkSync(tarball);
   console.log("Clean-room smoke passed");
 } finally {

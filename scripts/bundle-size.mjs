@@ -17,13 +17,17 @@ const files = [
  * Gzip baselines (bytes) after Phase 1–2 modularization.
  * Fail CI if gzip grows > +10% vs these values. Remeasure with `npm run size`.
  */
-/** Gzip baselines (bytes) after streaming/isolation/validation hardening. */
+/**
+ * Gzip baselines (bytes) after RC stabilization:
+ * paced drain, generation sessions, incremental split, CSS namespacing.
+ * Do not raise without justifying the size increase.
+ */
 const GZIP_BUDGETS = {
-  "index.js": 30998,
-  "glyptide.iife.js": 26151,
-  "styles.css": 2443,
+  "index.js": 33575,
+  "glyptide.iife.js": 27910,
+  "styles.css": 2265,
   "patterns.js": 9636,
-  "engine.js": 15346,
+  "engine.js": 17665,
 };
 
 const FAIL_PCT = 0.1;
@@ -45,6 +49,10 @@ for (const f of files) {
   const p = path.join(root, f);
   if (!fs.existsSync(p)) {
     console.log(`  ${f.padEnd(22)} missing`);
+    if (failBudgets && GZIP_BUDGETS[f] != null) {
+      console.error(`  BUDGET FAIL ${f}: required artifact missing`);
+      failed = true;
+    }
     continue;
   }
   const buf = fs.readFileSync(p);
