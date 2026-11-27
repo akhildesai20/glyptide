@@ -441,6 +441,12 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
     get session() {
       return engine.session;
     },
+    get queueSize() {
+      return engine.queueSize;
+    },
+    get activeAnimationCount() {
+      return engine.activeAnimationCount;
+    },
   };
 
   return instance;

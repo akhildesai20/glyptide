@@ -343,6 +343,10 @@ export interface GlyptideInstance {
   readonly rendered: string;
   /** Active live session id (0 = none) */
   readonly session: number;
+  /** Ingress backlog size (catch-up / pace diagnostics) */
+  readonly queueSize: number;
+  /** In-flight WAAPI / CSS animations (capped by the engine) */
+  readonly activeAnimationCount: number;
 }
 
 export interface EngineCallbacks {

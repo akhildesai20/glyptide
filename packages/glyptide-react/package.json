@@ -40,5 +40,15 @@
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": "Glyptide",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akhildesai20/glyptide.git",
+    "directory": "packages/glyptide-react"
+  },
+  "bugs": {
+    "url": "https://github.com/akhildesai20/glyptide/issues"
+  },
+  "homepage": "https://github.com/akhildesai20/glyptide"
 }

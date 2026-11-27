@@ -301,6 +301,19 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     put(wait, text);
   }
 
+  function cancelActiveAnimations(): void {
+    for (const a of activeAnimations) {
+      // Attach rejection handler before cancel — happy-dom rejects `finished`.
+      void Promise.resolve(a.finished).catch(() => {});
+      try {
+        a.cancel();
+      } catch {
+        // Ignore sync cancel failures in non-browser DOM shims.
+      }
+    }
+    activeAnimations.clear();
+  }
+
   function clear(): void {
     guide?.remove();
     guide = null;
@@ -308,8 +321,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     next = null;
     cursor?.remove();
     cursor = null;
-    for (const a of activeAnimations) a.cancel();
-    activeAnimations.clear();
+    cancelActiveAnimations();
     for (const id of settleTimers) clearTimeout(id);
     settleTimers.clear();
     out?.classList.remove("paused");
@@ -403,7 +415,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       fill: "none",
     });
     activeAnimations.add(a);
-    a.onfinish = a.oncancel = () => {
+    const settleAnim = () => {
       activeAnimations.delete(a);
       el.style.removeProperty("filter");
       if (effect === "ink" || effect === "mark") {
@@ -411,6 +423,11 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
         el.style.removeProperty("background-color");
       }
     };
+    a.onfinish = a.oncancel = settleAnim;
+    // Prevent unhandled rejection when cancel() aborts the finished promise.
+    void a.finished?.then(settleAnim, () => {
+      activeAnimations.delete(a);
+    });
   }
 
   function base(selected = true): void {
@@ -1194,6 +1211,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       );
       ingress.setPolicy(opt.catchUp ?? "catchUp");
       ingress.setStallMs(opt.stallMs ?? 0);
+      announce("Preparing text.");
       set("Generating");
       startStallWatch();
     }
@@ -1231,8 +1249,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     stopDrain();
     cursor?.remove();
     cursor = null;
-    for (const a of activeAnimations) a.cancel();
-    activeAnimations.clear();
+    cancelActiveAnimations();
     for (const id of settleTimers) clearTimeout(id);
     settleTimers.clear();
     ingress.clear();

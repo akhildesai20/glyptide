@@ -13,10 +13,36 @@ export interface IncrementalSplitter {
   readonly pending: string;
 }
 
+const TOKEN_GRAPHEMES = 3;
+
+type SegmenterLike = {
+  segment: (input: string) => Iterable<{ segment: string }>;
+};
+
+type IntlWithSegmenter = typeof Intl & {
+  Segmenter?: new (
+    locales?: string | string[],
+    options?: { granularity?: "grapheme" },
+  ) => SegmenterLike;
+};
+
 function endsWithIncompleteSurrogate(text: string): boolean {
   if (!text.length) return false;
   const c = text.charCodeAt(text.length - 1);
   return c >= 0xd800 && c <= 0xdbff;
+}
+
+/** Grapheme clusters via Intl.Segmenter when available; else code points. */
+function graphemeClusters(text: string): string[] {
+  if (!text) return [];
+  const IntlRef = Intl as IntlWithSegmenter;
+  if (typeof Intl !== "undefined" && typeof IntlRef.Segmenter === "function") {
+    const segmenter = new IntlRef.Segmenter(undefined, {
+      granularity: "grapheme",
+    });
+    return Array.from(segmenter.segment(text), (x) => x.segment);
+  }
+  return Array.from(text);
 }
 
 /**
@@ -83,6 +109,11 @@ function splitCompleteLines(
   return { units: parts.slice(0, -1), rest: parts[parts.length - 1] };
 }
 
+/**
+ * Token mode groups grapheme clusters (default 3). Always hold the trailing
+ * cluster: the next chunk may extend it (ZWJ emoji, combining marks, Indic).
+ * Also hold a partial trailing token group (< TOKEN_GRAPHEMES clusters).
+ */
 function splitCompleteGraphemes(
   buffer: string,
 ): { units: string[]; rest: string } {
@@ -90,11 +121,20 @@ function splitCompleteGraphemes(
   if (endsWithIncompleteSurrogate(buffer)) {
     return { units: [], rest: buffer };
   }
-  // Grapheme-complete units via splitText token (groups of graphemes) —
-  // hold nothing except orphan high surrogate (handled above).
-  // For true grapheme safety we emit all but keep empty rest.
-  const units = splitText(buffer, "token");
-  return { units, rest: "" };
+  const graphemes = graphemeClusters(buffer);
+  if (graphemes.length <= 1) {
+    // Single (possibly still-growing) cluster — wait for more or flush().
+    return { units: [], rest: buffer };
+  }
+  const complete = graphemes.slice(0, -1);
+  const held = graphemes[graphemes.length - 1] ?? "";
+  const units: string[] = [];
+  let i = 0;
+  for (; i + TOKEN_GRAPHEMES <= complete.length; i += TOKEN_GRAPHEMES) {
+    units.push(complete.slice(i, i + TOKEN_GRAPHEMES).join(""));
+  }
+  const rest = complete.slice(i).join("") + held;
+  return { units, rest };
 }
 
 export function createIncrementalSplitter(kind: BufferKind): IncrementalSplitter {

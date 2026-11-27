@@ -159,6 +159,46 @@ describe("incremental cross-chunk segmentation", () => {
     out += s.flush().join("");
     expect(out).toBe(emoji);
   });
+
+  it("holds incomplete ZWJ emoji clusters until flush (no mid-cluster emit)", () => {
+    const emoji = "👨‍👩‍👧‍👦";
+    const s = createIncrementalSplitter("token");
+    const emitted: string[] = [];
+    for (const cp of [...emoji]) {
+      const units = s.push(cp);
+      emitted.push(...units);
+      // Growing ZWJ sequence must stay buffered as one incomplete cluster.
+      expect(units).toEqual([]);
+      expect(s.pending.length).toBeGreaterThan(0);
+    }
+    expect(emitted).toEqual([]);
+    expect(s.flush()).toEqual([emoji]);
+    expect(s.pending).toBe("");
+  });
+
+  it("holds combining marks and Indic graphemes across code-point chunks", () => {
+    const acute = "e\u0301";
+    const s1 = createIncrementalSplitter("token");
+    expect(s1.push("e")).toEqual([]);
+    expect(s1.push("\u0301")).toEqual([]);
+    expect(s1.flush().join("")).toBe(acute);
+
+    const ste = "स्ते";
+    const s2 = createIncrementalSplitter("token");
+    for (const cp of [...ste]) {
+      expect(s2.push(cp)).toEqual([]);
+    }
+    expect(s2.flush()).toEqual([ste]);
+
+    // Word mode: irregular Indic chunks reassemble without orphan virama-only DOM units
+    const phrase = "नमस्ते दुनिया";
+    const s3 = createIncrementalSplitter("word");
+    let out = "";
+    const parts = ["नम", "स्ते ", "दुनि", "या"];
+    for (const p of parts) out += s3.push(p).join("");
+    out += s3.flush().join("");
+    expect(out).toBe(phrase);
+  });
 });
 
 describe("paced draining", () => {

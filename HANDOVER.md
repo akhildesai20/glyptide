@@ -23,6 +23,7 @@ Windows is the **primary** ongoing development and release environment. Keep the
 | Public npm publish | **Not done** — blocked until explicit human authorization |
 | GitHub visibility | **Private** — do not change without authorization |
 | Primary machine | **Windows** (Node.js 24 LTS) |
+| Pre-release reliability audit | Completed on Windows (grapheme hold, a11y announce, clean-room vanilla+React, visual case fix) |
 
 Package manager: **npm** workspaces + committed `package-lock.json` (do not switch to pnpm/yarn without an explicit decision).
 
@@ -156,7 +157,9 @@ Notes:
 | `prepublishOnly` build on core | Yes |
 | README + LICENSE in packages | Yes |
 | Public registry publish | **No — do not publish without explicit authorization** |
-| npm account auth on Windows | **Blocked** — `npm whoami` returns 401; run `npm login` |
+| npm account auth on Windows | User reports `npm whoami` works interactively; confirm in the same shell before publish. Agent/CI shells may still see stale `.npmrc` tokens (401). |
+| Unscoped `glyptide` name | Available on registry (404) |
+| `@glyptide` scope / org | Must exist and be owned by the publisher before `npm publish` of `@glyptide/react` |
 
 Suggested publish order **when authorized**: build → clean-room → dry-run `npm pack` → `npm publish` from `packages/glyptide`, then `@glyptide/react` with peer dep on published `glyptide`. Update docs that currently say “not on npm yet.”
 
@@ -223,6 +226,7 @@ Visual baselines live under `site/e2e/visual.spec.ts-snapshots/*-chromium-win32.
 - [x] Norton HTTPS trust via `NODE_EXTRA_CA_CERTS` (no TLS disable)  
 - [x] Cross-platform Playwright / `.gitattributes` fixes  
 - [x] Full build / typecheck / unit / e2e / clean-room  
-- [x] Visual baselines (`VISUAL=1`) on Windows Chromium  
-- [ ] `npm login` (fix 401) before any publish attempt  
+- [x] Visual baselines (`VISUAL=1`) on Windows Chromium (case-correct)  
+- [x] Pre-release reliability audit + regressions  
+- [ ] Confirm `npm whoami` + `@glyptide` org ownership in the publish shell  
 - [ ] npm publish only with explicit authorization  

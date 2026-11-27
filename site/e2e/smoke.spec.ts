@@ -56,6 +56,17 @@ test.describe("Glyptide site", () => {
     await expect(page.locator("#status")).toHaveText("Ready");
   });
 
+  test("keyboard review accept on Control+Enter", async ({ page }) => {
+    await page.goto("/playground/?case=continue&pattern=continue-ghost-suggestion");
+    await page.locator("#play").click();
+    await expect(page.locator("#status")).toHaveText("Review", { timeout: 45000 });
+    await expect(page.locator("#output .ghost")).toBeVisible();
+    await page.locator("#stage").focus();
+    await page.keyboard.press("Control+Enter");
+    await expect(page.locator("#status")).toHaveText(/Complete|Ready/);
+    await expect(page.locator("#output .ghost")).toHaveCount(0);
+  });
+
   test("appearance preset selector applies aurora", async ({ page }) => {
     await page.goto("/playground/?case=new&pattern=new-gradient-ink");
     await page.locator("#presetTrigger").click();

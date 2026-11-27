@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { patterns } from "glyptide";
 
 /**
  * Visual regression subset — soft gate.
@@ -9,15 +10,21 @@ test.describe("visual regression subset", () => {
   test.skip(!process.env.VISUAL, "Set VISUAL=1 to run screenshot baselines");
   test.use({ reducedMotion: "reduce" });
 
-  for (const pattern of [
+  const cases: { id: string; caseId: string }[] = [
     "new-word-settle",
     "new-progressive-emphasis",
     "insert-reserved-gap",
     "replace-review-in-place",
-  ]) {
-    test(`final frame ${pattern}`, async ({ page }) => {
+  ].map((id) => {
+    const p = patterns.find((x) => x.id === id);
+    if (!p) throw new Error(`Unknown visual pattern ${id}`);
+    return { id, caseId: p.caseId };
+  });
+
+  for (const { id, caseId } of cases) {
+    test(`final frame ${id}`, async ({ page }) => {
       await page.goto(
-        `/playground/?case=new&pattern=${pattern}&speed=200&latency=0&scenario=steady`,
+        `/playground/?case=${caseId}&pattern=${id}&speed=200&latency=0&scenario=steady`,
       );
       await page.locator("#play").click();
       await page.waitForSelector(
@@ -25,7 +32,7 @@ test.describe("visual regression subset", () => {
         { timeout: 20000 },
       );
       const stage = page.locator(".stage").first();
-      await expect(stage).toHaveScreenshot(`${pattern}-final.png`, {
+      await expect(stage).toHaveScreenshot(`${id}-final.png`, {
         animations: "disabled",
         maxDiffPixels: 120,
       });

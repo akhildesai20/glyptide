@@ -44,7 +44,7 @@ Starting a **new** stream after stop/complete requires `beginStream()` (or `pipe
 
 ### Incremental segmentation
 
-Chunks are transport boundaries, not reveal units. Glyptide retains an incomplete trailing boundary (word/sentence/…) across `append` calls and flushes remainder on `finish()`.
+Chunks are transport boundaries, not reveal units. Glyptide retains an incomplete trailing boundary (word/sentence/paragraph/line, and **grapheme clusters** in token mode — including ZWJ emoji and combining marks) across `append` calls and flushes remainder on `finish()`.
 
 Atomic patterns (`kind: "all"`) hold all text until finish.
 
