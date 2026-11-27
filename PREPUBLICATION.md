@@ -1,7 +1,7 @@
 # Glyptide v0.1.0 — Pre-publication report
 
 **Release candidate commit (feature freeze base):** `aeb0a70`  
-**This preparation commit:** _(filled at commit time — see `git log -1`)_  
+**This preparation commit:** _400d5dbffc0a7dd87c1337dec855659a1d84fd70_  
 **Maturity:** public preview · **License:** MIT · **Repo:** `akhildesai20/glyptide` (currently **private**)
 
 **Acknowledgement:** Making the repository public will expose the entire monorepo, including `site/` website source, `prototype/`, scripts, CI workflows, and historical commits. That is intentional for this open-source layout; packages remain separately installable.
