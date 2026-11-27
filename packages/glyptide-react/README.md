@@ -3,7 +3,7 @@
 Thin React adapter for [glyptide](https://www.npmjs.com/package/glyptide) (peer dependency).
 
 ```bash
-# Until public npm release, install local packages (from repo root):
+# Until public npm release (see docs/publication-status.json), install local packages:
 npm install ./packages/glyptide ./packages/glyptide-react
 ```
 

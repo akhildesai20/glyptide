@@ -16,7 +16,9 @@ Glyptide is a **presentation layer** for generative text UIs (stream, insert, re
 
 ## Install (consumer project)
 
-`glyptide@0.1.0` is **not published to public npm yet**. Install a built package path or tarball:
+Install wording is driven by [`publication-status.json`](./publication-status.json) (see also [`publication-install.md`](./publication-install.md)).
+
+While `"npmPublished": false`, install a built package path or tarball:
 
 ```bash
 # From a built clone (relative paths work on Windows / macOS / Linux):
@@ -25,7 +27,7 @@ npm install ./packages/glyptide
 npm install ./packages/glyptide-react
 ```
 
-Cloning the monorepo is for **contributors** (and to run `npm run build:lib` / pack). App builders only need the package.
+Cloning the monorepo is for **contributors** (and to run `npm run build:lib` / pack). App builders only need the package. Do **not** treat registry install commands as live until publication status flips.
 
 ## Integrate
 
@@ -40,7 +42,9 @@ const g = createGlyptide({
 });
 ```
 
-Streams: `beginStream` → `append` / `applySnapshot` / `finish`, or `pipeTextToGlyptide` with `mode: "delta" | "snapshot"`.  
+Streams: `beginStream` → `append` / `applySnapshot` / `finish`, or `pipeTextToGlyptide(instance, source, { mode: "delta" | "snapshot", signal? })` (exported from `"glyptide"`).  
+`pipeTextToGlyptide` resolves when the **source** ends — listen for `settled` / `complete` (or poll `state`) if you need visual settlement.  
+`import "glyptide/styles.css"` is for browsers/bundlers (not plain Node).  
 Lightweight (no registry JSON): `import { makeEngine } from "glyptide/engine"`.
 
 ## Progressive docs (fetch on demand)

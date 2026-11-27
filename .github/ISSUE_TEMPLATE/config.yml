@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Integrator brief
+    url: https://github.com/akhildesai20/glyptide/blob/main/docs/ai-integrate.md
+    about: Start here before filing API / install questions
+  - name: Security report
+    url: https://github.com/akhildesai20/glyptide/blob/main/SECURITY.md
+    about: Report vulnerabilities privately — do not open a public issue

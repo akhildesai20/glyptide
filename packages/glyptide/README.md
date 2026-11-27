@@ -3,9 +3,13 @@
 Thoughtful text-motion patterns for generative interfaces.  
 **Presentation layer only** — no model calls, no API keys.
 
+**Version:** 0.1.0 · **Maturity:** public preview · **License:** MIT
+
 ## Install
 
-`glyptide@0.1.0` is **not on the public npm registry yet**. Install the built package path (or a packed tarball) — you do **not** need the website source:
+Publication status is centralized in the monorepo at `docs/publication-status.json`.
+
+Until the package is on the public npm registry:
 
 ```bash
 # From a clone / CI artifact that already ran `npm run build:lib`:
@@ -16,7 +20,9 @@ npm install ./packages/glyptide
 #   npm install ./glyptide-0.1.0.tgz
 ```
 
-React apps can also add `@glyptide/react` the same way from `./packages/glyptide-react`.
+React apps: also add `@glyptide/react` the same way from `./packages/glyptide-react`.
+
+Requires **Node.js ≥ 18**. Modern evergreen browsers.
 
 ## Quick start
 
@@ -48,13 +54,13 @@ Real streams: `beginStream()` → `append` / `applySnapshot` / `finish`, or `pip
 
 Unknown pattern ids throw `GlyptideConfigError` (never silently substituted).
 
-## Docs for humans & agents
+Underscored test instrumentation (if present) is **not** part of the supported public API.
 
-Prefer published / generated docs over reading this monorepo’s `site/` app:
+## Docs
 
-- Getting started · API · Streaming · Appearance (see repo `docs/` or the playground `/docs/*.md`)
-- AI index: `/llms.txt` · full reference `/llms-full.txt` · registry `/registry/patterns.json`
-- Minimal agent brief: `docs/ai-integrate.md`
+- Minimal agent / integrator brief: repository `docs/ai-integrate.md`
+- API · Streaming · Appearance in repository `docs/`
+- AI index: `/llms.txt` · registry `/registry/patterns.json` (on the docs site)
 
 ## License
 

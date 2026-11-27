@@ -281,7 +281,18 @@ fs.writeFileSync(
 );
 
 /* —— Markdown docs —— */
-const installNote = `The npm package \`glyptide@${pkg.version}\` is **not published to the public registry yet**. Install from the repository:
+const publicationStatus = JSON.parse(
+  fs.readFileSync(path.join(root, "docs/publication-status.json"), "utf8"),
+);
+const installNote = publicationStatus.npmPublished
+  ? `The npm package \`glyptide@${pkg.version}\` is on the public registry:
+
+\`\`\`bash
+npm install glyptide
+# optional React adapter:
+npm install @glyptide/react
+\`\`\``
+  : `The npm package \`glyptide@${pkg.version}\` is **not published to the public registry yet**. Install from the repository:
 
 \`\`\`bash
 # From a built clone (relative path works on Windows / macOS / Linux):

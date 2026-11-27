@@ -12,6 +12,7 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./package.json": "./package.json",
     "./engine": {
       "types": "./dist/engine.d.ts",
       "import": "./dist/engine.js",
@@ -56,21 +57,29 @@
     "generative-ui",
     "ai",
     "motion",
-    "typescript"
+    "typescript",
+    "react",
+    "accessibility"
   ],
   "license": "MIT",
   "author": "Glyptide",
   "repository": {
     "type": "git",
-    "url": "https://github.com/akhildesai20/glyptide.git"
+    "url": "git+https://github.com/akhildesai20/glyptide.git",
+    "directory": "packages/glyptide"
   },
   "bugs": {
     "url": "https://github.com/akhildesai20/glyptide/issues"
   },
-  "homepage": "https://github.com/akhildesai20/glyptide",
+  "homepage": "https://github.com/akhildesai20/glyptide#readme",
   "engines": {
     "node": ">=18"
   },
+  "browserslist": [
+    "defaults",
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"

@@ -44,15 +44,26 @@
     "vitest": "^2.1.8",
     "happy-dom": "^21.0.4"
   },
+  "keywords": [
+    "glyptide",
+    "react",
+    "streaming",
+    "generative-ui",
+    "animation",
+    "text"
+  ],
   "license": "MIT",
   "author": "Glyptide",
   "repository": {
     "type": "git",
-    "url": "https://github.com/akhildesai20/glyptide.git",
+    "url": "git+https://github.com/akhildesai20/glyptide.git",
     "directory": "packages/glyptide-react"
   },
   "bugs": {
     "url": "https://github.com/akhildesai20/glyptide/issues"
   },
-  "homepage": "https://github.com/akhildesai20/glyptide"
+  "homepage": "https://github.com/akhildesai20/glyptide#readme",
+  "engines": {
+    "node": ">=18"
+  }
 }

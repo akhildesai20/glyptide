@@ -19,6 +19,8 @@
     "test:clean-room": "node scripts/clean-room-smoke.mjs",
     "test:ai-docs": "node scripts/ai-docs-agent-smoke.mjs",
     "measure:ai-context": "node scripts/measure-ai-context.mjs",
+    "sync:publication-status": "node scripts/sync-publication-status.mjs",
+    "test:prepub-integration": "node scripts/prepub-integration-smoke.mjs",
     "check:ai-docs": "npm run generate:ai-docs && git diff --exit-code -- site/public/llms.txt site/public/llms-full.txt site/public/registry site/public/schemas site/public/docs site/public/skills || (echo 'AI docs out of date — run npm run generate:ai-docs' && exit 1)"
   },
   "engines": {

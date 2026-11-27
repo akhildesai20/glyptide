@@ -25,6 +25,7 @@ Windows is the **primary** ongoing development and release environment. Keep the
 | Primary machine | **Windows** (Node.js 24 LTS) |
 | Pre-release reliability audit | Completed on Windows (grapheme hold, a11y announce, clean-room vanilla+React, visual case fix) |
 | v0.1.0 release-blocker remediation | Session-aware pipe cancel, finish/pause/scheduler/anim bounds, unicode/typography/React hot props, CI matrix — verified with `release-blockers` + Playwright |
+| Pre-publication prep | See `PREPUBLICATION.md` + `docs/publication-status.json` — **do not publish** until explicit authorization |
 
 Package manager: **npm** workspaces + committed `package-lock.json` (do not switch to pnpm/yarn without an explicit decision).
 

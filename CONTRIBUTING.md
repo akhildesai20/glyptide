@@ -2,6 +2,8 @@
 
 Thanks for helping improve thoughtful text motion for generative interfaces.
 
+**v0.1.0 feature freeze:** prefer bug fixes, docs, tests, and packaging over new patterns, palettes, or redesigns.
+
 ## Development
 
 ```bash
@@ -14,23 +16,22 @@ npm run test:clean-room
 
 - Core library: `packages/glyptide` (what app builders install)
 - React adapter: `packages/glyptide-react`
-- Website: `site` (contributor playground — not a library dependency)
-- AI brief for integrators: `docs/ai-integrate.md`
-- Preserved prototype: `prototype/text-in-motion-v5.html`
+- Website: `site` (playground — not a library dependency; becomes public with the repo)
+- AI brief: `docs/ai-integrate.md`
+- Publication wording: `docs/publication-status.json` → `npm run sync:publication-status`
 
 ## Principles
 
-1. Preserve existing pattern behavior unless fixing a clear bug.
+1. Preserve existing pattern ids and public APIs unless intentionally versioned.
 2. Prefer native browser APIs over new dependencies.
 3. Motion must communicate state — do not add decorative animation.
 4. Keep the core framework-agnostic and SSR-safe at module init.
 5. Test playback, review flows, reduced motion, and themes.
+6. Never commit secrets, certs, or machine-local paths.
 
 ## Pull requests
 
-- Include a short description of the behavioral change.
-- Note any pattern count or API surface changes.
-- Run `npm run build` and relevant Playwright tests before requesting review.
+Use the PR template. Run `npm run build:lib`, relevant tests, and `generate:ai-docs` when registry/docs change.
 
 ## License
 
