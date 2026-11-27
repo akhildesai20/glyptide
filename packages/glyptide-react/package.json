@@ -37,12 +37,12 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "glyptide": "file:../glyptide",
+    "happy-dom": "^21.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8",
-    "happy-dom": "^21.0.4"
+    "vitest": "^3.2.4"
   },
   "keywords": [
     "glyptide",
@@ -62,7 +62,7 @@
   "bugs": {
     "url": "https://github.com/akhildesai20/glyptide/issues"
   },
-  "homepage": "https://github.com/akhildesai20/glyptide#readme",
+  "homepage": "https://glyptide.vercel.app",
   "engines": {
     "node": ">=18"
   }

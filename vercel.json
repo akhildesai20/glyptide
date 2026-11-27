@@ -4,7 +4,7 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/((?!playground(?:/|$)|docs(?:/|$)|for-ai\\.html|llms\\.txt|llms-full\\.txt|registry/|schemas/|skills/|assets/|og\\.svg|favicon\\.svg).*)",
+      "source": "/((?!playground(?:/|$)|docs(?:/|$)|for-ai\\.html|llms\\.txt|llms-full\\.txt|registry/|schemas/|skills/|assets/|og\\.svg|favicon\\.svg|robots\\.txt|sitemap\\.xml).*)",
       "destination": "/index.html"
     }
   ]

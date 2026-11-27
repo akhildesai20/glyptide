@@ -2,41 +2,43 @@
 
 > Thoughtful text motion for generative interfaces — 96 patterns across 6 use cases. Model-independent presentation layer for AI streaming UIs.
 
+Website: https://glyptide.vercel.app (home · playground · docs · For AI)
+
 Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
 The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
 
 ## Start here (minimal context)
 
-- [AI / integrator brief](/docs/ai-integrate.md): Install + integrate without reading website source — **fetch this first**
+- [AI / integrator brief](https://glyptide.vercel.app/docs/ai-integrate.md): Install + integrate without reading website source — **fetch this first**
 - Prefer progressive retrieval. Do **not** inspect `site/` playground source or engine internals unless maintaining the library.
-- Do **not** load [llms-full.txt](/llms-full.txt) unless you need exhaustive pattern ids.
+- Do **not** load [llms-full.txt](https://glyptide.vercel.app/llms-full.txt) unless you need exhaustive pattern ids.
 
 ## Docs (on demand)
 
-- [Getting started](/docs/getting-started.md): Install (local package) and first `createGlyptide` call
-- [Public API](/docs/api.md): `createGlyptide`, instance methods, appearance lifecycle
-- [Streaming](/docs/streaming.md): `append` / `pipeTextToGlyptide`, delta vs snapshot
-- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
-- [Patterns](/docs/patterns.md): All 96 pattern ids with lifecycle metadata
-- [Accessibility](/docs/accessibility.md): Reduced motion, semantics, announcements
-- [Design guidance](/docs/design.md): Motion and reading-comfort principles
-- [Full documentation](/llms-full.txt): Consolidated AI-readable reference (large)
+- [Getting started](https://glyptide.vercel.app/docs/getting-started.md): Install (local package) and first `createGlyptide` call
+- [Public API](https://glyptide.vercel.app/docs/api.md): `createGlyptide`, instance methods, appearance lifecycle
+- [Streaming](https://glyptide.vercel.app/docs/streaming.md): `append` / `pipeTextToGlyptide`, delta vs snapshot
+- [Appearance](https://glyptide.vercel.app/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
+- [Patterns](https://glyptide.vercel.app/docs/patterns.md): All 96 pattern ids with lifecycle metadata
+- [Accessibility](https://glyptide.vercel.app/docs/accessibility.md): Reduced motion, semantics, announcements
+- [Design guidance](https://glyptide.vercel.app/docs/design.md): Motion and reading-comfort principles
+- [Full documentation](https://glyptide.vercel.app/llms-full.txt): Consolidated AI-readable reference (large)
 
 ## Machine-readable
 
-- [Pattern registry JSON](/registry/patterns.json): Versioned metadata for every pattern
-- [Config JSON Schema](/schemas/config.json): Validate Glyptide configuration
-- [Appearance JSON Schema](/schemas/appearance.json): Appearance options
-- [Pattern meta schema](/schemas/pattern-meta.json): Registry entry shape
+- [Pattern registry JSON](https://glyptide.vercel.app/registry/patterns.json): Versioned metadata for every pattern
+- [Config JSON Schema](https://glyptide.vercel.app/schemas/config.json): Validate Glyptide configuration
+- [Appearance JSON Schema](https://glyptide.vercel.app/schemas/appearance.json): Appearance options
+- [Pattern meta schema](https://glyptide.vercel.app/schemas/pattern-meta.json): Registry entry shape
 
 ## Agent resources
 
-- [Agent skill](/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
-- [For AI page](/for-ai.html): Human + agent discovery page
+- [Agent skill](https://glyptide.vercel.app/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
+- [For AI page](https://glyptide.vercel.app/for-ai.html): Human + agent discovery page
 
 ## Examples
 
-- [Vanilla JS](/skills/glyptide/examples/vanilla-js.md)
-- [React](/skills/glyptide/examples/react.md)
-- [AI SDK streaming](/skills/glyptide/examples/ai-sdk.md)
-- [Provider notes](/docs/providers.md)
+- [Vanilla JS](https://glyptide.vercel.app/skills/glyptide/examples/vanilla-js.md)
+- [React](https://glyptide.vercel.app/skills/glyptide/examples/react.md)
+- [AI SDK streaming](https://glyptide.vercel.app/skills/glyptide/examples/ai-sdk.md)
+- [Provider notes](https://glyptide.vercel.app/docs/providers.md)

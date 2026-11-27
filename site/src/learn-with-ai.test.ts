@@ -27,4 +27,10 @@ describe("learn-with-ai prompt", () => {
       "https://example.com/for-ai.html",
     );
   });
+
+  it("defaults to the canonical production site when origin is empty", () => {
+    const prompt = buildLearnWithAiPrompt("");
+    expect(prompt).toContain("https://glyptide.vercel.app/docs/ai-integrate.md");
+    expect(prompt).toContain("https://glyptide.vercel.app/llms.txt");
+  });
 });

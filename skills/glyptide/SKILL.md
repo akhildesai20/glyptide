@@ -11,7 +11,9 @@ metadata:
 
 Glyptide is a **presentation layer** for generative text. It does not send prompts, need API keys, or replace your model SDK.
 
-**Start with the minimal brief** ([`docs/ai-integrate.md`](../../docs/ai-integrate.md) in-repo, or `/docs/ai-integrate.md` on the docs site). Load other references only when needed.
+**Website:** https://glyptide.vercel.app  
+
+**Start with the minimal brief** ([`docs/ai-integrate.md`](../../docs/ai-integrate.md) in-repo, or https://glyptide.vercel.app/docs/ai-integrate.md). Load other references only when needed.
 
 ## Do not
 

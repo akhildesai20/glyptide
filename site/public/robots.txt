@@ -1,12 +1,12 @@
 # Crawl policy for the Glyptide docs / playground site.
-# Update Sitemap URL after docs/publication-status.json → websiteUrl is set.
 User-agent: *
 Allow: /
 
-# Prefer AI-readable indexes over scraping site source.
 Allow: /llms.txt
 Allow: /llms-full.txt
 Allow: /registry/
 Allow: /schemas/
 Allow: /docs/
 Allow: /skills/
+
+Sitemap: https://glyptide.vercel.app/sitemap.xml

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://glyptide.local/schemas/appearance.json",
+  "$id": "https://glyptide.vercel.app/schemas/appearance.json",
   "title": "GlyptideAppearance",
   "type": "object",
   "additionalProperties": false,

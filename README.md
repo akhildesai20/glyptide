@@ -12,14 +12,16 @@ Glyptide is a lightweight, model-independent presentation layer for streaming, i
 
 | Resource | Link |
 |----------|------|
+| **Website** | https://glyptide.vercel.app |
+| Playground | https://glyptide.vercel.app/playground/ |
+| Docs | https://glyptide.vercel.app/docs/ |
+| For AI | https://glyptide.vercel.app/for-ai.html |
 | Repository | https://github.com/akhildesai20/glyptide |
-| Integrator brief (AI + humans) | [docs/ai-integrate.md](./docs/ai-integrate.md) |
+| Integrator brief | [docs/ai-integrate.md](./docs/ai-integrate.md) · [live](https://glyptide.vercel.app/docs/ai-integrate.md) |
 | API | [docs/api.md](./docs/api.md) |
 | Streaming | [docs/streaming.md](./docs/streaming.md) |
 | Appearance | [APPEARANCE.md](./APPEARANCE.md) |
 | Publication status | [docs/publication-status.json](./docs/publication-status.json) |
-
-When the docs website is deployed, playground / docs / For AI pages will be linked from the repository homepage. Until then, use the markdown docs above and the static assets under `site/public/` (`llms.txt`, registry, schemas).
 
 ## Installation
 
@@ -144,7 +146,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) and [AGENTS.md](./AGENTS.md).
 - Pattern ids are stable; inventing ids throws `GlyptideConfigError`
 - Snapshot streams replace on divergent / shrinking / empty payloads (see streaming docs)
 - Showcase typography lives in the website; the runtime inherits host font metrics
-- Website deployment URL may be unset until hosting is configured (`publication-status.json` → `websiteUrl`)
+- Website: https://glyptide.vercel.app (`docs/publication-status.json` → `websiteUrl`)
 
 ## License
 

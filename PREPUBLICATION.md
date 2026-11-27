@@ -129,8 +129,9 @@ Prepared / refreshed:
 - Production build: **pass**
 - Chromium smoke e2e: **17 passed** (themes, recipes/playground, keyboard review, For AI / llms, docs)
 - CI multi-browser smoke (Firefox/WebKit) on RC: **pass**
-- `websiteUrl` in publication status: **`null`** — do **not** invent a domain; set after real deploy, then add absolute canonical / `og:url` / sitemap
-- `site/public/robots.txt` added (Sitemap URL deferred until `websiteUrl` is set)
+- `websiteUrl`: **https://glyptide.vercel.app** (canonical / OG / sitemap / AI docs synchronized)
+- Production probe: HTML routes 200; `/llms.txt`, `/llms-full.txt`, `/registry/patterns.json`, `/schemas/*`, `/docs/*.md`, `/skills/**` return real text/json/markdown (not SPA HTML fallback)
+- npm audit: **`npm audit --omit=dev` → 0**. Full audit still reports **dev-only** vitest/tinypool/esbuild (tsup) findings; Vitest bumped 2→3 (6→4 reported). Full clear needs Vitest 5 / coordinated tsup esbuild — deferred (no `audit fix --force`)
 - **When the repo is public, `site/` source is public.**
 
 Non-blocking: full tablet/mobile visual pass is covered partly by responsive CSS + smoke; dedicated device lab not run. Visual regression suite remains opt-in (`VISUAL=1`).

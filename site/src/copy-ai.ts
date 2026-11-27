@@ -6,6 +6,7 @@ import {
 } from "glyptide";
 import type { AppearanceState } from "./appearance";
 import { appearanceConfigFromState, themeAwarePalette } from "./appearance";
+import { CANONICAL_SITE_URL } from "./site-url";
 
 const PKG = "glyptide";
 const VERSION = "0.1.0";
@@ -18,10 +19,11 @@ export function buildCopyForAiPrompt(input: {
   origin?: string;
 }): string {
   const { pattern, config, appearanceState } = input;
-  const origin = (input.origin ?? globalThis.location?.origin ?? "").replace(
-    /\/$/,
-    "",
-  );
+  const origin = (
+    input.origin ??
+    globalThis.location?.origin ??
+    CANONICAL_SITE_URL
+  ).replace(/\/$/, "");
   const doc = (path: string) => (origin ? `${origin}${path}` : path);
 
   const appearance: AppearanceConfig =

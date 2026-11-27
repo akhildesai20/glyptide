@@ -1,6 +1,6 @@
 # @glyptide/react
 
-Thin React adapter for [glyptide](https://www.npmjs.com/package/glyptide) (peer dependency).
+Thin React adapter for [glyptide](https://glyptide.vercel.app) (peer dependency).
 
 ```bash
 # Until public npm release (see docs/publication-status.json), install local packages:

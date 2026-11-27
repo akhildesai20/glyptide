@@ -12,6 +12,15 @@ const distIndex = path.join(root, "packages/glyptide/dist/index.js");
 const pkg = JSON.parse(
   fs.readFileSync(path.join(root, "packages/glyptide/package.json"), "utf8"),
 );
+const publicationStatus = JSON.parse(
+  fs.readFileSync(path.join(root, "docs/publication-status.json"), "utf8"),
+);
+const websiteUrl = String(publicationStatus.websiteUrl || "").replace(/\/$/, "");
+const schemaOrigin = websiteUrl || "https://glyptide.local";
+const absDoc = (pathPart) =>
+  websiteUrl
+    ? `${websiteUrl}${pathPart.startsWith("/") ? pathPart : `/${pathPart}`}`
+    : pathPart;
 
 if (!fs.existsSync(distIndex)) {
   console.error("Missing packages/glyptide/dist — run npm run build:lib first");
@@ -128,7 +137,7 @@ fs.writeFileSync(
 /* —— JSON Schemas —— */
 const appearanceSchema = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
-  $id: "https://glyptide.local/schemas/appearance.json",
+  $id: `${schemaOrigin}/schemas/appearance.json`,
   title: "GlyptideAppearance",
   type: "object",
   additionalProperties: false,
@@ -144,7 +153,7 @@ const appearanceSchema = {
 
 const configSchema = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
-  $id: "https://glyptide.local/schemas/config.json",
+  $id: `${schemaOrigin}/schemas/config.json`,
   title: "GlyptideConfig",
   type: "object",
   additionalProperties: false,
@@ -243,7 +252,7 @@ const configSchema = {
 
 const patternMetaSchema = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
-  $id: "https://glyptide.local/schemas/pattern-meta.json",
+  $id: `${schemaOrigin}/schemas/pattern-meta.json`,
   title: "GlyptidePatternMeta",
   type: "object",
   required: ["id", "name", "category", "kind", "effect", "appearanceLifecycle"],
@@ -281,9 +290,6 @@ fs.writeFileSync(
 );
 
 /* —— Markdown docs —— */
-const publicationStatus = JSON.parse(
-  fs.readFileSync(path.join(root, "docs/publication-status.json"), "utf8"),
-);
 const installNote = publicationStatus.npmPublished
   ? `The npm package \`glyptide@${pkg.version}\` is on the public registry:
 
@@ -407,48 +413,51 @@ function copyDir(src, dest) {
 copyDir(path.join(root, "skills/glyptide"), outSkill);
 
 /* —— llms.txt —— */
+const siteLine = websiteUrl
+  ? `\nWebsite: ${websiteUrl} (home · playground · docs · For AI)\n`
+  : "\n";
 const llmsTxt = `# Glyptide
 
 > Thoughtful text motion for generative interfaces — ${patternCount} patterns across 6 use cases. Model-independent presentation layer for AI streaming UIs.
-
+${siteLine}
 Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
 ${installNote.split("\n").slice(0, 1).join("")}
 
 ## Start here (minimal context)
 
-- [AI / integrator brief](/docs/ai-integrate.md): Install + integrate without reading website source — **fetch this first**
+- [AI / integrator brief](${absDoc("/docs/ai-integrate.md")}): Install + integrate without reading website source — **fetch this first**
 - Prefer progressive retrieval. Do **not** inspect \`site/\` playground source or engine internals unless maintaining the library.
-- Do **not** load [llms-full.txt](/llms-full.txt) unless you need exhaustive pattern ids.
+- Do **not** load [llms-full.txt](${absDoc("/llms-full.txt")}) unless you need exhaustive pattern ids.
 
 ## Docs (on demand)
 
-- [Getting started](/docs/getting-started.md): Install (local package) and first \`createGlyptide\` call
-- [Public API](/docs/api.md): \`createGlyptide\`, instance methods, appearance lifecycle
-- [Streaming](/docs/streaming.md): \`append\` / \`pipeTextToGlyptide\`, delta vs snapshot
-- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
-- [Patterns](/docs/patterns.md): All ${patternCount} pattern ids with lifecycle metadata
-- [Accessibility](/docs/accessibility.md): Reduced motion, semantics, announcements
-- [Design guidance](/docs/design.md): Motion and reading-comfort principles
-- [Full documentation](/llms-full.txt): Consolidated AI-readable reference (large)
+- [Getting started](${absDoc("/docs/getting-started.md")}): Install (local package) and first \`createGlyptide\` call
+- [Public API](${absDoc("/docs/api.md")}): \`createGlyptide\`, instance methods, appearance lifecycle
+- [Streaming](${absDoc("/docs/streaming.md")}): \`append\` / \`pipeTextToGlyptide\`, delta vs snapshot
+- [Appearance](${absDoc("/docs/appearance.md")}): Presets, color modes, transient vs review-bound lifecycles
+- [Patterns](${absDoc("/docs/patterns.md")}): All ${patternCount} pattern ids with lifecycle metadata
+- [Accessibility](${absDoc("/docs/accessibility.md")}): Reduced motion, semantics, announcements
+- [Design guidance](${absDoc("/docs/design.md")}): Motion and reading-comfort principles
+- [Full documentation](${absDoc("/llms-full.txt")}): Consolidated AI-readable reference (large)
 
 ## Machine-readable
 
-- [Pattern registry JSON](/registry/patterns.json): Versioned metadata for every pattern
-- [Config JSON Schema](/schemas/config.json): Validate Glyptide configuration
-- [Appearance JSON Schema](/schemas/appearance.json): Appearance options
-- [Pattern meta schema](/schemas/pattern-meta.json): Registry entry shape
+- [Pattern registry JSON](${absDoc("/registry/patterns.json")}): Versioned metadata for every pattern
+- [Config JSON Schema](${absDoc("/schemas/config.json")}): Validate Glyptide configuration
+- [Appearance JSON Schema](${absDoc("/schemas/appearance.json")}): Appearance options
+- [Pattern meta schema](${absDoc("/schemas/pattern-meta.json")}): Registry entry shape
 
 ## Agent resources
 
-- [Agent skill](/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
-- [For AI page](/for-ai.html): Human + agent discovery page
+- [Agent skill](${absDoc("/skills/glyptide/SKILL.md")}): Portable Agent Skills package for coding agents
+- [For AI page](${absDoc("/for-ai.html")}): Human + agent discovery page
 
 ## Examples
 
-- [Vanilla JS](/skills/glyptide/examples/vanilla-js.md)
-- [React](/skills/glyptide/examples/react.md)
-- [AI SDK streaming](/skills/glyptide/examples/ai-sdk.md)
-- [Provider notes](/docs/providers.md)
+- [Vanilla JS](${absDoc("/skills/glyptide/examples/vanilla-js.md")})
+- [React](${absDoc("/skills/glyptide/examples/react.md")})
+- [AI SDK streaming](${absDoc("/skills/glyptide/examples/ai-sdk.md")})
+- [Provider notes](${absDoc("/docs/providers.md")})
 `;
 
 fs.writeFileSync(path.join(outPublic, "llms.txt"), llmsTxt);
@@ -458,7 +467,7 @@ const patternIdList = patterns.map((p) => `- \`${p.id}\` — ${p.name} (${p.case
 const llmsFull = `# Glyptide — full AI reference
 
 > Version ${pkg.version}. ${patternCount} patterns. MIT. Presentation layer only — no model calls, no API keys.
-
+${websiteUrl ? `> Website: ${websiteUrl}\n` : ""}
 ## Overview
 
 Glyptide is an open-source library of text generation, insertion, rewriting, and transformation motion patterns for generative interfaces.
@@ -536,10 +545,69 @@ Prefer CSS + Web Animations. Pause off-screen previews. Avoid new runtime depend
 
 ## Context tip
 
-For new integrations, start with \`/docs/ai-integrate.md\` instead of this full file.
+For new integrations, start with \`${absDoc("/docs/ai-integrate.md")}\` instead of this full file.
 `;
 
 fs.writeFileSync(path.join(outPublic, "llms-full.txt"), llmsFull);
+
+/* —— robots + sitemap (when websiteUrl is set) —— */
+const robots = websiteUrl
+  ? `# Crawl policy for the Glyptide docs / playground site.
+User-agent: *
+Allow: /
+
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /registry/
+Allow: /schemas/
+Allow: /docs/
+Allow: /skills/
+
+Sitemap: ${websiteUrl}/sitemap.xml
+`
+  : `# Crawl policy for the Glyptide docs / playground site.
+# Update Sitemap URL after docs/publication-status.json → websiteUrl is set.
+User-agent: *
+Allow: /
+
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /registry/
+Allow: /schemas/
+Allow: /docs/
+Allow: /skills/
+`;
+fs.writeFileSync(path.join(outPublic, "robots.txt"), robots);
+
+if (websiteUrl) {
+  const urls = [
+    "/",
+    "/playground/",
+    "/docs/",
+    "/for-ai.html",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/registry/patterns.json",
+    "/docs/ai-integrate.md",
+    "/docs/getting-started.md",
+    "/docs/api.md",
+    "/docs/streaming.md",
+    "/docs/appearance.md",
+    "/skills/glyptide/SKILL.md",
+  ];
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (u) => `  <url>
+    <loc>${websiteUrl}${u}</loc>
+  </url>`,
+  )
+  .join("\n")}
+</urlset>
+`;
+  fs.writeFileSync(path.join(outPublic, "sitemap.xml"), sitemap);
+}
 
 console.log("Generated AI docs:");
 console.log("  registry patterns:", registry.patterns.length);
@@ -548,3 +616,4 @@ console.log("  → site/public/llms-full.txt");
 console.log("  → site/public/registry/patterns.json");
 console.log("  → site/public/schemas/*");
 console.log("  → site/public/docs/*");
+if (websiteUrl) console.log("  → site/public/robots.txt + sitemap.xml");

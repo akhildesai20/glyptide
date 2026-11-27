@@ -58,9 +58,9 @@ Underscored test instrumentation (if present) is **not** part of the supported p
 
 ## Docs
 
-- Minimal agent / integrator brief: repository `docs/ai-integrate.md`
-- API · Streaming · Appearance in repository `docs/`
-- AI index: `/llms.txt` · registry `/registry/patterns.json` (on the docs site)
+- Website: https://glyptide.vercel.app
+- Minimal agent / integrator brief: https://glyptide.vercel.app/docs/ai-integrate.md
+- AI index: https://glyptide.vercel.app/llms.txt · registry https://glyptide.vercel.app/registry/patterns.json
 
 ## License
 

@@ -46,9 +46,10 @@ g.start({ text: "Every word, intentionally in motion." });
 
 ## Documentation
 
-- Integrator brief: `docs/ai-integrate.md`
-- API / streaming / appearance docs in `docs/`
-- Website (home · playground · docs · For AI) ships with this repository
+- Website: https://glyptide.vercel.app
+- Integrator brief: https://glyptide.vercel.app/docs/ai-integrate.md
+- API / streaming / appearance: https://glyptide.vercel.app/docs/
+- For AI: https://glyptide.vercel.app/for-ai.html
 
 ## Known limitations
 
@@ -56,5 +57,6 @@ This is a **public preview**. It does not claim exhaustive cross-browser certifi
 
 ## Links
 
+- Website: https://glyptide.vercel.app
 - Repository: https://github.com/akhildesai20/glyptide
 - License: MIT

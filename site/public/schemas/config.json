@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://glyptide.local/schemas/config.json",
+  "$id": "https://glyptide.vercel.app/schemas/config.json",
   "title": "GlyptideConfig",
   "type": "object",
   "additionalProperties": false,

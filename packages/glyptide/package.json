@@ -71,7 +71,7 @@
   "bugs": {
     "url": "https://github.com/akhildesai20/glyptide/issues"
   },
-  "homepage": "https://github.com/akhildesai20/glyptide#readme",
+  "homepage": "https://glyptide.vercel.app",
   "engines": {
     "node": ">=18"
   },

@@ -7,6 +7,8 @@ Read this first. Fetch other docs only when the task needs them.
 
 Glyptide is a **presentation layer** for generative text UIs (stream, insert, rewrite, continue, structure). It does **not** call models and needs **no API keys**.
 
+**Website:** https://glyptide.vercel.app (playground · docs · [For AI](https://glyptide.vercel.app/for-ai.html) · [llms.txt](https://glyptide.vercel.app/llms.txt))
+
 ## Do not
 
 - Do **not** clone or inspect `site/` (playground website source) to learn the API.

@@ -3,13 +3,15 @@
  * Keep in sync with published docs, llms assets, and packaging status.
  */
 
-export const LEARN_WITH_AI_PROMPT_VERSION = 2;
+import { CANONICAL_SITE_URL } from "./site-url";
+
+export const LEARN_WITH_AI_PROMPT_VERSION = 3;
 
 /** Absolute site origin for AI-readable links (deployment-aware). */
 export function siteOrigin(
   origin = typeof location !== "undefined" ? location.origin : "",
 ): string {
-  return (origin || "").replace(/\/$/, "");
+  return (origin || CANONICAL_SITE_URL || "").replace(/\/$/, "");
 }
 
 function abs(origin: string, path: string): string {

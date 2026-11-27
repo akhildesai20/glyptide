@@ -1,6 +1,7 @@
 # Glyptide — full AI reference
 
 > Version 0.1.0. 96 patterns. MIT. Presentation layer only — no model calls, no API keys.
+> Website: https://glyptide.vercel.app
 
 ## Overview
 
@@ -199,4 +200,4 @@ Prefer CSS + Web Animations. Pause off-screen previews. Avoid new runtime depend
 
 ## Context tip
 
-For new integrations, start with `/docs/ai-integrate.md` instead of this full file.
+For new integrations, start with `https://glyptide.vercel.app/docs/ai-integrate.md` instead of this full file.
