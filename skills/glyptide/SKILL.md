@@ -27,7 +27,7 @@ Glyptide is a **presentation layer** for generative text. It does not send promp
 1. Inspect the host app (framework, theme, where text renders).
 2. Use case: `new` | `insert` | `replace` | `rewrite` | `continue` | `structured`.
 3. Pick a pattern via `recommendPatterns` or a **targeted** registry lookup — not the whole inventory.
-4. Install from built `packages/glyptide` (or tarball) until public npm release — app projects need the package, not a full monorepo clone.
+4. Install from npm: `npm install glyptide` (and `@glyptide/react` when needed) — app projects need the package, not a full monorepo clone.
 5. Import `glyptide` + `glyptide/styles.css` (or `@glyptide/react`).
 6. Connect the existing stream with `append`/`finish` or `pipeTextToGlyptide` (`delta` vs `snapshot`).
 7. Configure appearance/motion; verify lifecycle (transient paint clears).

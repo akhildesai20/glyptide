@@ -3,8 +3,7 @@
 Thin React adapter for [glyptide](https://glyptide.vercel.app) (peer dependency).
 
 ```bash
-# Until public npm release (see docs/publication-status.json), install local packages:
-npm install ./packages/glyptide ./packages/glyptide-react
+npm install glyptide @glyptide/react
 ```
 
 ```tsx
@@ -31,7 +30,7 @@ export function StreamView() {
 
 Strict Mode double-mount must not leave orphan `.glyptide-waiting` nodes. Always call through the imperative handle (`beginStream` / `append` / `finish`) for multi-chunk streams so session IDs stay coherent across hot updates.
 
-See the `glyptide` package README and repository `docs/api.md` for the full API.  
+See the `glyptide` package README and https://glyptide.vercel.app/docs/ for the full API.  
 Do not invent props beyond the published adapter surface.
 
 MIT License.

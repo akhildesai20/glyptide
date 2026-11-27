@@ -1,7 +1,7 @@
 # React + Glyptide
 
 ```bash
-npm install /path/to/glyptide/packages/glyptide /path/to/glyptide/packages/glyptide-react
+npm install glyptide @glyptide/react
 ```
 
 ```tsx

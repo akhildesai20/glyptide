@@ -1,8 +1,8 @@
 {
   "version": "0.1.0",
   "maturity": "public-preview",
-  "npmPublished": false,
-  "repositoryPublic": false,
+  "npmPublished": true,
+  "repositoryPublic": true,
   "websiteUrl": "https://glyptide.vercel.app",
   "packages": ["glyptide", "@glyptide/react"],
   "notes": "Flip npmPublished to true only after successful public registry publish + install verification. Then run: npm run generate:ai-docs && npm run sync:publication-status"

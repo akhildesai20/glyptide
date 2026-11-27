@@ -5,7 +5,7 @@
 
 import { CANONICAL_SITE_URL } from "./site-url";
 
-export const LEARN_WITH_AI_PROMPT_VERSION = 3;
+export const LEARN_WITH_AI_PROMPT_VERSION = 4;
 
 /** Absolute site origin for AI-readable links (deployment-aware). */
 export function siteOrigin(
@@ -82,7 +82,7 @@ AI-readable:
 - Pattern registry: ${registry}
 - Agent skill: ${skill}
 
-Repository (may be private — do not rely on GitHub alone): ${github}
+Repository: ${github}
 
 ---
 
@@ -90,7 +90,7 @@ Repository (may be private — do not rely on GitHub alone): ${github}
 
 Glyptide is a **presentation layer** for generative UIs (stream, insert, rewrite, continue, structure). No AI provider calls, no API keys.
 
-\`glyptide@0.1.0\` is **not on public npm yet**. Install built \`packages/glyptide\` or a \`.tgz\` from \`npm pack\`. Styles: \`import "glyptide/styles.css"\`.
+Install: \`npm install glyptide\` (optional \`@glyptide/react\`). Styles: \`import "glyptide/styles.css"\`. Website: https://glyptide.vercel.app
 
 \`\`\`ts
 import { createGlyptide } from "glyptide";

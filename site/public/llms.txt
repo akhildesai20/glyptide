@@ -5,7 +5,7 @@
 Website: https://glyptide.vercel.app (home · playground · docs · For AI)
 
 Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
-The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
+The npm package `glyptide@0.1.0` is on the public registry:
 
 ## Start here (minimal context)
 

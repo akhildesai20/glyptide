@@ -14,11 +14,10 @@ describe("learn-with-ai prompt", () => {
     expect(prompt).toContain("https://example.com/docs/getting-started.md");
     expect(prompt).toContain("https://example.com/registry/patterns.json");
     expect(prompt).toContain("https://example.com/skills/glyptide/SKILL.md");
-    expect(prompt).toContain("not on public npm yet");
+    expect(prompt).toContain("npm install glyptide");
     expect(prompt).toContain("createGlyptide");
     expect(prompt).toContain("Do not invent");
     expect(prompt).toContain("site/");
-    expect(prompt).not.toMatch(/npm install glyptide@/);
   });
 
   it("normalizes trailing slashes on origin", () => {

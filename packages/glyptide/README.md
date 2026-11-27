@@ -3,24 +3,16 @@
 Thoughtful text-motion patterns for generative interfaces.  
 **Presentation layer only** — no model calls, no API keys.
 
-**Version:** 0.1.0 · **Maturity:** public preview · **License:** MIT
+**Version:** 0.1.0 · **Maturity:** public preview · **License:** MIT  
+**Website:** https://glyptide.vercel.app
 
 ## Install
 
-Publication status is centralized in the monorepo at `docs/publication-status.json`.
-
-Until the package is on the public npm registry:
-
 ```bash
-# From a clone / CI artifact that already ran `npm run build:lib`:
-npm install ./packages/glyptide
-
-# Or pack once, then install the tarball in any project:
-#   cd packages/glyptide && npm pack
-#   npm install ./glyptide-0.1.0.tgz
+npm install glyptide
 ```
 
-React apps: also add `@glyptide/react` the same way from `./packages/glyptide-react`.
+React apps: also add `@glyptide/react`.
 
 Requires **Node.js ≥ 18**. Modern evergreen browsers.
 
@@ -59,7 +51,7 @@ Underscored test instrumentation (if present) is **not** part of the supported p
 ## Docs
 
 - Website: https://glyptide.vercel.app
-- Minimal agent / integrator brief: https://glyptide.vercel.app/docs/ai-integrate.md
+- Integrator brief: https://glyptide.vercel.app/docs/ai-integrate.md
 - AI index: https://glyptide.vercel.app/llms.txt · registry https://glyptide.vercel.app/registry/patterns.json
 
 ## License

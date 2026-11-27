@@ -20,16 +20,13 @@ Glyptide is a **presentation layer** for generative text UIs (stream, insert, re
 
 Install wording is driven by [`publication-status.json`](./publication-status.json) (see also [`publication-install.md`](./publication-install.md)).
 
-While `"npmPublished": false`, install a built package path or tarball:
-
 ```bash
-# From a built clone (relative paths work on Windows / macOS / Linux):
-npm install ./packages/glyptide
+npm install glyptide
 # optional React adapter:
-npm install ./packages/glyptide-react
+npm install @glyptide/react
 ```
 
-Cloning the monorepo is for **contributors** (and to run `npm run build:lib` / pack). App builders only need the package. Do **not** treat registry install commands as live until publication status flips.
+Cloning the monorepo is for **contributors**. App builders only need the npm packages.
 
 ## Integrate
 
@@ -53,16 +50,15 @@ Lightweight (no registry JSON): `import { makeEngine } from "glyptide/engine"`.
 
 | Need | Open |
 |------|------|
-| Install + first call | `docs/getting-started.md` or `/docs/getting-started.md` |
+| Install + first call | `docs/getting-started.md` or https://glyptide.vercel.app/docs/getting-started.md |
 | Options & methods | `docs/api.md` |
 | Live streams | `docs/streaming.md` |
 | Pick a pattern | `recommendPatterns({ useCase })` or `/registry/patterns.json` |
 | Paint / presets | `APPEARANCE.md` / `/docs/appearance.md` |
-| Index of links | `/llms.txt` |
-| Exhaustive reference | `/llms-full.txt` (large — last resort) |
+| Index of links | https://glyptide.vercel.app/llms.txt |
+| Exhaustive reference | https://glyptide.vercel.app/llms-full.txt (large — last resort) |
 | Agent skill | `skills/glyptide/SKILL.md` |
 
 ## Concerns to keep separate
 
-**Pattern** · **Motion** · **Appearance** · **Lifecycle**  
-Transient appearance must clear to **inherited** host styles. Honor `prefers-reduced-motion`.
+**Pattern** · **Motion** · **Appearance** · **Lifecycle**

@@ -16,6 +16,7 @@ Glyptide is a lightweight, model-independent presentation layer for streaming, i
 | Playground | https://glyptide.vercel.app/playground/ |
 | Docs | https://glyptide.vercel.app/docs/ |
 | For AI | https://glyptide.vercel.app/for-ai.html |
+| npm | https://www.npmjs.com/package/glyptide · https://www.npmjs.com/package/@glyptide/react |
 | Repository | https://github.com/akhildesai20/glyptide |
 | Integrator brief | [docs/ai-integrate.md](./docs/ai-integrate.md) · [live](https://glyptide.vercel.app/docs/ai-integrate.md) |
 | API | [docs/api.md](./docs/api.md) |
@@ -25,23 +26,16 @@ Glyptide is a lightweight, model-independent presentation layer for streaming, i
 
 ## Installation
 
-Prefer **package install** over cloning. Current install wording is generated from publication status — see [docs/publication-install.md](./docs/publication-install.md).
-
 ```bash
-# From a clone after `npm run build:lib` (macOS / Linux / Windows):
-npm install ./packages/glyptide
+npm install glyptide
 
 # Optional React adapter:
-npm install ./packages/glyptide-react
-
-# Or pack once, then install the tarball in any project:
-#   cd packages/glyptide && npm pack
-#   npm install ./glyptide-0.1.0.tgz
+npm install @glyptide/react
 ```
 
 Requires **Node.js ≥ 18**. The library targets modern browsers (baseline evergreen). React adapter requires **React ≥ 18**.
 
-> `glyptide@0.1.0` is **not on the public npm registry yet**. Do not treat registry install commands as live until `docs/publication-status.json` has `"npmPublished": true`.
+Install wording is generated from [docs/publication-status.json](./docs/publication-status.json) — see [docs/publication-install.md](./docs/publication-install.md).
 
 ## Minimal example
 
@@ -119,7 +113,7 @@ Portable skill: [`skills/glyptide/`](./skills/glyptide/).
 | `docs/` | Human/agent docs |
 | `skills/glyptide/` | Agent Skill |
 | `examples/` | Offline recipes / provider notes |
-| `site/` | Playground + docs website (**becomes public with the repo**; not a runtime dependency) |
+| `site/` | Playground + docs website (not a runtime dependency) |
 | `prototype/` | Historical study — not production source of truth |
 
 **Public API** lives in package exports (`createGlyptide`, stream helpers, patterns, presets, styles). Underscored test hooks and `site/` tooling are **not** supported public API.
@@ -146,7 +140,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) and [AGENTS.md](./AGENTS.md).
 - Pattern ids are stable; inventing ids throws `GlyptideConfigError`
 - Snapshot streams replace on divergent / shrinking / empty payloads (see streaming docs)
 - Showcase typography lives in the website; the runtime inherits host font metrics
-- Website: https://glyptide.vercel.app (`docs/publication-status.json` → `websiteUrl`)
 
 ## License
 

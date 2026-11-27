@@ -52,7 +52,7 @@ npm run test:clean-room    # pack + import smoke (no publish)
 npm run measure:ai-context # approximate token footprint of AI entry docs
 ```
 
-Local package install for consumers (after `build:lib`): `npm install ./packages/glyptide` (relative path; works on Windows).
+Consumer install: `npm install glyptide` (optional `@glyptide/react`). Contributors still use workspace `npm run build:lib`.
 
 ## Coding conventions
 

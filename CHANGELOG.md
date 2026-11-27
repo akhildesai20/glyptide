@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0 — Public preview (pre-publication)
+## 0.1.0 — Public preview
 
-First public preview of Glyptide. Feature set is frozen for this release.
+First public release of Glyptide on npm (`glyptide`, `@glyptide/react`).
 
 ### Added
 
@@ -14,11 +14,10 @@ First public preview of Glyptide. Feature set is frozen for this release.
 - Motion presets; adaptive waiting; stall detection
 - Lightweight `glyptide/engine` export; IIFE browser build; CSS entry
 - AI-native docs: integrator brief, `llms.txt`, registry JSON, schemas, Agent Skill
-- Playground website (home · playground · docs · For AI)
+- Playground website (home · playground · docs · For AI) at https://glyptide.vercel.app
 - CI: Windows/Linux, Node 20/24, clean-room pack smoke, multi-browser smoke
 
 ### Notes
 
 - Maturity: **public preview** — not exhaustive compatibility or latency guarantees
-- Until `docs/publication-status.json` has `"npmPublished": true`, install from a built package path or tarball
-- Website source in `site/` becomes publicly visible when the repository is made public
+- Install: `npm install glyptide` / `npm install @glyptide/react`

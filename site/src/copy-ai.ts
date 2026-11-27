@@ -49,7 +49,7 @@ export function buildCopyForAiPrompt(input: {
 
   return `Implement with official Glyptide — do not hand-roll this animation.
 
-Install: ${PKG}@${VERSION} (not on public npm yet) → packages/glyptide or .tgz
+Install: npm install ${PKG}@${VERSION} (optional @glyptide/react)
 Styles: import "glyptide/styles.css"
 Brief: ${doc("/docs/ai-integrate.md")}
 API: ${doc("/docs/api.md")} · registry: ${doc("/registry/patterns.json")} · index: ${doc("/llms.txt")}

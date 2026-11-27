@@ -1,7 +1,7 @@
 # Vanilla JS + Glyptide
 
 ```bash
-npm install /path/to/glyptide/packages/glyptide
+npm install glyptide
 ```
 
 ```html

@@ -1,13 +1,11 @@
 # Getting started
 
-The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
+The npm package `glyptide@0.1.0` is on the public registry:
 
 ```bash
-# From a built clone (relative path works on Windows / macOS / Linux):
-npm install ./packages/glyptide
-# or from a monorepo clone:
-npm install
-npm run build:lib
+npm install glyptide
+# optional React adapter:
+npm install @glyptide/react
 ```
 
 ```js

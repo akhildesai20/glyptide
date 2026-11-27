@@ -1,8 +1,7 @@
 import type { ResolvedConfig } from "glyptide";
 
 export const INTEGRATE_SNIPPETS = {
-  js: `// From this repository (package not yet on npm):
-//   npm install ./packages/glyptide
+  js: `// npm install glyptide
 import { createGlyptide } from "glyptide";
 import "glyptide/styles.css";
 
@@ -35,7 +34,7 @@ text.start({
 // for await (const chunk of stream) text.append(chunk);
 // text.finish();`,
 
-  react: `// npm install ./packages/glyptide ./packages/glyptide-react
+  react: `// npm install glyptide @glyptide/react
 import { Glyptide } from "@glyptide/react";
 import "glyptide/styles.css";
 
@@ -54,16 +53,16 @@ export function Example() {
   );
 }`,
 
-  download: `Local install (verified):
+  download: `npm install:
 
-  npm install ./packages/glyptide
-  npm install ./packages/glyptide-react
+  npm install glyptide
+  npm install @glyptide/react
 
-Built files:
-  packages/glyptide/dist/index.js
-  packages/glyptide/dist/glyptide.iife.js
-  packages/glyptide/dist/styles.css
+CDN / standalone (from the installed package):
+  node_modules/glyptide/dist/glyptide.iife.js
+  node_modules/glyptide/dist/styles.css
 
+Docs: https://glyptide.vercel.app/docs/
 Use playground Code export for a self-contained HTML example
 with the selected preset and both light/dark palette variants.`,
 };
