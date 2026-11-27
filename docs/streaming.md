@@ -44,7 +44,11 @@ Starting a **new** stream after stop/complete requires `beginStream()` (or `pipe
 
 ### Incremental segmentation
 
-Chunks are transport boundaries, not reveal units. Glyptide retains an incomplete trailing boundary (word/sentence/paragraph/line, and **grapheme clusters** in token mode — including ZWJ emoji and combining marks) across `append` calls and flushes remainder on `finish()`.
+Chunks are transport boundaries, not reveal units. Glyptide retains an incomplete trailing boundary (word/sentence/paragraph/line) across `append` calls and flushes remainder on `finish()`.
+
+**Token / grapheme mode:** holds only *extensible* trailing clusters (ZWJ joiners, lone regional indicators, emoji presentation selectors, combining marks / Indic virama). Stable Latin/CJK clusters are eligible to reveal immediately. On source stall, any still-held fragment is flushed so slow streams are not delayed indefinitely.
+
+**Sentence fallback** (no `Intl.Segmenter`): Latin `.!?` plus common CJK/fullwidth terminators (`。！？…`). Locale-complete segmentation requires `Intl.Segmenter`.
 
 Atomic patterns (`kind: "all"`) hold all text until finish.
 
@@ -58,12 +62,18 @@ Atomic patterns (`kind: "all"`) hold all text until finish.
 
 Source text is never discarded. Queues coalesce when bounded. Stall detection fires only when the **source** is idle and the **visual queue is empty** (not while pacing).
 
+### Pause
+
+While `Paused`, appends and snapshot replacements stay buffered — the DOM does not change. `resume()` applies any held snapshot, then drains the reveal queue. `finish()` during pause marks the session complete; settlement runs after resume drains.
+
 ### Cancellation ownership
 
 | Concern | Owner |
 |---------|--------|
 | Visual playback stop | `instance.stop()` / AbortSignal on create / pipe |
 | Stream consumption stop | `AbortSignal` on `consumeTextStream` / `pipeTextToGlyptide` |
+| Pipe abort/error | Stops **only** the pipe’s own session — never a newer `beginStream()` |
+| Already-aborted signal | Throws before `beginStream` — does not disturb an active session |
 | Upstream model HTTP/SSE | **Host** — pass the **same** `AbortSignal` to the provider SDK |
 | Instance teardown | `instance.destroy()` |
 
@@ -88,7 +98,15 @@ Binary streams use one persistent `TextDecoder` for the lifetime of the source. 
 
 ## Host CSS / DOM
 
-Production styles target `.glyptide-document` and `.glyptide-waiting` only. `destroy()` removes classes Glyptide added and clears generated content; pre-existing host classes remain.
+Production styles target `.glyptide-document` and `.glyptide-waiting` only. `.glyptide-document` **inherits** host `font-family`, `font-size`, `line-height`, and `letter-spacing` (with `white-space: pre-wrap` for layout). Showcase typography lives in site CSS, not the package. `destroy()` removes classes Glyptide added and clears generated content; pre-existing host classes remain.
+
+### Unicode segmentation
+
+Incremental reveal uses grapheme-aware buffering (ZWJ sequences, skin tones, flags, combining marks, Indic conjuncts) so animation units never split mid-cluster. Where `Intl.Segmenter` is available, word/sentence modes prefer it (including non-Western terminators such as `。！？`); otherwise a documented terminator/heuristic fallback is used. Eligible completed units are not held indefinitely waiting for more source text — only incomplete clusters/words remain buffered.
+
+### React adapter (`@glyptide/react`)
+
+`speed` / `latency` / `reduce` / `appearance` / `motion` update in place without resetting the session. Pattern/theme/config changes recreate the instance. See `packages/glyptide-react/README.md`.
 
 ## Streamdown / Markdown hosts
 

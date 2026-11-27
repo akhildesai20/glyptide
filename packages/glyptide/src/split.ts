@@ -42,9 +42,14 @@ export function splitText(text: string, kind: BufferKind): string[] {
   if (kind === "sentence") {
     const segmenter = getSegmenter("sentence");
     if (segmenter) {
+      // Intl.Segmenter handles locale-aware terminators (。！？ … etc.) when available
       return Array.from(segmenter.segment(text), (x) => x.segment);
     }
-    return text.match(/[^.!?]+(?:[.!?]+\s*|$)|[.!?]+/g) || [];
+    // Fallback: Latin + common CJK/fullwidth terminators only (not exhaustive)
+    return (
+      text.match(/[^。．.!?？！…]+(?:[。．.!?？！…]+[\s\u3000]*|$)|[。．.!?？！…]+/g) ||
+      []
+    );
   }
 
   // Prefer Intl word segmentation for CJK / scripts without spaces

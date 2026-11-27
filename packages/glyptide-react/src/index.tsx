@@ -159,6 +159,8 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pattern, signal]);
 
+    // Hot-update appearance + pacing without recreating the instance / session.
+    // Pattern and AbortSignal changes recreate via the mount effect above.
     useEffect(() => {
       instanceRef.current?.setAppearance({
         preset,
@@ -167,8 +169,23 @@ export const Glyptide = forwardRef<GlyptideHandle, GlyptideProps>(
         colors,
         appearance: appearance ?? null,
         motion: motion ?? null,
+        speed,
+        latency,
+        reduce,
       });
-    }, [preset, palette, theme, colors, appearance, motion]);
+    }, [
+      preset,
+      palette,
+      theme,
+      colors,
+      appearance,
+      motion,
+      speed,
+      latency,
+      reduce,
+    ]);
+
+    // Source/text are applied on the next start()/autoPlay — documented reactive surface.
 
     useImperativeHandle(ref, () => ({
       get instance() {

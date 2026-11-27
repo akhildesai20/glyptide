@@ -390,6 +390,19 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
       if ("colors" in next) proposed.colors = next.colors ?? null;
       if ("appearance" in next) proposed.appearance = next.appearance ?? null;
       if ("motion" in next) proposed.motion = next.motion ?? null;
+      if ("speed" in next && typeof next.speed === "number") {
+        proposed.speed = next.speed;
+      }
+      if ("latency" in next && typeof next.latency === "number") {
+        proposed.latency = next.latency;
+      }
+      if ("reduce" in next && typeof next.reduce === "boolean") {
+        proposed.reduce = next.reduce;
+      }
+      if ("stallMs" in next && typeof next.stallMs === "number") {
+        proposed.stallMs = next.stallMs;
+      }
+      if ("catchUp" in next && next.catchUp) proposed.catchUp = next.catchUp;
       validatePartialConfig(proposed);
       const resolved = resolveConfig(
         { text: proposed.text ?? base.text ?? "" },
@@ -402,6 +415,11 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
         colors: resolved.colors,
         appearance: resolved.appearance,
         motion: resolved.motion,
+        speed: resolved.speed,
+        latency: resolved.latency,
+        reduce: resolved.reduce,
+        stallMs: resolved.stallMs,
+        catchUp: resolved.catchUp,
       };
       engine.updateAppearance({
         colors: resolved.colors,
@@ -411,6 +429,11 @@ export function createGlyptide(options: CreateGlyptideOptions): GlyptideInstance
         appearance: resolved.appearance,
         persistGradient: resolved.persistGradient,
         motion: resolved.motion,
+        speed: resolved.speed,
+        latency: resolved.latency,
+        reduce: resolved.reduce,
+        stallMs: resolved.stallMs,
+        catchUp: resolved.catchUp,
       });
     },
     on(event: GlyptideEvent | "*", handler: GlyptideEventHandler) {

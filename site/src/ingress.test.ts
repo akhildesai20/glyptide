@@ -22,11 +22,38 @@ describe("createStreamIngress", () => {
 
   it("flushes remaining units", () => {
     const ingress = createStreamIngress({ policy: "pace" });
-    // pace returns one unit from push; rest stay queued
-    const immediate = ingress.push(["a", "b", "c"]);
-    expect(immediate).toEqual(["a"]);
+    // push only enqueues; the scheduler drains via take()/flush()
+    expect(ingress.push(["a", "b", "c"])).toEqual([]);
+    expect(ingress.take(1)).toEqual(["a"]);
     expect(ingress.flush().join("")).toBe("bc");
     expect(ingress.size).toBe(0);
+  });
+
+  it("push never returns units, even for flush policy", () => {
+    const ingress = createStreamIngress({ policy: "flush" });
+    expect(ingress.push(["a", "b"])).toEqual([]);
+    expect(ingress.size).toBe(2);
+    expect(ingress.suggestedTake()).toBe(2);
+  });
+
+  it("accelerates catchUp take when the backlog is aged", () => {
+    let now = 1000;
+    const ingress = createStreamIngress({
+      policy: "catchUp",
+      maxQueue: 256,
+      now: () => now,
+    });
+    ingress.push(Array.from({ length: 6 }, (_, i) => `w${i} `));
+    expect(ingress.oldestAt).toBe(1000);
+    expect(ingress.suggestedTake()).toBe(1);
+    now = 1250;
+    expect(ingress.backlogAgeMs()).toBe(250);
+    expect(ingress.suggestedTake()).toBe(4);
+    now = 1600;
+    expect(ingress.suggestedTake()).toBe(6);
+    ingress.flush();
+    expect(ingress.oldestAt).toBe(0);
+    expect(ingress.backlogAgeMs()).toBe(0);
   });
 
   it("fires stall after idle", () => {

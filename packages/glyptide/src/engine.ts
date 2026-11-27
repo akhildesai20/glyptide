@@ -44,7 +44,7 @@ export interface InternalEngine {
   accept: () => void;
   reject: () => void;
   palette: () => void;
-  /** Update appearance fields and re-apply CSS vars without restarting generation */
+  /** Update appearance / pacing fields without restarting generation */
   updateAppearance: (
     patch: Partial<
       Pick<
@@ -56,6 +56,11 @@ export interface InternalEngine {
         | "appearance"
         | "persistGradient"
         | "motion"
+        | "speed"
+        | "latency"
+        | "reduce"
+        | "stallMs"
+        | "catchUp"
       >
     >,
   ) => void;
@@ -137,11 +142,20 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   let activeSession = 0;
   let destroyed = false;
   let sourceComplete = false;
+  /** True once finish() has been accepted for the active session (idempotent) */
+  let sessionFinished = false;
+  /**
+   * Snapshot replacement received while paused. The DOM stays untouched until
+   * resume(); append-style updates while this is set extend it.
+   */
+  let pausedSnapshot: string | null = null;
   let drainTimer = 0;
   let splitter = createIncrementalSplitter("word");
   const settleTimers = new Set<number>();
   const bus = createEventBus();
   const MAX_ACTIVE_ANIMATIONS = 48;
+  /** Max time finalize waits for in-flight animations before settling (ms) */
+  const SETTLE_MAX_MS = 1200;
   const ingress = createStreamIngress({
     maxQueue: 256,
     policy: "catchUp",
@@ -149,6 +163,15 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     onStall: () => {
       if (destroyed) return;
       if (liveMode && (state === "Generating" || state === "Waiting for text")) {
+        // Avoid holding a trailing word/grapheme indefinitely on slow streams
+        if (splitter.pending && opt?.kind !== "all") {
+          const held = splitter.flush();
+          if (held.length) {
+            ingress.push(held);
+            scheduleDrain();
+            return;
+          }
+        }
         set("Waiting for text");
         cue("Waiting for more text…");
         emit("stalled");
@@ -167,8 +190,14 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     generation += 1;
     activeSession = 0;
     sourceComplete = false;
+    sessionFinished = false;
+    pausedSnapshot = null;
     stopDrain();
     splitter.clear();
+  }
+
+  function canAnimate(): boolean {
+    return activeAnimations.size < MAX_ACTIVE_ANIMATIONS;
   }
 
   function stopDrain(): void {
@@ -186,10 +215,11 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       motion.deliveryIntervalMs > 0
         ? motion.deliveryIntervalMs
         : Math.max(8, Math.round(1000 / Math.max(12, opt?.speed ?? 54)));
-    if (policy === "catchUp" && ingress.size > 32) {
+    const age = ingress.backlogAgeMs();
+    if (policy === "catchUp" && (ingress.size > 32 || age > 500)) {
       return Math.max(0, Math.floor(base / 4));
     }
-    if (policy === "catchUp" && ingress.size > 8) {
+    if (policy === "catchUp" && (ingress.size > 8 || age > 200)) {
       return Math.max(0, Math.floor(base / 2));
     }
     return base;
@@ -212,7 +242,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       drainTimer = 0;
       if (destroyed || !liveMode || state === "Paused") return;
       // Bound concurrent decorative animations
-      if (activeAnimations.size >= MAX_ACTIVE_ANIMATIONS) {
+      if (!canAnimate()) {
         const batch = ingress.take(Math.max(1, ingress.suggestedTake()));
         for (const u of batch) add(u, { skipAnim: true });
       } else {
@@ -330,7 +360,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   }
 
   function animate(el: HTMLElement, effect: string): void {
-    if (opt.reduce || effect === "none" || !el.animate) return;
+    if (opt.reduce || effect === "none" || !el.animate || !canAnimate()) return;
     const motion = resolveMotion(opt.motion);
     const reveal = motion.revealMs;
     const blur = motion.blurPx;
@@ -488,7 +518,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
 
   function add(t: string, opts?: { skipAnim?: boolean }): void {
     if (destroyed || !chunk) return;
-    const skipAnim = !!opts?.skipAnim;
+    // Over the concurrent-animation budget → reveal without new animations
+    const skipAnim = !!opts?.skipAnim || !canAnimate();
 
     if (opt.effect === "worddiff") {
       rendered += t;
@@ -592,7 +623,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
           if (!visual.solidOnly) {
             e.style.setProperty("--appear-angle", `${direction}deg`);
           }
-          if (visual.animateGradient && e.animate) {
+          if (visual.animateGradient && e.animate && canAnimate()) {
             const a = e.animate(
               [
                 {
@@ -666,6 +697,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
             e.classList.remove("checkpoint-active");
             e.style.removeProperty("background-color");
           }, 1100);
+        } else if (effect === "emphasis" && (!e.animate || !canAnimate())) {
+          settleTransientPiece(e);
         } else if (effect === "emphasis") {
           const a = e.animate(
             [
@@ -776,6 +809,34 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       announce("Proposed text is ready for review.");
       return;
     }
+    const policy = opt.catchUp ?? "catchUp";
+    if (!opt.reduce && policy !== "flush" && activeAnimations.size > 0) {
+      // Soft settle: let in-flight animations finish before appearance cleanup
+      const gen = generation;
+      let budget = SETTLE_MAX_MS;
+      const poll = () => {
+        if (destroyed || gen !== generation) return;
+        if (state === "Paused") {
+          // Paused time does not count against the settle budget
+          later(poll, 50);
+          return;
+        }
+        if (activeAnimations.size === 0 || budget <= 0) {
+          settleComplete();
+          return;
+        }
+        budget -= 50;
+        later(poll, 50);
+      };
+      later(poll, 50);
+      return;
+    }
+    settleComplete();
+  }
+
+  /** Hard clear + appearance cleanup + Complete (after any soft settle wait) */
+  function settleComplete(): void {
+    if (destroyed) return;
     clear();
     if (chunk) {
       const meta = lifecycleMeta();
@@ -1092,7 +1153,15 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     for (const a of activeAnimations) a.play();
     set(previous === "Paused" ? "Generating" : previous);
     if (next) schedule(next, left);
-    if (liveMode) scheduleDrain();
+    if (liveMode) {
+      // Snapshot replacement received while paused becomes visible only now
+      if (pausedSnapshot != null) {
+        const pending = pausedSnapshot;
+        pausedSnapshot = null;
+        replaceRenderedContent(pending);
+      }
+      scheduleDrain();
+    }
   }
 
   function stop(): void {
@@ -1149,6 +1218,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     generation += 1;
     activeSession = generation;
     sourceComplete = false;
+    sessionFinished = false;
+    pausedSnapshot = null;
     liveMode = false;
     simulated = false;
     splitter.clear();
@@ -1171,6 +1242,8 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   function ensureLiveSession(session?: number): boolean {
     if (destroyed) return false;
     if (session != null && !sessionOk(session)) return false;
+    // A finished session never auto-restarts; callers must beginStream()
+    if (sessionFinished) return false;
 
     if (!liveMode) {
       // Terminal states require beginStream() — refuse stale auto-restart
@@ -1192,6 +1265,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       if (activeSession === 0) {
         generation += 1;
         activeSession = generation;
+        sessionFinished = false;
       }
 
       if (!chunk) {
@@ -1212,7 +1286,12 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
       ingress.setPolicy(opt.catchUp ?? "catchUp");
       ingress.setStallMs(opt.stallMs ?? 0);
       announce("Preparing text.");
-      set("Generating");
+      if (state === "Paused") {
+        // Stay paused: resume() returns to Generating
+        previous = "Generating";
+      } else {
+        set("Generating");
+      }
       startStallWatch();
     }
     if (!chunk) setup();
@@ -1222,18 +1301,21 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   /** Begin or continue a real (non-simulated) stream */
   function append(chunkText: string, session?: number): void {
     if (destroyed || !chunkText) return;
+    if (sessionFinished && sessionOk(session)) return;
     if (!ensureLiveSession(session)) return;
 
+    if (pausedSnapshot != null) {
+      // Pending paused snapshot replacement: extend it (applied on resume)
+      pausedSnapshot += chunkText;
+      snapshotAccum = pausedSnapshot;
+      return;
+    }
+
     ingress.setPolicy(opt.catchUp ?? "catchUp");
-    const kind = opt.kind === "all" ? "all" : opt.kind;
-    const units =
-      kind === "all"
-        ? splitter.push(chunkText)
-        : splitter.push(chunkText);
-    // kind all retains until finish; others emit complete units
-    void kind;
-    const ready = units.length ? ingress.push(units) : [];
-    for (const u of ready) add(u);
+    // kind "all" retains until finish; others emit complete units
+    const units = splitter.push(chunkText);
+    // Enqueue only — the scheduler owns reveal (and is a no-op while paused)
+    if (units.length) ingress.push(units);
     scheduleDrain();
   }
 
@@ -1255,7 +1337,7 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     ingress.clear();
     splitter.clear();
 
-    if (!ensureLiveSession(activeSession || undefined)) {
+    if (!liveMode && !ensureLiveSession(activeSession || undefined)) {
       // Force live bootstrap for in-session replace
       liveMode = true;
       simulated = false;
@@ -1280,13 +1362,25 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   function applySnapshot(fullText: string, session?: number): void {
     if (destroyed) return;
     if (session != null && !sessionOk(session)) return;
+    if (sessionFinished && sessionOk(session)) return;
     if (!liveMode && !ensureLiveSession(session)) return;
 
-    const previous = snapshotAccum || rendered;
-    const op = normalizeSnapshot(previous, fullText);
+    const previousText = snapshotAccum || rendered;
+    const op = normalizeSnapshot(previousText, fullText);
     if (op.type === "noop") {
       snapshotAccum = fullText;
       return;
+    }
+    if (state === "Paused") {
+      // Documented pause semantics: nothing becomes visible while paused.
+      // Replacements are held and applied on resume(); appends are buffered.
+      if (pausedSnapshot != null || op.type === "replace") {
+        pausedSnapshot = fullText;
+        snapshotAccum = fullText;
+        ingress.clear();
+        splitter.clear();
+        return;
+      }
     }
     if (op.type === "append") {
       if (op.text) append(op.text, session ?? activeSession);
@@ -1297,16 +1391,23 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
   }
 
   function finish(session?: number): void {
-    if (destroyed || !liveMode) return;
+    if (destroyed) return;
     if (session != null && !sessionOk(session)) return;
+    // Idempotent: exactly one stream-end per session
+    if (sessionFinished) return;
+    if (!liveMode) {
+      // Empty stream (beginStream → finish) still completes
+      if (activeSession === 0) return;
+      if (!ensureLiveSession(session ?? activeSession)) return;
+    }
+    sessionFinished = true;
     emit("stream-end");
     stopStallWatch();
     const rem = splitter.flush();
-    if (rem.length) {
-      const ready = ingress.push(rem);
-      for (const u of ready) add(u);
-    }
+    if (rem.length) ingress.push(rem);
     sourceComplete = true;
+    // Paused: keep buffered text hidden; resume() drains then completes
+    if (state === "Paused") return;
     const policy = opt.catchUp ?? "catchUp";
     if (policy === "flush" || opt.reduce) {
       for (const u of ingress.flush()) add(u, { skipAnim: true });
@@ -1354,6 +1455,11 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
         | "appearance"
         | "persistGradient"
         | "motion"
+        | "speed"
+        | "latency"
+        | "reduce"
+        | "stallMs"
+        | "catchUp"
       >
     >,
   ): void {
@@ -1365,6 +1471,22 @@ export function makeEngine(cb: EngineCallbacks): InternalEngine {
     if ("appearance" in patch) opt.appearance = patch.appearance ?? null;
     if ("persistGradient" in patch) opt.persistGradient = !!patch.persistGradient;
     if ("motion" in patch) opt.motion = patch.motion ?? null;
+    if ("speed" in patch && typeof patch.speed === "number") opt.speed = patch.speed;
+    if ("latency" in patch && typeof patch.latency === "number") {
+      opt.latency = patch.latency;
+    }
+    if ("reduce" in patch && typeof patch.reduce === "boolean") {
+      opt.reduce = patch.reduce;
+      out.classList.toggle("reduced", patch.reduce);
+    }
+    if ("stallMs" in patch && typeof patch.stallMs === "number") {
+      opt.stallMs = patch.stallMs;
+      ingress.setStallMs(patch.stallMs);
+    }
+    if ("catchUp" in patch && patch.catchUp) {
+      opt.catchUp = patch.catchUp;
+      ingress.setPolicy(patch.catchUp);
+    }
     applyAppearanceVars();
     palette();
   }

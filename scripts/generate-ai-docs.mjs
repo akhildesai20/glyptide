@@ -108,7 +108,7 @@ function registryEntry(p) {
 const registry = {
   name: "glyptide",
   version: pkg.version,
-  generatedAt: new Date().toISOString(),
+  // Omit wall-clock timestamps so `check:ai-docs` / CI remain deterministic.
   patternCount,
   cases,
   presets: PALETTE_PRESETS.map((p) => ({

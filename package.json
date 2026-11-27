@@ -11,7 +11,7 @@
     "build:lib": "npm run build -w glyptide && npm run build -w @glyptide/react",
     "generate:ai-docs": "node scripts/generate-ai-docs.mjs",
     "dev": "npm run build:lib && npm run generate:ai-docs && npm run dev -w site",
-    "test": "npm run test -w site",
+    "test": "npm run test -w site && npm run test -w @glyptide/react",
     "test:e2e": "npm run test:e2e -w site",
     "typecheck": "npm run typecheck -w glyptide",
     "size": "node scripts/bundle-size.mjs",

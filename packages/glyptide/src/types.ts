@@ -323,7 +323,11 @@ export interface GlyptideInstance {
   reject: () => void;
   /** Re-apply generation palette (e.g. after theme change) */
   palette: () => void;
-  /** Update preset / palette / theme / appearance without restarting generation */
+  /**
+   * Hot-update appearance / motion / pacing without restarting the session.
+   * `speed`, `latency`, and `reduce` apply to subsequent reveals; in-flight
+   * units keep their current animation.
+   */
   setAppearance: (options: {
     preset?: string | null;
     palette?: ThemeAwarePalette | null;
@@ -331,6 +335,11 @@ export interface GlyptideInstance {
     colors?: GenerationColors | null;
     appearance?: AppearanceConfig | null;
     motion?: MotionConfig | null;
+    speed?: number;
+    latency?: number;
+    reduce?: boolean;
+    stallMs?: number;
+    catchUp?: CatchUpPolicy;
   }) => void;
   /** Subscribe to lifecycle events; returns unsubscribe */
   on: (event: GlyptideEvent | "*", handler: GlyptideEventHandler) => () => void;

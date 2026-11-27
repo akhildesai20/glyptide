@@ -355,18 +355,18 @@ export async function pipeTextToGlyptide(
 ): Promise<string> {
   const mode = options.mode ?? "delta";
   const signal = options.signal;
+  // Already aborted: never touch the instance (may belong to a newer session)
+  if (signal?.aborted) throw abortError();
   const session = instance.beginStream();
-  const onAbort = () => {
+  /** Stop only if this pipe's session is still the active one */
+  const stopIfOwned = () => {
     try {
-      instance.stop();
+      if (instance.session === session) instance.stop();
     } catch {
       /* destroyed */
     }
   };
-  if (signal?.aborted) {
-    onAbort();
-    throw abortError();
-  }
+  const onAbort = () => stopIfOwned();
   if (signal) instrumentedAdd(signal, onAbort, { once: true });
   try {
     let absolute = "";
@@ -395,13 +395,7 @@ export async function pipeTextToGlyptide(
     return text;
   } catch (err) {
     // Failure: stop this session without emitting successful settlement
-    try {
-      if (instance.state !== "Stopped" && instance.state !== "Complete") {
-        instance.stop();
-      }
-    } catch {
-      /* destroyed */
-    }
+    stopIfOwned();
     throw err;
   } finally {
     if (signal) instrumentedRemove(signal, onAbort);

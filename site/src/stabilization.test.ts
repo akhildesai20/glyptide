@@ -117,7 +117,8 @@ describe("generation session isolation", () => {
     const b = g.beginStream();
     g.append("BBB ", b);
     g.append("fromA", a);
-    expect(g.rendered).toContain("BBB");
+    // Reveal is scheduler-driven (append only enqueues)
+    await vi.waitFor(() => expect(g.rendered).toContain("BBB"));
     expect(g.rendered).not.toContain("fromA");
     expect(g.rendered).not.toContain("AAA");
     g.finish(b);
@@ -381,6 +382,107 @@ describe("ghost review lifecycle", () => {
     });
     expect(g.state).toBe("Review");
     expect(el.querySelector(".ghost")).toBeTruthy();
+    g.destroy();
+  });
+});
+
+describe("P0 stream lifecycle", () => {
+  it("pre-aborted pipe does not disturb an active session", async () => {
+    const { g } = mount();
+    const live = g.beginStream();
+    g.append("keep ", live);
+    const ac = new AbortController();
+    ac.abort();
+    await expect(
+      pipeTextToGlyptide(g, "x", { signal: ac.signal }),
+    ).rejects.toMatchObject({ name: "AbortError" });
+    expect(g.session).toBe(live);
+    expect(g.state).not.toBe("Stopped");
+    g.destroy();
+  });
+
+  it("aborting an older pipe does not stop a newer session", async () => {
+    const { g } = mount();
+    const ac = new AbortController();
+    let release!: () => void;
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    async function* src() {
+      yield "a ";
+      await gate;
+      yield "b ";
+    }
+    const p = pipeTextToGlyptide(g, src(), { signal: ac.signal });
+    await vi.waitFor(() => expect(g.session).not.toBe(0));
+    const newer = g.beginStream();
+    ac.abort();
+    await expect(p).rejects.toMatchObject({ name: "AbortError" });
+    release();
+    expect(g.session).toBe(newer);
+    expect(g.state).not.toBe("Stopped");
+    g.destroy();
+  });
+
+  it("finish is idempotent and rejects post-finish chunks", async () => {
+    const { g } = mount();
+    const ends = vi.fn();
+    g.on("stream-end", ends);
+    const s = g.beginStream();
+    g.append("hello ", s);
+    g.finish(s);
+    g.finish(s);
+    g.append("late", s);
+    await vi.waitFor(() => expect(g.state).toBe("Complete"));
+    expect(ends).toHaveBeenCalledTimes(1);
+    expect(g.rendered).not.toContain("late");
+    g.destroy();
+  });
+
+  it("empty stream completes", async () => {
+    const { g } = mount();
+    const events: string[] = [];
+    g.on("*", (e) => events.push(e));
+    const s = g.beginStream();
+    g.finish(s);
+    await vi.waitFor(() => expect(g.state).toBe("Complete"));
+    expect(events).toContain("stream-end");
+    expect(events).toContain("settled");
+    expect(g.rendered).toBe("");
+    g.destroy();
+  });
+
+  it("buffers chunks invisibly while paused and drains on resume", async () => {
+    const { el, g } = mount();
+    const s = g.beginStream();
+    g.append("one ", s);
+    await vi.waitFor(() => expect(g.rendered).toContain("one"));
+    g.pause();
+    const before = el.textContent;
+    g.append("two three ", s);
+    g.finish(s);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(el.textContent).toBe(before);
+    expect(g.rendered).toBe("one ");
+    expect(g.state).toBe("Paused");
+    g.resume();
+    await vi.waitFor(() => expect(g.state).toBe("Complete"));
+    expect(g.rendered).toBe("one two three ");
+    g.destroy();
+  });
+
+  it("holds snapshot replacement while paused until resume", async () => {
+    const { g } = mount();
+    const s = g.beginStream();
+    g.applySnapshot("alpha beta ", s);
+    await vi.waitFor(() => expect(g.rendered).toContain("alpha"));
+    g.pause();
+    g.applySnapshot("totally different ", s);
+    await new Promise((r) => setTimeout(r, 30));
+    expect(g.rendered).toContain("alpha");
+    expect(g.rendered).not.toContain("totally");
+    g.resume();
+    expect(g.rendered).toBe("totally different ");
     g.destroy();
   });
 });

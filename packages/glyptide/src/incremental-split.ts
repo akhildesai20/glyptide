@@ -110,9 +110,49 @@ function splitCompleteLines(
 }
 
 /**
- * Token mode groups grapheme clusters (default 3). Always hold the trailing
- * cluster: the next chunk may extend it (ZWJ emoji, combining marks, Indic).
- * Also hold a partial trailing token group (< TOKEN_GRAPHEMES clusters).
+ * True when the trailing cluster may still grow (ZWJ sequences, skin tones,
+ * regional-indicator pairs, combining marks). Stable Latin/CJK graphemes return false
+ * so slow streams are not delayed by one cluster indefinitely.
+ */
+function isExtensibleCluster(cluster: string): boolean {
+  if (!cluster) return false;
+  if (endsWithIncompleteSurrogate(cluster)) return true;
+  if (cluster.endsWith("\u200D")) return true; // ZWJ join
+  if (cluster.endsWith("\uFE0F")) return true; // emoji presentation may precede ZWJ
+  // Lone regional indicator (flags need a pair)
+  const cps = [...cluster];
+  if (cps.length === 1) {
+    const cp = cps[0].codePointAt(0)!;
+    if (cp >= 0x1f1e6 && cp <= 0x1f1ff) return true;
+  }
+  // Trailing combining mark / virama — may attach more
+  const last = cps[cps.length - 1];
+  const lastCp = last.codePointAt(0)!;
+  if (
+    (lastCp >= 0x0300 && lastCp <= 0x036f) ||
+    (lastCp >= 0x1ab0 && lastCp <= 0x1aff) ||
+    (lastCp >= 0x1dc0 && lastCp <= 0x1dff) ||
+    (lastCp >= 0x20d0 && lastCp <= 0x20ff) ||
+    (lastCp >= 0xfe20 && lastCp <= 0xfe2f) ||
+    lastCp === 0x094d || // Devanagari virama
+    lastCp === 0x09cd ||
+    lastCp === 0x0a4d ||
+    lastCp === 0x0acd ||
+    lastCp === 0x0b4d ||
+    lastCp === 0x0bcd ||
+    lastCp === 0x0c4d ||
+    lastCp === 0x0ccd ||
+    lastCp === 0x0d4d
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Token mode groups grapheme clusters (default 3).
+ * Hold only an *extensible* trailing cluster (ZWJ / RI / combining / virama).
+ * Engine stall flush still releases held content on slow streams.
  */
 function splitCompleteGraphemes(
   buffer: string,
@@ -122,12 +162,12 @@ function splitCompleteGraphemes(
     return { units: [], rest: buffer };
   }
   const graphemes = graphemeClusters(buffer);
-  if (graphemes.length <= 1) {
-    // Single (possibly still-growing) cluster — wait for more or flush().
-    return { units: [], rest: buffer };
-  }
-  const complete = graphemes.slice(0, -1);
-  const held = graphemes[graphemes.length - 1] ?? "";
+  if (!graphemes.length) return { units: [], rest: "" };
+  const last = graphemes[graphemes.length - 1] ?? "";
+  const holdLast = isExtensibleCluster(last);
+  const complete = holdLast ? graphemes.slice(0, -1) : graphemes;
+  const held = holdLast ? last : "";
+  if (!complete.length) return { units: [], rest: buffer };
   const units: string[] = [];
   let i = 0;
   for (; i + TOKEN_GRAPHEMES <= complete.length; i += TOKEN_GRAPHEMES) {

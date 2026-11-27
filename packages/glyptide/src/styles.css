@@ -1,5 +1,7 @@
 /* Glyptide document surface — theme-independent generation styles */
 
+/* Runtime surface: inherit host typography (family/size/line-height/letter-spacing).
+   Showcase metrics live in site CSS (.stage / .hero-sentence / .mini). */
 .glyptide-document {
   --gen: var(--glyptide-gen, var(--added, #135b32));
   --hilite: var(--glyptide-hilite, var(--tint, #d6efdd));
@@ -9,13 +11,17 @@
   position: relative;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  line-height: 1.76;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
 }
 
 .glyptide-document.code {
+  /* Monospace is intentional for code patterns; size still inherits host. */
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.85em;
-  line-height: 1.75;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .glyptide-document .selected{
