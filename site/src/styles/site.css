@@ -50,11 +50,9 @@
   width: 18px;
   height: 18px;
   border-radius: 3px;
-  background:
-    linear-gradient(var(--ink) 0 0) left / 3px 100% no-repeat,
-    linear-gradient(var(--accent) 0 0) center / 3px 70% no-repeat,
-    linear-gradient(var(--ink-muted) 0 0) right / 3px 40% no-repeat;
-  transform: skewX(-10deg);
+  display: block;
+  flex-shrink: 0;
+  object-fit: cover;
 }
 
 .nav {

@@ -17,16 +17,16 @@ Create `docs/media/` when the first asset is ready. Keep masters in `docs/media/
 
 | Asset | Proposed filename | Path(s) | Dimensions | Format | Notes |
 |-------|-------------------|---------|------------|--------|-------|
-| Logo symbol | `logo-mark.svg` | `docs/media/logo-mark.svg` | ViewBox 32×32 (scalable) | SVG | Monochrome preferred; use currentColor |
-| Wordmark | `logo-wordmark.svg` | `docs/media/logo-wordmark.svg` | ~180×32 | SVG | Optional lockup without symbol |
-| Logo light | `logo-light.svg` | `docs/media/logo-light.svg` | Same as mark or lockup | SVG | For dark backgrounds |
-| Logo dark | `logo-dark.svg` | `docs/media/logo-dark.svg` | Same | SVG | For light backgrounds |
+| Logo symbol | `logo-mark.svg` | `docs/media/logo-mark.svg` (+ `site/public/`) | ViewBox 32×32 | SVG | Single green mark — no light/dark variants |
+| Wordmark | `logo-wordmark.svg` | `docs/media/logo-wordmark.svg` | 180×32 | SVG | Text “Glyptide.” (site ink, light theme) |
+| Logo light | `logo-light.svg` | `docs/media/logo-light.svg` | 180×32 | SVG | Text “Glyptide.” `#EDEDED` — for dark backgrounds |
+| Logo dark | `logo-dark.svg` | `docs/media/logo-dark.svg` | 180×32 | SVG | Text “Glyptide.” `#171717` — for light backgrounds |
 | GitHub README hero | `github-hero.png` | `docs/media/github-hero.png` | **1280×640** (2:1) | PNG | Max ~1 MB; README only |
 | GitHub social preview | `github-social.png` | `docs/media/github-social.png` | **1280×640** | PNG | Upload in GitHub Settings → Social preview |
 | Website Open Graph | `og.png` | `docs/media/og.png` → copy to `site/public/og.png` | **1200×630** | PNG | Replaces SVG OG when ready |
-| Favicon | `favicon.svg` | `site/public/favicon.svg` | Scalable | SVG | Already present; replace in place |
-| Favicon PNG fallback | `favicon-32.png` | `site/public/favicon-32.png` | **32×32** | PNG | Optional |
-| Apple touch icon | `apple-touch-icon.png` | `site/public/apple-touch-icon.png` | **180×180** | PNG | Add `<link>` when file exists |
+| Favicon | `favicon.svg` | `docs/media/` + `site/public/favicon.svg` | 32×32 viewBox | SVG | Simplified mark (green + white G, no bevels) |
+| Favicon PNG fallback | `favicon-32.png` | `docs/media/` + `site/public/favicon-32.png` | **32×32** | PNG | From simplified favicon |
+| Apple touch icon | `apple-touch-icon.png` | `docs/media/` + `site/public/apple-touch-icon.png` | **180×180** | PNG | Full mark, solid square — no baked corner radius |
 | Animation preview (README) | `demo-stream.webp` | `docs/media/demo-stream.webp` | ≤800×450 | WebP/GIF | Optional; only link from README after file exists |
 | Animation preview 2 | `demo-review.webp` | `docs/media/demo-review.webp` | ≤800×450 | WebP/GIF | Optional |
 
@@ -63,25 +63,31 @@ Create `docs/media/` when the first asset is ready. Keep masters in `docs/media/
 <meta property="og:image:height" content="630" />
 ```
 
-3. Keep `og.svg` until `og.png` is live, then remove SVG references if unused.
+3. `og.png` is live; `og.svg` removed.
 
 ### Favicon / Apple touch
 
-1. Replace `site/public/favicon.svg` in place (or add PNG fallbacks).
-2. When `apple-touch-icon.png` exists, add to each HTML head:
+Shipped:
 
 ```html
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
 ```
+
+Regenerate PNGs from `docs/media/favicon.svg` (32) and `docs/media/logo-mark.svg` (180) when the mark changes. Do not bake iOS corner radius into the apple-touch export.
 
 ### Site wordmark mark
 
-The site header uses a CSS `.mark` square today. When `logo-mark.svg` is ready, wire it in `site/src/shell.ts` / CSS without changing IA.
+`docs/media/logo-mark.svg` is the master. Deployed copies: `site/public/logo-mark.svg` (header/footer) and `site/public/favicon.svg`. Shell uses `<img class="mark" src="/logo-mark.svg">`.
 
 ## Checklist before merging brand assets
 
-- [ ] No temporary placeholder logos in `main`
-- [ ] Light/dark variants verified on both themes
-- [ ] README image paths resolve on GitHub
-- [ ] OG PNG tested with a share debugger after deploy
-- [ ] Favicon visible in browser tab light + dark UI
+- [x] Logo mark committed (`docs/media/logo-mark.svg`) — no temporary placeholder
+- [x] Wordmark / light / dark text SVGs (“Glyptide.”) — no separate mark variants
+- [x] README hero (`docs/media/github-hero.png`)
+- [x] GitHub social master (`docs/media/github-social.png`) — upload in repo Settings → Social preview
+- [x] Website OG PNG (`site/public/og.png`) wired in page heads
+- [ ] OG PNG verified with a share debugger after deploy
+- [x] Favicon SVG (simplified) + PNG 32×32
+- [x] Apple touch icon 180×180 (solid square, no baked corners)

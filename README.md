@@ -15,11 +15,9 @@ Glyptide is a lightweight, model-independent presentation layer for streaming, i
 
 **Public preview** `0.1.0` · **MIT**
 
-<!--
-  GitHub README hero (optional): add docs/media/github-hero.png when ready.
-  Specs and replacement steps: docs/BRANDING.md
-  Do not uncomment an <img> until the file exists.
--->
+<p align="center">
+  <img src="docs/media/github-hero.png" alt="Glyptide — Text motion for generative interfaces" width="800" />
+</p>
 
 **[Website](https://glyptide.vercel.app)** ·
 **[Playground](https://glyptide.vercel.app/playground/)** ·

@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g clip-path="url(#clip0_2_371)">
+<rect width="32" height="32" fill="#17633C"/>
+<use xlink:href="#stroke0_2_371" fill="#17633C"/>
+<use xlink:href="#stroke0_2_371" fill="white" fill-opacity="0.2"/>
+<use xlink:href="#stroke1_2_371" fill="#17633C"/>
+<use xlink:href="#stroke1_2_371" fill="black" fill-opacity="0.6"/>
+<use xlink:href="#stroke2_2_371" fill="#17633C"/>
+<use xlink:href="#stroke2_2_371" fill="black" fill-opacity="0.8"/>
+<path d="M26 12H22V10H10V22H22V18H14V14H26V25C26 25.5523 25.5523 26 25 26H7C6.44772 26 6 25.5523 6 25L6 7C6 6.44772 6.44772 6 7 6L25 6C25.5523 6 26 6.44772 26 7V12Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_2_371">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+<path id="stroke0_2_371" d="M0 0H32L22 10H10L0 0Z"/>
+<path id="stroke1_2_371" d="M9.53674e-07 32L-4.4509e-07 0L10 10L10 22L9.53674e-07 32Z"/>
+<path id="stroke2_2_371" d="M-1.39876e-06 32H32L22 22H10L-1.39876e-06 32Z"/>
+</defs>
+</svg>

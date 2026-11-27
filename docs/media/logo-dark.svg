@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="32" viewBox="0 0 180 32" role="img" aria-label="Glyptide">
+  <title>Glyptide</title>
+  <!-- For light backgrounds — matches site --ink (light theme) -->
+  <text
+    x="0"
+    y="24"
+    fill="#171717"
+    font-family="Geist, Inter, Segoe UI, system-ui, sans-serif"
+    font-size="22"
+    font-weight="600"
+    letter-spacing="-0.88"
+  >Glyptide.</text>
+</svg>

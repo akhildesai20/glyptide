@@ -52,7 +52,7 @@ export function headerHtml(page: SitePage): string {
   return `<header class="site-header">
       <div class="wrap header-inner">
         <a class="wordmark" href="/" aria-label="Glyptide home">
-          <span class="mark" aria-hidden="true"></span>
+          <img class="mark" src="/logo-mark.svg" width="18" height="18" alt="" />
           Glyptide
         </a>
         <a
@@ -78,7 +78,7 @@ export function footerHtml(): string {
       <div class="wrap footer-grid">
         <div class="footer-brand">
           <a class="wordmark footer-wordmark" href="/" aria-label="Glyptide home">
-            <span class="mark" aria-hidden="true"></span>
+            <img class="mark" src="/logo-mark.svg" width="18" height="18" alt="" />
             Glyptide
           </a>
           <p class="footer-tagline">Every word, intentionally in motion.</p>
