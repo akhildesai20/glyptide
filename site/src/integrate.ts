@@ -44,7 +44,8 @@ export function integrateSectionHtml(opts?: { headingId?: string }): string {
           <h2 id="${hid}" class="section-kicker">Quick integration</h2>
           <p>
             Drop Glyptide into an existing surface. Pass text from your stream —
-            no AI API required. Package not yet published to npm — install from this repository.
+            no AI API required. Install with
+            <code>npm install glyptide</code>.
           </p>
         </div>
         <div class="integrate-code" role="region" aria-label="Integration example">

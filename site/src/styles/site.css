@@ -27,6 +27,25 @@
   text-decoration: none;
 }
 
+.version-chip {
+  flex: 0 0 auto;
+  margin-left: calc(var(--space-2) * -1);
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-secondary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.version-chip:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 22%, var(--border));
+}
+
 .mark {
   width: 18px;
   height: 18px;
@@ -189,6 +208,60 @@
   font-size: var(--text-md);
   color: var(--ink-secondary);
   line-height: 1.6;
+}
+
+.hero-install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+}
+
+.hero-install-code {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.hero-capabilities {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  max-width: 52rem;
+}
+
+.hero-cap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-cap-value {
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.hero-cap-label {
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .hero-capabilities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .hero-cta {

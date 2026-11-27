@@ -400,6 +400,11 @@ fs.copyFileSync(
   path.join(root, "docs/ai-integrate.md"),
   path.join(outDocs, "ai-integrate.md"),
 );
+fs.copyFileSync(
+  path.join(root, "docs/bundle-size.md"),
+  path.join(outDocs, "bundle-size.md"),
+);
+fs.copyFileSync(path.join(root, "CHANGELOG.md"), path.join(outDocs, "changelog.md"));
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -431,7 +436,7 @@ ${installNote.split("\n").slice(0, 1).join("")}
 
 ## Docs (on demand)
 
-- [Getting started](${absDoc("/docs/getting-started.md")}): Install (local package) and first \`createGlyptide\` call
+- [Getting started](${absDoc("/docs/getting-started.md")}): Install (\`npm install glyptide\`) and first \`createGlyptide\` call
 - [Public API](${absDoc("/docs/api.md")}): \`createGlyptide\`, instance methods, appearance lifecycle
 - [Streaming](${absDoc("/docs/streaming.md")}): \`append\` / \`pipeTextToGlyptide\`, delta vs snapshot
 - [Appearance](${absDoc("/docs/appearance.md")}): Presets, color modes, transient vs review-bound lifecycles

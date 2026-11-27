@@ -15,7 +15,7 @@ The npm package `glyptide@0.1.0` is on the public registry:
 
 ## Docs (on demand)
 
-- [Getting started](https://glyptide.vercel.app/docs/getting-started.md): Install (local package) and first `createGlyptide` call
+- [Getting started](https://glyptide.vercel.app/docs/getting-started.md): Install (`npm install glyptide`) and first `createGlyptide` call
 - [Public API](https://glyptide.vercel.app/docs/api.md): `createGlyptide`, instance methods, appearance lifecycle
 - [Streaming](https://glyptide.vercel.app/docs/streaming.md): `append` / `pipeTextToGlyptide`, delta vs snapshot
 - [Appearance](https://glyptide.vercel.app/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles

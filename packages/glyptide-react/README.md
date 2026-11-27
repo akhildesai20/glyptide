@@ -12,9 +12,12 @@ import "glyptide/styles.css";
 
 export function StreamView() {
   return (
-    <Glyptide pattern="new-word-settle" theme="inherit">
-      Thoughtful motion for generative UIs.
-    </Glyptide>
+    <Glyptide
+      pattern="new-word-settle"
+      theme="inherit"
+      text="Thoughtful motion for generative UIs."
+      autoPlay
+    />
   );
 }
 ```

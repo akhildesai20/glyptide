@@ -1,6 +1,7 @@
 import { patternCount } from "glyptide";
 import { applyHomeCompatRedirects } from "../compat";
 import { initHero } from "../hero";
+import { copyWithIconFeedback, setIconLabel } from "../icons/controls";
 import { integrateSectionHtml, mountIntegrate } from "../integrate";
 import { learnWithAiHtml, mountLearnWithAi } from "../learn-with-ai";
 import { $ } from "../dom";
@@ -16,6 +17,21 @@ if (!applyHomeCompatRedirects()) {
 
   $("heroMeta").textContent =
     `${patternCount} patterns · 6 use cases · Open source`;
+  const capPatterns = document.getElementById("heroCapPatterns");
+  if (capPatterns) capPatterns.textContent = String(patternCount);
+
+  const installCopy = document.getElementById("heroInstallCopy");
+  const installCode = document.getElementById("heroInstallCode");
+  if (installCopy instanceof HTMLButtonElement && installCode) {
+    setIconLabel(installCopy, "copy", "Copy");
+    installCopy.addEventListener("click", () => {
+      void copyWithIconFeedback(installCopy, installCode.textContent?.trim() || "npm install glyptide", {
+        idleLabel: "Copy",
+        successLabel: "Copied",
+      });
+    });
+  }
+
   initHero($("heroSentence"), $("heroPause"));
 
   const learnMount = document.getElementById("learnWithAiMount");

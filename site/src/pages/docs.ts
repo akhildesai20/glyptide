@@ -29,6 +29,7 @@ const DOCS: { id: string; path: string }[] = [
   { id: "appearance", path: "/docs/appearance.md" },
   { id: "accessibility", path: "/docs/accessibility.md" },
   { id: "api", path: "/docs/api.md" },
+  { id: "bundle-size", path: "/docs/bundle-size.md" },
   { id: "changelog", path: "/docs/changelog.md" },
 ];
 

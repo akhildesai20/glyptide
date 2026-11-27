@@ -18,6 +18,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://glyptide.vercel.app/" />
     <meta property="og:image" content="https://glyptide.vercel.app/og.svg" />
+    <!-- When docs/media/og.png is ready: switch og:image to /og.png (1200×630) — see docs/BRANDING.md -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Glyptide" />
     <meta
@@ -26,6 +27,26 @@
     />
     <link rel="canonical" href="https://glyptide.vercel.app/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- When site/public/apple-touch-icon.png (180×180) exists: <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Glyptide",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "softwareVersion": "0.1.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "url": "https://glyptide.vercel.app/",
+        "downloadUrl": "https://www.npmjs.com/package/glyptide",
+        "codeRepository": "https://github.com/akhildesai20/glyptide",
+        "description": "Thoughtful text motion for generative interfaces. Lightweight presentation layer with 96 patterns — no AI provider calls.",
+        "author": {
+          "@type": "Person",
+          "name": "Akhil Desai"
+        }
+      }
+    </script>
     <script>
       (function () {
         try {
@@ -68,6 +89,7 @@
         <div class="hero-cta">
           <a class="btn btn-primary" href="#recipes">Explore recipes</a>
           <a class="btn btn-secondary" href="/docs/">Get started</a>
+          <a class="btn btn-ghost" href="/playground/">Playground</a>
           <a
             class="btn btn-ghost"
             href="https://github.com/akhildesai20/glyptide"
@@ -84,7 +106,40 @@
             Pause
           </button>
         </div>
+        <div class="hero-install">
+          <code class="hero-install-code" id="heroInstallCode"
+            >npm install glyptide</code
+          >
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            id="heroInstallCopy"
+          >
+            Copy
+          </button>
+        </div>
         <p class="hero-meta" id="heroMeta">— patterns · 6 use cases · Open source</p>
+        <div
+          class="hero-capabilities"
+          aria-label="Glyptide at a glance"
+        >
+          <div class="hero-cap">
+            <span class="hero-cap-value" id="heroCapPatterns">96</span>
+            <span class="hero-cap-label">Motion patterns</span>
+          </div>
+          <div class="hero-cap">
+            <span class="hero-cap-value">6</span>
+            <span class="hero-cap-label">Use cases</span>
+          </div>
+          <div class="hero-cap">
+            <span class="hero-cap-value">0</span>
+            <span class="hero-cap-label">Runtime dependencies</span>
+          </div>
+          <div class="hero-cap">
+            <span class="hero-cap-value">MIT</span>
+            <span class="hero-cap-label">Open source license</span>
+          </div>
+        </div>
       </section>
 
       <div id="learnWithAiMount"></div>

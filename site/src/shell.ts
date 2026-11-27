@@ -3,11 +3,18 @@
  */
 import { hydrateIcons } from "./icons";
 import { setIconLabel } from "./icons/controls";
+import {
+  GITHUB_RELEASE,
+  GITHUB_REPO,
+  NPM_CORE,
+  NPM_REACT,
+  SITE_VERSION,
+} from "./site-url";
 import { initTheme, syncThemeSwitch } from "./theme";
 
 export type SitePage = "home" | "playground" | "docs" | "for-ai";
 
-const GH = "https://github.com/akhildesai20/glyptide";
+const GH = GITHUB_REPO;
 
 const NAV: { href: string; label: string; page?: SitePage; external?: boolean }[] = [
   { href: "/playground/", label: "Playground", page: "playground" },
@@ -48,6 +55,14 @@ export function headerHtml(page: SitePage): string {
           <span class="mark" aria-hidden="true"></span>
           Glyptide
         </a>
+        <a
+          class="version-chip"
+          href="${GITHUB_RELEASE}"
+          rel="noopener noreferrer"
+          target="_blank"
+          title="GitHub release v${SITE_VERSION}"
+          >v${SITE_VERSION}</a
+        >
         <nav class="nav" aria-label="Primary">
           ${links}
         </nav>
@@ -81,14 +96,18 @@ export function footerHtml(): string {
           <ul class="footer-links">
             <li><a href="/docs/">Documentation</a></li>
             <li><a href="/docs/#doc-api">API reference</a></li>
+            <li><a href="/docs/#doc-bundle-size">Bundle size</a></li>
             <li><a href="/for-ai.html">For AI</a></li>
             <li><a href="/docs/#doc-changelog">Changelog</a></li>
+            <li><a href="${NPM_CORE}" rel="noopener noreferrer" target="_blank">npm · glyptide</a></li>
+            <li><a href="${NPM_REACT}" rel="noopener noreferrer" target="_blank">npm · @glyptide/react</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h2 class="footer-heading">Project</h2>
           <ul class="footer-links">
             <li><a href="${GH}" rel="noopener noreferrer" target="_blank">GitHub</a></li>
+            <li><a href="${GITHUB_RELEASE}" rel="noopener noreferrer" target="_blank">Release v${SITE_VERSION}</a></li>
             <li><a href="${GH}/blob/main/CONTRIBUTING.md" rel="noopener noreferrer" target="_blank">Contributing</a></li>
             <li><a href="${GH}/issues" rel="noopener noreferrer" target="_blank">Report an issue</a></li>
             <li><a href="${GH}/blob/main/LICENSE" rel="noopener noreferrer" target="_blank">MIT License</a></li>
