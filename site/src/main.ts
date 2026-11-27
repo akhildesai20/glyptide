@@ -61,12 +61,11 @@ setIconLabel($("reset"), "reset", "Reset");
 setIconLabel($("exportCode"), "code", "Code");
 setIconLabel($("copyForAi"), "sparkles", "Copy for AI");
 setIconLabel($("sharePlay"), "share", "Share");
-setIconLabel($("recipeReplay"), "replay", "Replay");
 wireControlAnim($("reset"), "reset");
 wireControlAnim($("stop"), "stop");
 wireControlAnim($("play"), "play");
 wireControlAnim($("sharePlay"), "share");
-wireControlAnim($("recipeReplay"), "replay");
+
 
 document.querySelectorAll<HTMLAnchorElement>('a[target="_blank"]').forEach((a) => {
   if (a.querySelector(".g-icon")) return;

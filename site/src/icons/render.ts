@@ -21,7 +21,7 @@ const SIZE_PX: Record<IconSize, number> = {
   md: 16,
   lg: 20,
   xl: 24,
-  feature: 44,
+  feature: 48,
 };
 
 function resolveSize(size: IconSize | number | undefined): number {

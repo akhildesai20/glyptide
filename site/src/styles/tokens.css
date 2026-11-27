@@ -59,9 +59,9 @@
   --icon-md: 16px;
   --icon-lg: 20px;
   --icon-xl: 24px;
-  --icon-feature: 44px;
+  --icon-feature: 48px;
   --icon-stroke: 1.75;
-  --icon-stroke-feature: 1.35;
+  --icon-stroke-feature: 1.5;
 
   --glyptide-ink: var(--ink);
   --glyptide-gen: var(--added);

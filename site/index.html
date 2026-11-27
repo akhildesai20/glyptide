@@ -364,18 +364,7 @@
             <p class="section-kicker">Recipes</p>
             <h2 id="recipes-heading">Glyptide in practice.</h2>
             <p class="section-sub">
-              Explore production-oriented compositions for common generative
-              interfaces.
-            </p>
-            <p class="section-note">
-              Runs locally with simulated streams. No API keys required.
-              Source:
-              <a
-                href="https://github.com/akhildesai20/glyptide/tree/main/examples/recipes"
-                rel="noopener noreferrer"
-                target="_blank"
-                >examples/recipes/</a
-              >
+              Explore real-world generative interactions. No API keys required.
             </p>
           </div>
         </div>
@@ -404,14 +393,18 @@
                 href="https://github.com/akhildesai20/glyptide/tree/main/examples/recipes"
                 rel="noopener noreferrer"
                 target="_blank"
-                >examples/recipes/</a
+                >View source</a
               >
+              <button type="button" class="btn btn-ghost btn-sm" id="recipeCopy">
+                Copy implementation
+              </button>
             </div>
           </div>
-          <div class="recipe-stage-surface glyptide-stage" aria-label="Recipe preview">
-            <div class="glyptide-document" id="recipeOutput"></div>
-            <div class="glyptide-waiting" id="recipeWaiting" hidden></div>
-          </div>
+          <div
+            class="recipe-stage-surface"
+            id="recipeStageSurface"
+            aria-label="Recipe preview"
+          ></div>
         </div>
       </section>
 
