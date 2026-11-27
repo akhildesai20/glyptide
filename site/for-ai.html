@@ -32,40 +32,7 @@
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="wrap header-inner">
-        <a class="wordmark" href="/">
-          <span class="mark" aria-hidden="true"></span>
-          Glyptide
-        </a>
-        <nav class="nav" aria-label="Primary">
-          <a href="/#library">Library</a>
-          <a href="/#playground">Playground</a>
-          <a href="/#recipes">Recipes</a>
-          <a href="/#docs">Documentation</a>
-          <a href="/for-ai.html" aria-current="page">For AI</a>
-          <a
-            href="https://github.com/akhildesai20/glyptide"
-            rel="noopener noreferrer"
-            target="_blank"
-            >GitHub</a
-          >
-        </nav>
-        <div class="header-actions">
-          <div class="theme-switch" role="group" aria-label="Color theme">
-            <button type="button" data-theme-set="light" title="Light" aria-label="Light theme">
-              <span data-icon="sun" data-icon-size="md" aria-hidden="true"></span>
-            </button>
-            <button type="button" data-theme-set="system" title="System" aria-label="System theme">
-              <span data-icon="monitor" data-icon-size="md" aria-hidden="true"></span>
-            </button>
-            <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark theme">
-              <span data-icon="moon" data-icon-size="md" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div data-site-header></div>
 
     <main id="main" class="wrap for-ai">
       <header class="for-ai-hero">
@@ -80,12 +47,15 @@
       <section class="for-ai-section" aria-labelledby="ai-docs">
         <h2 id="ai-docs">AI-readable documentation</h2>
         <p>
-          Standards-aligned discovery files. Prefer these over scraping the HTML
-          playground.
+          Start with the minimal integrator brief, then fetch only what you need.
+          Prefer these over scraping the HTML playground or reading <code>site/</code> source.
         </p>
         <div class="for-ai-actions">
+          <a class="btn btn-secondary btn-sm" href="/docs/ai-integrate.md"
+            >Integrator brief</a
+          >
           <a class="btn btn-secondary btn-sm" href="/llms.txt">Open llms.txt</a>
-          <a class="btn btn-secondary btn-sm" href="/llms-full.txt">Open llms-full.txt</a>
+          <a class="btn btn-ghost btn-sm" href="/llms-full.txt">Open llms-full.txt</a>
           <button type="button" class="btn btn-ghost btn-sm" id="copyLlms">
             Copy llms.txt
           </button>
@@ -150,46 +120,12 @@
           pattern, appearance, and verification steps as an implementation prompt.
         </p>
         <div class="for-ai-actions">
-          <a class="btn btn-primary btn-sm" href="/#playground">Open playground</a>
+          <a class="btn btn-primary btn-sm" href="/playground/">Open playground</a>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer wrap">
-      <p>
-        Glyptide remains backend-independent and free to integrate. Package install
-        is local until npm publication.
-      </p>
-    </footer>
-
-    <script type="module">
-      import { initTheme, syncThemeSwitch } from "/src/theme.ts";
-      import { hydrateIcons } from "/src/icons/index.ts";
-      import { copyWithIconFeedback, setIconLabel } from "/src/icons/controls.ts";
-      initTheme();
-      hydrateIcons(document);
-      syncThemeSwitch();
-      const btn = document.getElementById("copyLlms");
-      const status = document.getElementById("copyLlmsStatus");
-      if (btn) setIconLabel(btn, "copy", "Copy llms.txt");
-      document.querySelectorAll('a[target="_blank"]').forEach((a) => {
-        if (/github\.com/i.test(a.href) && a.textContent?.trim() === "GitHub") {
-          setIconLabel(a, "github", "GitHub");
-        }
-      });
-      btn?.addEventListener("click", async () => {
-        try {
-          const res = await fetch("/llms.txt");
-          const text = await res.text();
-          const ok = await copyWithIconFeedback(btn, text, {
-            idleLabel: "Copy llms.txt",
-            successLabel: "Copied",
-          });
-          if (status) status.textContent = ok ? "" : "Open llms.txt and copy manually";
-        } catch {
-          if (status) status.textContent = "Open llms.txt and copy manually";
-        }
-      });
-    </script>
+    <div data-site-footer></div>
+    <script type="module" src="/src/pages/for-ai.ts"></script>
   </body>
 </html>

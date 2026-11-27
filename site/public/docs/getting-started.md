@@ -3,7 +3,8 @@
 The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
 
 ```bash
-npm install /path/to/glyptide/packages/glyptide
+# From a built clone (relative path works on Windows / macOS / Linux):
+npm install ./packages/glyptide
 # or from a monorepo clone:
 npm install
 npm run build:lib

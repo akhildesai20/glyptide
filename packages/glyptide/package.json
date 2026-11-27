@@ -31,7 +31,12 @@
     "./glyptide.iife.js": "./dist/glyptide.iife.js"
   },
   "files": [
-    "dist",
+    "dist/*.js",
+    "dist/*.cjs",
+    "dist/*.d.ts",
+    "dist/*.d.cts",
+    "dist/*.iife.js",
+    "dist/styles.css",
     "README.md",
     "LICENSE"
   ],

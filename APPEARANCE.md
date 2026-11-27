@@ -2,11 +2,7 @@
 
 ## Presets (18)
 
-**AI-inspired:** Intelligence, Gemini, Copilot, Terracotta, Jade, Prism  
-**Minimal:** Graphite (default), Paper, Iris, Electric, Sakura, Matcha  
-**Expressive:** Aurora (gradient demos), Sunset, Ocean, Twilight, Ember, Botanical  
-
-Each preset defines independent `light` and `dark` `{ ink, highlight, gradientMiddle, gradientEnd }` values.
+Each preset defines independent `light` and `dark` `{ ink, highlight, gradientMiddle, gradientEnd }` values. The docs Appearance page shows live light/dark gradient swatches for every preset.
 
 ## Decoupled model
 

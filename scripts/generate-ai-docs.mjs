@@ -284,7 +284,8 @@ fs.writeFileSync(
 const installNote = `The npm package \`glyptide@${pkg.version}\` is **not published to the public registry yet**. Install from the repository:
 
 \`\`\`bash
-npm install /path/to/glyptide/packages/glyptide
+# From a built clone (relative path works on Windows / macOS / Linux):
+npm install ./packages/glyptide
 # or from a monorepo clone:
 npm install
 npm run build:lib
@@ -378,6 +379,10 @@ fs.writeFileSync(path.join(outDocs, "accessibility.md"), a11yMd);
 fs.copyFileSync(path.join(root, "design.md"), path.join(outDocs, "design.md"));
 fs.copyFileSync(path.join(root, "docs/providers.md"), path.join(outDocs, "providers.md"));
 fs.copyFileSync(path.join(root, "docs/mcp.md"), path.join(outDocs, "mcp.md"));
+fs.copyFileSync(
+  path.join(root, "docs/ai-integrate.md"),
+  path.join(outDocs, "ai-integrate.md"),
+);
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -398,16 +403,22 @@ const llmsTxt = `# Glyptide
 Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
 ${installNote.split("\n").slice(0, 1).join("")}
 
-## Docs
+## Start here (minimal context)
+
+- [AI / integrator brief](/docs/ai-integrate.md): Install + integrate without reading website source — **fetch this first**
+- Prefer progressive retrieval. Do **not** inspect \`site/\` playground source or engine internals unless maintaining the library.
+- Do **not** load [llms-full.txt](/llms-full.txt) unless you need exhaustive pattern ids.
+
+## Docs (on demand)
 
 - [Getting started](/docs/getting-started.md): Install (local package) and first \`createGlyptide\` call
 - [Public API](/docs/api.md): \`createGlyptide\`, instance methods, appearance lifecycle
-- [Patterns](/docs/patterns.md): All ${patternCount} pattern ids with lifecycle metadata
-- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
 - [Streaming](/docs/streaming.md): \`append\` / \`pipeTextToGlyptide\`, delta vs snapshot
+- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
+- [Patterns](/docs/patterns.md): All ${patternCount} pattern ids with lifecycle metadata
 - [Accessibility](/docs/accessibility.md): Reduced motion, semantics, announcements
 - [Design guidance](/docs/design.md): Motion and reading-comfort principles
-- [Full documentation](/llms-full.txt): Consolidated AI-readable reference
+- [Full documentation](/llms-full.txt): Consolidated AI-readable reference (large)
 
 ## Machine-readable
 
@@ -419,7 +430,7 @@ ${installNote.split("\n").slice(0, 1).join("")}
 ## Agent resources
 
 - [Agent skill](/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
-- [For AI page](/for-ai.html): Human + agent discovery page in the playground site
+- [For AI page](/for-ai.html): Human + agent discovery page
 
 ## Examples
 
@@ -427,11 +438,6 @@ ${installNote.split("\n").slice(0, 1).join("")}
 - [React](/skills/glyptide/examples/react.md)
 - [AI SDK streaming](/skills/glyptide/examples/ai-sdk.md)
 - [Provider notes](/docs/providers.md)
-
-## Optional
-
-- [Repository README](https://github.com/akhildesai20/glyptide/blob/main/README.md): Human overview (private until public release)
-- [AGENTS.md](https://github.com/akhildesai20/glyptide/blob/main/AGENTS.md): Instructions for agents working in this repo
 `;
 
 fs.writeFileSync(path.join(outPublic, "llms.txt"), llmsTxt);
@@ -509,12 +515,17 @@ ${PALETTE_PRESETS.map((p) => `- \`${p.id}\` — ${p.name} (${p.category})`).join
 2. Leaving gradient classes after completion (use lifecycle — already handled by engine)
 3. Using \`mode: "delta"\` with snapshot SDKs (causes duplicated text)
 4. Embedding provider API keys in the browser
-5. Assuming npm \`glyptide\` is published — install from the repo until release
+5. Assuming npm \`glyptide\` is published — install from the package path/tarball until release
 6. Overriding host foreground with hardcoded black/white after settle
+7. Reading \`site/\` website source to discover the public API
 
 ## Performance
 
 Prefer CSS + Web Animations. Pause off-screen previews. Avoid new runtime dependencies in core.
+
+## Context tip
+
+For new integrations, start with \`/docs/ai-integrate.md\` instead of this full file.
 `;
 
 fs.writeFileSync(path.join(outPublic, "llms-full.txt"), llmsFull);

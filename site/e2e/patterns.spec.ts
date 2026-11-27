@@ -23,7 +23,7 @@ for (const caseId of CASES) {
 
       for (const p of list) {
         await page.goto(
-          `/?case=${caseId}&pattern=${p.id}&speed=140&latency=0&scenario=steady`,
+          `/playground/?case=${caseId}&pattern=${p.id}&speed=140&latency=0&scenario=steady`,
         );
         await page.locator("#reduce").check();
 

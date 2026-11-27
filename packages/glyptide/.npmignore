@@ -1,0 +1,4 @@
+# Keep published tarball lean (sourcemaps stay in local dist for debugging).
+**/*.map
+**/tsconfig.tsbuildinfo
+*.tgz

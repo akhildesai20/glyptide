@@ -1,0 +1,17 @@
+# Indexing-only exclusions (does not block local reads/tests).
+# Prefer docs/ai-integrate.md + docs/api.md over dumping these into context.
+
+prototype/
+**/*.map
+**/*.tgz
+**/playwright-report/
+**/test-results/
+**/blob-report/
+site/dist/
+
+docs/STABILIZATION.md
+docs/HARDENING.md
+docs/BASELINE.md
+docs/RELEASE_CANDIDATE.md
+docs/pattern-inventory.md
+AUDIT.md

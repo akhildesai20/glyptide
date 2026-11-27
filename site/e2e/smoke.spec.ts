@@ -7,8 +7,14 @@ test.describe("Glyptide site", () => {
     await expect(page.locator("#heroMeta")).toContainText("96 patterns");
   });
 
-  test("playground generate completes for word settle", async ({ page }) => {
+  test("home redirects playground query params", async ({ page }) => {
     await page.goto("/?case=new&pattern=new-word-settle");
+    await expect(page).toHaveURL(/\/playground\/\?.*case=new/);
+    await expect(page.locator("#play")).toBeVisible();
+  });
+
+  test("playground generate completes for word settle", async ({ page }) => {
+    await page.goto("/playground/?case=new&pattern=new-word-settle");
     await page.locator("#play").click();
     await expect(page.locator("#status")).toHaveText("Generating", { timeout: 5000 });
     await expect(page.locator("#status")).toHaveText("Complete", { timeout: 45000 });
@@ -16,16 +22,18 @@ test.describe("Glyptide site", () => {
     expect(text.length).toBeGreaterThan(40);
   });
 
-  test("theme switch persists", async ({ page }) => {
+  test("theme switch persists across pages", async ({ page }) => {
     await page.goto("/");
     await page.locator('[data-theme-set="dark"]').click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.reload();
+    await page.goto("/docs/");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.goto("/playground/");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
   test("library cards render and play", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/playground/");
     await page.locator("#library").scrollIntoViewIfNeeded();
     const card = page.locator(".card").first();
     await expect(card).toBeVisible();
@@ -34,13 +42,13 @@ test.describe("Glyptide site", () => {
   });
 
   test("reduced motion checkbox resets surface", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/playground/");
     await page.locator("#reduce").check();
     await expect(page.locator("#status")).toHaveText("Ready");
   });
 
   test("keyboard review discard on Escape", async ({ page }) => {
-    await page.goto("/?case=continue&pattern=continue-ghost-suggestion");
+    await page.goto("/playground/?case=continue&pattern=continue-ghost-suggestion");
     await page.locator("#play").click();
     await expect(page.locator("#status")).toHaveText("Review", { timeout: 45000 });
     await page.locator("#stage").focus();
@@ -49,7 +57,7 @@ test.describe("Glyptide site", () => {
   });
 
   test("appearance preset selector applies aurora", async ({ page }) => {
-    await page.goto("/?case=new&pattern=new-gradient-ink");
+    await page.goto("/playground/?case=new&pattern=new-gradient-ink");
     await page.locator("#presetTrigger").click();
     await expect(page.locator("#presetPopover")).toBeVisible();
     await page.locator("#presetPopover .preset-item", { hasText: "Aurora" }).click();
@@ -61,7 +69,7 @@ test.describe("Glyptide site", () => {
   test("theme switch updates preset variant without clearing selection", async ({
     page,
   }) => {
-    await page.goto("/?case=new&pattern=new-gradient-ink");
+    await page.goto("/playground/?case=new&pattern=new-gradient-ink");
     await page.locator("#presetTrigger").click();
     await expect(page.locator("#presetPopover")).toBeVisible();
     await page
@@ -75,7 +83,7 @@ test.describe("Glyptide site", () => {
   });
 
   test("appearance gradient is transient on word settle", async ({ page }) => {
-    await page.goto("/?case=new&pattern=new-word-settle");
+    await page.goto("/playground/?case=new&pattern=new-word-settle");
     await page.locator("#output").evaluate((el) => {
       (el as HTMLElement).style.color = "rgb(20, 80, 160)";
     });
@@ -88,11 +96,9 @@ test.describe("Glyptide site", () => {
     await expect(page.locator("#status")).toHaveText("Generating", {
       timeout: 5000,
     });
-    // Transient gradient may appear briefly during generation
     await expect(page.locator("#status")).toHaveText("Complete", {
       timeout: 45000,
     });
-    // Aesthetic treatments must not remain after transient settlement
     await expect(page.locator("#output .grad-ink")).toHaveCount(0);
     await expect(page.locator("#output .appear-ink")).toHaveCount(0);
     const color = await page.locator("#output").evaluate((el) =>
@@ -102,7 +108,7 @@ test.describe("Glyptide site", () => {
   });
 
   test("review-bound ghost keeps styling until discard", async ({ page }) => {
-    await page.goto("/?case=continue&pattern=continue-ghost-suggestion");
+    await page.goto("/playground/?case=continue&pattern=continue-ghost-suggestion");
     await page.locator("#play").click();
     await expect(page.locator("#status")).toHaveText("Review", {
       timeout: 45000,
@@ -125,8 +131,28 @@ test.describe("Glyptide site", () => {
     );
   });
 
+  test("docs page loads guides", async ({ page }) => {
+    await page.goto("/docs/");
+    await expect(
+      page.getByRole("heading", { level: 1, name: /Get started with Glyptide/i }),
+    ).toBeVisible();
+    await expect(page.locator("#doc-getting-started")).toContainText(/Install|npm|repository/i, {
+      timeout: 15000,
+    });
+    await expect(page.locator(".nav a[aria-current='page']")).toHaveText("Docs");
+  });
+
+  test("home has recipes and simple playground", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#recipes")).toBeVisible();
+    await expect(page.locator("#playground")).toBeVisible();
+    await expect(page.locator("#openFullPlayground")).toBeVisible();
+    await expect(page.locator("#library")).toHaveCount(0);
+    await expect(page.locator(".nav a[href='#library']")).toHaveCount(0);
+  });
+
   test("structured pattern selector groups and searches", async ({ page }) => {
-    await page.goto("/?case=structured");
+    await page.goto("/playground/?case=structured");
     await page.locator("#patternTrigger").click();
     await expect(page.locator("#patternPopover")).toBeVisible();
     await expect(page.locator(".pattern-group-head").first()).toBeVisible();
@@ -137,5 +163,17 @@ test.describe("Glyptide site", () => {
     ).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(page.locator("#patternPopover")).toBeHidden();
+  });
+
+  test("open playground carries config from home", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#playground").scrollIntoViewIfNeeded();
+    await page.locator("#caseTabs button", { hasText: "Continue writing" }).click();
+    const href = await page.locator("#openFullPlayground").getAttribute("href");
+    expect(href).toMatch(/\/playground\/\?/);
+    expect(href).toMatch(/case=continue/);
+    await page.locator("#openFullPlayground").click();
+    await expect(page).toHaveURL(/\/playground\/\?.*case=continue/);
+    await expect(page.locator("#status")).toBeVisible();
   });
 });

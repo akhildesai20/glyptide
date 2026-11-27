@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("language & motion panel", () => {
   test("switches Urdu and English samples swiftly", async ({ page }) => {
-    await page.goto("/?case=new&pattern=new-word-settle&latency=0&speed=140");
+    await page.goto("/playground/?case=new&pattern=new-word-settle&latency=0&speed=140");
     await page.locator("#langUr").click();
     await expect(page.locator("#sample")).toHaveAttribute("dir", "rtl");
     await expect(page.locator("#sample")).toHaveAttribute("lang", "ur");
@@ -17,7 +17,7 @@ test.describe("language & motion panel", () => {
   });
 
   test("motion preset updates hint and survives generate", async ({ page }) => {
-    await page.goto("/?case=new&pattern=new-word-settle&latency=0&speed=140");
+    await page.goto("/playground/?case=new&pattern=new-word-settle&latency=0&speed=140");
     await page.locator("#reduce").uncheck();
     await page.locator("#motionPreset").selectOption("instant");
     await expect(page.locator("#motionHint")).toContainText(/No piece animation|Instant/i);

@@ -1,6 +1,8 @@
 node_modules
 dist
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.log
 .vite
 coverage
@@ -9,9 +11,12 @@ playwright-report
 blob-report
 .turbo
 *.tsbuildinfo
+*.tgz
 .env
 .env.*
 !.env.example
+.npmrc
+!.npmrc.example
 site/dist
 packages/*/dist
 .idea
@@ -19,3 +24,8 @@ packages/*/dist
 !.vscode/extensions.json
 *.pem
 .vercel
+*.local
+.eslintcache
+.cache
+tmp/
+temp/

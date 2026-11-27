@@ -7,12 +7,15 @@ Thanks for helping improve thoughtful text motion for generative interfaces.
 ```bash
 npm install
 npm run build:lib
+npm run generate:ai-docs
 npm run dev
+npm run test:clean-room
 ```
 
-- Core library: `packages/glyptide`
+- Core library: `packages/glyptide` (what app builders install)
 - React adapter: `packages/glyptide-react`
-- Website: `site`
+- Website: `site` (contributor playground — not a library dependency)
+- AI brief for integrators: `docs/ai-integrate.md`
 - Preserved prototype: `prototype/text-in-motion-v5.html`
 
 ## Principles

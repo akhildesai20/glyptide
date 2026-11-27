@@ -13,7 +13,14 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist/*.js",
+    "dist/*.cjs",
+    "dist/*.d.ts",
+    "dist/*.d.cts",
+    "README.md",
+    "LICENSE"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",

@@ -6,41 +6,25 @@ An open-source library of carefully crafted text-generation, insertion, rewritin
 
 > Every word, intentionally in motion.
 
-## Features
+## Use the library (preferred)
 
-- **96 patterns** across **6 use cases** (new response, inline insertion, selection rewrite, multi-paragraph rewrite, continue writing, structured output)
-- Framework-agnostic core with an optional React adapter
-- Simulated streaming *and* real streams (`append` / `applySnapshot` / `finish`, AbortSignal, lifecycle events)
-- Motion presets and adaptive waiting thresholds (no second animation engine)
-- Decoupled appearance (color mode, treatment, palette) with explicit **transient / persistent / review-bound** lifecycles
-- Theme-aware curated presets (light + dark) with contrast-aware ink
-- Reduced-motion support, pause/resume, accept/discard review flows
-- AI-native docs (`llms.txt`, registry JSON, schemas, Agent Skill) and offline recipes
-- Tiny surface area — native CSS, Web Animations, zero runtime deps in core
+You do **not** need to understand or ship the website source to use Glyptide.
 
-## Packages
-
-| Package | Description |
-|---------|-------------|
-| `glyptide` | Core engine, pattern registry, styles |
-| `@glyptide/react` | React component adapter |
-| `site` | Documentation & playground website |
-
-## Quick start (local)
-
-The package is **not published to npm yet**. Install from this repository:
+`glyptide@0.1.0` is **not on the public npm registry yet**. Install a **built package** (or tarball) into your app:
 
 ```bash
-npm install
-npm run build:lib
-npm run dev
+# From a clone after `npm run build:lib` (paths work on macOS, Linux, and Windows):
+npm install ./packages/glyptide
+
+# Optional React adapter:
+npm install ./packages/glyptide-react
+
+# Or pack once, then install anywhere without the rest of the tree:
+#   cd packages/glyptide && npm pack
+#   npm install ./glyptide-0.1.0.tgz
 ```
 
-In another project:
-
-```bash
-npm install /path/to/glyptide/packages/glyptide
-```
+Requires **Node.js ≥ 18** and **npm** (this repo uses npm workspaces + `package-lock.json`).
 
 ```js
 import { createGlyptide } from "glyptide";
@@ -49,69 +33,72 @@ import "glyptide/styles.css";
 const g = createGlyptide({
   element: document.querySelector("#out"),
   pattern: "new-word-settle",
-  preset: "aurora",
   theme: "inherit",
-  config: {
-    appearance: {
-      colorMode: "gradient",
-      treatment: "ink",
-      gradientMotion: "animated",
-    },
-  },
 });
 
 g.start({ text: "Thoughtful motion makes interfaces feel alive." });
-// After completion, temporary gradient paint is cleared; text inherits host color.
 ```
 
-Real streams:
+Real streams: `append` / `finish` or `pipeTextToGlyptide`. See [docs/ai-integrate.md](./docs/ai-integrate.md) (agents) and [docs/api.md](./docs/api.md).
 
-```js
-for await (const chunk of aiStream) {
-  g.append(chunk);
-}
-g.finish();
+Package entry points: `glyptide`, `glyptide/styles.css`, `glyptide/engine`, `glyptide/patterns`, `glyptide/presets`, IIFE build.
+
+## What’s in this monorepo
+
+| Path | Audience | Role |
+|------|----------|------|
+| [`packages/glyptide`](./packages/glyptide) | **App builders** | Core library (install this) |
+| [`packages/glyptide-react`](./packages/glyptide-react) | React apps | Thin adapter |
+| [`docs/`](./docs) | Humans & agents | API, streaming, integrator brief |
+| [`skills/glyptide/`](./skills/glyptide) | Coding agents | Portable Agent Skill |
+| [`examples/`](./examples) | Learners | Offline recipes / provider notes |
+| [`site/`](./site) | **Contributors** | Playground + docs website (not a runtime dependency) |
+| [`scripts/`](./scripts) | Maintainers | Build, AI-doc generation, size / clean-room |
+| [`prototype/`](./prototype) | Historical | v5 study — not the source of truth |
+
+**Cloning is for contributors** (and for building/packing the library). Product designers and AI app builders should install the package and follow docs — not browse `site/src`.
+
+## Features
+
+- **96 patterns** across **6 use cases**
+- Framework-agnostic core + optional React adapter
+- Simulated *and* real streams (`append` / `applySnapshot` / `finish`, AbortSignal, events)
+- Motion presets; decoupled appearance with **transient / persistent / review-bound** lifecycles
+- Theme-aware presets; reduced-motion; review accept/discard
+- AI-native docs (`llms.txt`, registry JSON, schemas, Agent Skill)
+- Tiny core — native CSS + Web Animations, no runtime deps
+
+## Contributor setup
+
+Works the same on macOS, Linux, and Windows (PowerShell / cmd / Git Bash) via npm scripts (Node, not bash):
+
+```bash
+git clone https://github.com/akhildesai20/glyptide.git
+cd glyptide
+npm install
+npm run build:lib
+npm run generate:ai-docs
+npm run typecheck
+npm test
+npm run test:clean-room   # pack + import smoke (no publish)
+npm run dev               # http://localhost:5173
 ```
+
+Optional: `npm run test:e2e` (Playwright Chromium), `npm run build` (lib + site), `npm run measure:ai-context`.
+
+See [HANDOVER.md](./HANDOVER.md) for Windows migration notes and current status.
 
 ## Appearance lifecycle
 
-Aesthetic presets style the **generation phase**. They do not permanently recolor finished prose unless the pattern’s lifecycle is persistent or review-bound.
-
-| Lifecycle | Examples | After completion |
-|-----------|----------|------------------|
-| Transient | Gradient ink, emphasis, checkpoints, colored insertion | Returns to inherited host styles |
-| Persistent | Heading weight | Intentional formatting kept |
-| Review-bound | Ghost, diffs, tracked addition | Stays until Accept / Discard |
-
-See [APPEARANCE.md](./APPEARANCE.md).
-
-## Accessibility
-
-- Honors `prefers-reduced-motion`
-- Status announcements via live regions in the playground
-- Semantic revision colors stay independent of aesthetic palettes
-
-## Browser support
-
-Modern evergreen browsers (Chromium, Firefox, Safari) with Web Animations API. Gradient OKLab interpolation is progressive enhancement.
-
-## Website
-
-The playground lives in `site/` and is intended for local development (`npm run dev`). A public deployment is not required for library use.
-
-## Prototype
-
-The original interaction study is preserved at [`prototype/text-in-motion-v5.html`](./prototype/text-in-motion-v5.html) as historical reference. The production source of truth is `packages/glyptide`.
+Aesthetic presets style the **generation phase**. They do not permanently recolor finished prose unless the pattern’s lifecycle is persistent or review-bound. See [APPEARANCE.md](./APPEARANCE.md).
 
 ## AI-native developer experience
 
-- [`AGENTS.md`](./AGENTS.md) — instructions for coding agents in this repo
-- [`design.md`](./design.md) — motion / lifecycle UX guidance
+- **Minimal agent brief:** [docs/ai-integrate.md](./docs/ai-integrate.md) — start here; fetch other docs on demand
+- [`AGENTS.md`](./AGENTS.md) — instructions for agents working **in this repo**
 - [`skills/glyptide/`](./skills/glyptide/) — portable Agent Skill
-- Playground site serves `/llms.txt`, `/llms-full.txt`, `/registry/patterns.json`, `/schemas/*`, and [`/for-ai.html`](./site/for-ai.html)
-- Runtime helpers: `pipeTextToGlyptide`, `recommendPatterns` (no LLM required)
-
-Regenerate derived AI docs after registry changes:
+- Playground serves `/llms.txt`, `/llms-full.txt`, `/registry/patterns.json`, `/schemas/*`, `/for-ai.html`
+- Runtime: `pipeTextToGlyptide`, `recommendPatterns` (no LLM)
 
 ```bash
 npm run build:lib && npm run generate:ai-docs
@@ -119,12 +106,13 @@ npm run build:lib && npm run generate:ai-docs
 
 ## Documentation
 
+- [AI / integrator brief](./docs/ai-integrate.md)
 - [API reference](./docs/api.md)
+- [Streaming](./docs/streaming.md)
 - [Appearance system](./APPEARANCE.md)
 - [Provider notes](./docs/providers.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Changelog](./CHANGELOG.md)
-- [Audit notes](./AUDIT.md)
 
 ## License
 

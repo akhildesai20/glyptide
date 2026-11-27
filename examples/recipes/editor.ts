@@ -21,10 +21,11 @@ export function runEditorInsert(root: HTMLElement) {
 export function runEditorReview(root: HTMLElement) {
   const g = createGlyptide({
     element: root,
-    pattern: "replace-ghost-rewrite",
+    pattern: "replace-review-in-place",
     latency: 150,
     config: {
-      source: "Ship [[fast]] and break things.",
+      source:
+        "Ship [[fast]] and break things. Motion should feel deliberate when text is rewritten.",
       text: "carefully",
     },
   });

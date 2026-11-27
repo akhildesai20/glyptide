@@ -13,6 +13,27 @@ export function setIconLabel(
   el.classList.add("btn-with-icon");
 }
 
+async function writeClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch {
+      /* fall through to execCommand */
+    }
+  }
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0";
+  document.body.append(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  const ok = document.execCommand("copy");
+  ta.remove();
+  if (!ok) throw new Error("copy failed");
+}
+
 export async function copyWithIconFeedback(
   button: HTMLElement,
   text: string,
@@ -26,7 +47,7 @@ export async function copyWithIconFeedback(
 ): Promise<boolean> {
   const idle = opts.idleIcon ?? "copy";
   try {
-    await navigator.clipboard.writeText(text);
+    await writeClipboard(text);
     swapLeadingIcon(button, "copied", { anim: "success" });
     const label = opts.successLabel ?? "Copied";
     const nodes = [...button.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE);

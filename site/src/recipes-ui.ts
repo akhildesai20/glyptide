@@ -96,6 +96,13 @@ interface ShellRefs {
   statusEl: HTMLElement | null;
 }
 
+function setStopVisible(btn: HTMLButtonElement, visible: boolean): void {
+  btn.classList.toggle("is-visible", visible);
+  btn.setAttribute("aria-hidden", String(!visible));
+  btn.tabIndex = visible ? 0 : -1;
+  if (!visible) btn.blur();
+}
+
 function buildShell(id: RecipeId, host: HTMLElement): ShellRefs {
   host.replaceChildren();
   host.dataset.recipeShell = id;
@@ -112,7 +119,9 @@ function buildShell(id: RecipeId, host: HTMLElement): ShellRefs {
           <div class="recipe-chat-meta">
             <span class="recipe-chat-role">Assistant</span>
             <span class="recipe-chat-status" data-recipe-status>Ready</span>
-            <button type="button" class="btn btn-ghost btn-sm" data-recipe-stop hidden>Stop</button>
+            <span class="recipe-chat-stop-slot">
+              <button type="button" class="btn btn-ghost btn-sm" data-recipe-stop aria-hidden="true" tabindex="-1">Stop</button>
+            </span>
           </div>
           <div class="glyptide-document" data-glyptide-out></div>
           <div class="glyptide-waiting" data-glyptide-wait hidden></div>
@@ -225,10 +234,11 @@ export function mountRecipesSection(section: HTMLElement): void {
   function wireShellControls(id: RecipeId, refs: ShellRefs): void {
     if (refs.stopBtn) {
       setIconLabel(refs.stopBtn, "stop", "Stop");
+      setStopVisible(refs.stopBtn, false);
       refs.stopBtn.onclick = () => {
         abort?.abort();
         instance?.stop();
-        refs.stopBtn!.hidden = true;
+        setStopVisible(refs.stopBtn!, false);
         if (refs.statusEl) refs.statusEl.textContent = "Stopped";
       };
     }
@@ -244,10 +254,7 @@ export function mountRecipesSection(section: HTMLElement): void {
       setIconLabel(refs.regenerateBtn, "replay", "Regenerate");
       refs.regenerateBtn.onclick = () => {
         if (!instance || id !== "composer") return;
-        regenerate(
-          instance,
-          "Regenerated draft: clearer sentences, same meaning, new rhythm.",
-        );
+        regenerate(instance);
       };
     }
   }
@@ -263,8 +270,9 @@ export function mountRecipesSection(section: HTMLElement): void {
     const syncState = (s: string) => {
       if (statusEl) statusEl.textContent = s;
       if (stopBtn) {
-        stopBtn.hidden = !["Waiting", "Generating", "Waiting for text"].includes(
-          s,
+        setStopVisible(
+          stopBtn,
+          ["Waiting", "Generating", "Waiting for text"].includes(s),
         );
       }
       if (acceptBtn && rejectBtn) {
@@ -278,7 +286,6 @@ export function mountRecipesSection(section: HTMLElement): void {
       switch (id) {
         case "chat": {
           syncState("Generating");
-          if (stopBtn) stopBtn.hidden = false;
           // Chat recipe targets [data-glyptide-out] inside root
           instance = await runChatRecipe(surface, signal);
           if (!signal.aborted) syncState("Complete");

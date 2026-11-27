@@ -1,0 +1,6 @@
+**/*.map
+**/tsconfig.tsbuildinfo
+*.tgz
+src
+tsup.config.ts
+tsconfig.json

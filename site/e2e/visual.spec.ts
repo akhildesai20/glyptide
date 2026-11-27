@@ -13,15 +13,15 @@ test.describe("visual regression subset", () => {
     "new-word-settle",
     "new-progressive-emphasis",
     "insert-reserved-gap",
-    "replace-ghost-rewrite",
+    "replace-review-in-place",
   ]) {
     test(`final frame ${pattern}`, async ({ page }) => {
       await page.goto(
-        `/?case=new&pattern=${pattern}&speed=200&latency=0&scenario=steady`,
+        `/playground/?case=new&pattern=${pattern}&speed=200&latency=0&scenario=steady`,
       );
-      await page.locator("#start").click();
+      await page.locator("#play").click();
       await page.waitForSelector(
-        ".status:has-text('Complete'), .status:has-text('Review'), .status:has-text('Stopped')",
+        "#status:has-text('Complete'), #status:has-text('Review'), #status:has-text('Stopped')",
         { timeout: 20000 },
       );
       const stage = page.locator(".stage").first();

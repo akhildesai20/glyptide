@@ -33,6 +33,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
+        playground: resolve(__dirname, "playground/index.html"),
+        docs: resolve(__dirname, "docs/index.html"),
         forAi: resolve(__dirname, "for-ai.html"),
       },
     },

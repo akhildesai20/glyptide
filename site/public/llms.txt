@@ -5,16 +5,22 @@
 Glyptide animates and structures generated text. It does not call AI providers and requires no API keys.
 The npm package `glyptide@0.1.0` is **not published to the public registry yet**. Install from the repository:
 
-## Docs
+## Start here (minimal context)
+
+- [AI / integrator brief](/docs/ai-integrate.md): Install + integrate without reading website source — **fetch this first**
+- Prefer progressive retrieval. Do **not** inspect `site/` playground source or engine internals unless maintaining the library.
+- Do **not** load [llms-full.txt](/llms-full.txt) unless you need exhaustive pattern ids.
+
+## Docs (on demand)
 
 - [Getting started](/docs/getting-started.md): Install (local package) and first `createGlyptide` call
 - [Public API](/docs/api.md): `createGlyptide`, instance methods, appearance lifecycle
-- [Patterns](/docs/patterns.md): All 96 pattern ids with lifecycle metadata
-- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
 - [Streaming](/docs/streaming.md): `append` / `pipeTextToGlyptide`, delta vs snapshot
+- [Appearance](/docs/appearance.md): Presets, color modes, transient vs review-bound lifecycles
+- [Patterns](/docs/patterns.md): All 96 pattern ids with lifecycle metadata
 - [Accessibility](/docs/accessibility.md): Reduced motion, semantics, announcements
 - [Design guidance](/docs/design.md): Motion and reading-comfort principles
-- [Full documentation](/llms-full.txt): Consolidated AI-readable reference
+- [Full documentation](/llms-full.txt): Consolidated AI-readable reference (large)
 
 ## Machine-readable
 
@@ -26,7 +32,7 @@ The npm package `glyptide@0.1.0` is **not published to the public registry yet**
 ## Agent resources
 
 - [Agent skill](/skills/glyptide/SKILL.md): Portable Agent Skills package for coding agents
-- [For AI page](/for-ai.html): Human + agent discovery page in the playground site
+- [For AI page](/for-ai.html): Human + agent discovery page
 
 ## Examples
 
@@ -34,8 +40,3 @@ The npm package `glyptide@0.1.0` is **not published to the public registry yet**
 - [React](/skills/glyptide/examples/react.md)
 - [AI SDK streaming](/skills/glyptide/examples/ai-sdk.md)
 - [Provider notes](/docs/providers.md)
-
-## Optional
-
-- [Repository README](https://github.com/akhildesai20/glyptide/blob/main/README.md): Human overview (private until public release)
-- [AGENTS.md](https://github.com/akhildesai20/glyptide/blob/main/AGENTS.md): Instructions for agents working in this repo

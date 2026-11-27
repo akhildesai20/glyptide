@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documentation — Glyptide</title>
+    <meta
+      name="description"
+      content="Install Glyptide, stream text into patterns, configure motion and appearance, and explore the API."
+    />
+    <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("glyptide-theme") || "system";
+          var dark =
+            t === "dark" ||
+            (t === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+          document.documentElement.dataset.themePref = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/site.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#docs-content">Skip to content</a>
+    <div data-site-header></div>
+
+    <div class="docs-layout wrap">
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm docs-nav-toggle"
+        id="docsNavToggle"
+        aria-expanded="false"
+        aria-controls="docsSidebar"
+      >
+        Menu
+      </button>
+      <aside class="docs-sidebar" id="docsSidebar" aria-label="Documentation">
+        <nav class="docs-nav" id="docsNav">
+          <p class="docs-nav-label">Guides</p>
+          <a href="#quick-integration" data-docs-link="quick">Quick integration</a>
+          <a href="#doc-getting-started" data-docs-link="getting-started">Installation</a>
+          <a href="#doc-streaming" data-docs-link="streaming">Streaming</a>
+          <a href="#doc-patterns" data-docs-link="patterns">Patterns</a>
+          <a href="#doc-design" data-docs-link="design">Motion &amp; lifecycle</a>
+          <a href="#doc-appearance" data-docs-link="appearance">Appearance</a>
+          <a href="#doc-accessibility" data-docs-link="accessibility">Accessibility</a>
+          <p class="docs-nav-label">Reference</p>
+          <a href="#doc-api" data-docs-link="api">API reference</a>
+          <a href="#examples" data-docs-link="examples">Examples</a>
+          <a href="#doc-changelog" data-docs-link="changelog">Changelog</a>
+          <p class="docs-nav-label">Also</p>
+          <a href="/for-ai.html">For AI</a>
+          <a href="/playground/">Playground</a>
+        </nav>
+      </aside>
+      <main id="docs-content" class="docs-content">
+        <header class="docs-page-head">
+          <p class="section-kicker">Documentation</p>
+          <h1>Get started with Glyptide</h1>
+          <p class="section-sub">
+            Presentation-layer text motion for generative UIs. No AI API keys —
+            install from this private repository until npm publication.
+          </p>
+        </header>
+
+        <div id="learnWithAiMount"></div>
+
+        <section id="quick-integration" class="docs-block" aria-labelledby="integrate-heading">
+          <div id="integrateMount"></div>
+        </section>
+
+        <article id="doc-getting-started" class="docs-article" data-docs-article="getting-started">
+          <p class="docs-loading">Loading…</p>
+        </article>
+        <article id="doc-streaming" class="docs-article" data-docs-article="streaming">
+          <p class="docs-loading">Loading…</p>
+        </article>
+        <section id="doc-patterns" class="docs-block pattern-registry-section" aria-labelledby="patterns-registry-label">
+          <span id="patterns-registry-label" class="sr-only">Pattern registry</span>
+          <div id="patternRegistryMount">
+            <p class="docs-loading">Loading pattern registry…</p>
+          </div>
+        </section>
+        <section id="doc-design" class="docs-block design-guide-section" aria-labelledby="design-guide-label">
+          <span id="design-guide-label" class="sr-only">Design &amp; motion guidance</span>
+          <div id="designGuideMount">
+            <p class="docs-loading">Loading design guidance…</p>
+          </div>
+        </section>
+        <article id="doc-appearance" class="docs-article" data-docs-article="appearance">
+          <p class="docs-loading">Loading…</p>
+        </article>
+        <article id="doc-accessibility" class="docs-article" data-docs-article="accessibility">
+          <p class="docs-loading">Loading…</p>
+        </article>
+        <article id="doc-api" class="docs-article" data-docs-article="api">
+          <p class="docs-loading">Loading…</p>
+        </article>
+
+        <section id="examples" class="docs-block">
+          <h2>Examples</h2>
+          <p>
+            Offline recipes demonstrate chat, editor review, research, coding, and
+            composer flows without calling a model provider.
+          </p>
+          <ul class="doc-list">
+            <li><a href="/#recipes">Interactive recipes on the home page</a></li>
+            <li>
+              <a
+                href="https://github.com/akhildesai20/glyptide/tree/main/examples/recipes"
+                rel="noopener noreferrer"
+                target="_blank"
+                >examples/recipes on GitHub</a
+              >
+            </li>
+            <li>
+              <a href="/skills/glyptide/examples/vanilla-js.md" target="_blank" rel="noopener"
+                >Vanilla JS skill example</a
+              >
+            </li>
+            <li>
+              <a href="/skills/glyptide/examples/react.md" target="_blank" rel="noopener"
+                >React skill example</a
+              >
+            </li>
+            <li>
+              <a href="/skills/glyptide/examples/ai-sdk.md" target="_blank" rel="noopener"
+                >AI SDK skill example</a
+              >
+            </li>
+          </ul>
+        </section>
+
+        <article id="doc-changelog" class="docs-article" data-docs-article="changelog">
+          <p class="docs-loading">Loading…</p>
+        </article>
+      </main>
+    </div>
+
+    <div data-site-footer></div>
+    <script type="module" src="/src/pages/docs.ts"></script>
+  </body>
+</html>
