@@ -1,0 +1,22 @@
+# Normalize text to LF in the repo; checkout as LF everywhere (incl. Windows).
+* text=auto eol=lf
+
+# Windows shell scripts may keep CRLF when checked out.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary / generated media
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.tgz binary
+*.pdf binary

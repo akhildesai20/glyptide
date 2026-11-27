@@ -1,12 +1,14 @@
-# Glyptide handover — Windows migration
+# Glyptide handover — Windows primary environment
 
 **Date:** 2026-11-27  
-**From:** macOS development machine  
-**To:** Windows PC (primary ongoing development + npm account access)  
+**Primary development machine:** Windows PC  
+**Secondary / historical:** macOS (prior development)  
 **Remote:** https://github.com/akhildesai20/glyptide (private)  
 **Branch:** `main`
 
 This document distinguishes **verified** work from **unfinished / deferred** work. Do not treat unverified items as production-ready.
+
+Windows is the **primary** ongoing development and release environment. Keep the monorepo intact; GitHub remains the single source of truth. Cross-platform scripts must continue to work on macOS and Linux.
 
 ---
 
@@ -14,13 +16,13 @@ This document distinguishes **verified** work from **unfinished / deferred** wor
 
 | Area | Status |
 |------|--------|
-| Core library `glyptide@0.1.0` | Verified locally (build, typecheck, clean-room pack/import) |
+| Core library `glyptide@0.1.0` | Verified on Windows (build, typecheck, clean-room pack/import) |
 | React adapter `@glyptide/react@0.1.0` | Verified in clean-room import |
-| Site (MPA: home / playground / docs / for-ai) | Implemented; Vitest + Playwright exist |
+| Site (MPA: home / playground / docs / for-ai) | Implemented; Vitest + Playwright verified on Windows |
 | AI docs (`llms.txt`, registry, skill, integrator brief) | Generated; progressive-retrieval oriented |
 | Public npm publish | **Not done** — blocked until explicit human authorization |
 | GitHub visibility | **Private** — do not change without authorization |
-| Windows as primary machine | Handover target — verify install on Windows after clone |
+| Primary machine | **Windows** (Node.js 24 LTS) |
 
 Package manager: **npm** workspaces + committed `package-lock.json` (do not switch to pnpm/yarn without an explicit decision).
 
@@ -48,26 +50,21 @@ Concerns stay separate: **Pattern · Motion · Appearance · Lifecycle**.
 
 ---
 
-## Latest completed changes (this handover batch)
+## Latest completed changes
 
-Verified on the Mac before push (see “Verification” below):
-
-1. **Site IA** — multi-page site (`/`, `/playground/`, `/docs/`, `/for-ai.html`); recipe shells; pattern registry UI; interactive design guide; Learn with AI strip; appearance preset gallery; docs table markdown `\|` fix.
-2. **Distribution hygiene** — explicit package `files` allowlists; no sourcemaps in tarball; clean-room smoke for both packages; package size ~178 KB for `glyptide`.
-3. **AI / discoverability** — `docs/ai-integrate.md`, README install-first framing, slim Copy-for-AI, updated skill/`llms.txt`/`AGENTS.md`, `.cursorindexingignore`, `npm run measure:ai-context`.
-4. **Windows prep** — relative install paths in docs; gitignore hardened; no bash-only scripts (Node `.mjs` only).
+1. **Site IA** — multi-page site (`/`, `/playground/`, `/docs/`, `/for-ai.html`); recipe shells; pattern registry UI; interactive design guide; Learn with AI strip; appearance preset gallery.
+2. **Distribution hygiene** — explicit package `files` allowlists; no sourcemaps in tarball; clean-room smoke for both packages.
+3. **AI / discoverability** — `docs/ai-integrate.md`, README install-first framing, slim Copy-for-AI, skill/`llms.txt`/`AGENTS.md`, `.cursorindexingignore`, `npm run measure:ai-context`.
+4. **Windows primary stabilization** — `.gitattributes` (LF), Playwright worker cap + direct `npx vite` webServer, Node 24 LTS, Norton HTTPS trust via user-local `NODE_EXTRA_CA_CERTS` (certs never committed).
 
 ---
 
 ## Pending / unfinished / limitations
 
-**Not finished / not claimed verified on Windows yet**
-
-- First-class Windows smoke (clone → `npm install` → build → test) — run on the PC after pull.
-- Full Playwright e2e may need `npx playwright install chromium` on a fresh Windows machine.
-- No dedicated ESLint script in root/`site` — quality gate is primarily `tsc` + Vitest + Playwright.
-- Public npm publish checklist remains deferred (auth is on Windows; still requires explicit go-ahead).
-- Some maintainer docs (`docs/STABILIZATION.md`, `HARDENING.md`, etc.) are historical RC notes — not required for app integration.
+- No dedicated ESLint script — quality gate is `tsc` + Vitest + Playwright.
+- Public npm publish deferred (`npm whoami` currently **401** until re-login; still requires explicit go-ahead).
+- Visual regression subset is opt-in (`VISUAL=1`); baselines may be absent until generated with `--update-snapshots`.
+- Some maintainer docs (`docs/STABILIZATION.md`, `HARDENING.md`, etc.) are historical RC notes.
 
 **Known product constraints (by design)**
 
@@ -76,44 +73,58 @@ Verified on the Mac before push (see “Verification” below):
 - Website (`site/`) is for demos/docs — apps must not depend on `site/src`.
 - Do not invent pattern ids; unknown ids throw `GlyptideConfigError`.
 
-**Known bugs / follow-ups to re-check on Windows**
-
-- Confirm Vite MPA routes and `vercel.json` rewrites after a production `npm run build` on Windows.
-- Re-run Playwright smoke against local preview if e2e was last run only on macOS.
-- If antivirus locks `node_modules` or Playwright browsers, allowlist the repo / Playwright cache.
-
 ---
 
-## Windows setup
+## Windows setup (primary)
 
 ```powershell
-# Prerequisites: Node.js 18+ and npm (comes with Node)
+# Prerequisites: Node.js 24 LTS (engines still allow >=18 for consumers)
+# If Norton/Symantec HTTPS scanning is enabled, trust its root for Node only:
+#   Export "Norton Web/Mail Shield Root" from LocalMachine\Root to a PEM under
+#   %USERPROFILE%\.certs\ (outside the repo), then set a USER env var:
+#   NODE_EXTRA_CA_CERTS=%USERPROFILE%\.certs\norton-web-mail-shield-root.pem
+# Never set NODE_TLS_REJECT_UNAUTHORIZED=0 permanently. Never commit PEMs.
+
 git clone https://github.com/akhildesai20/glyptide.git
 cd glyptide
-npm install
+# If Git HTTPS fails with OpenSSL, use schannel (repo-local is fine):
+#   git config http.sslBackend schannel
+npm ci
 npm run build:lib
 npm run generate:ai-docs
 npm run typecheck
 npm test
 npm run test:clean-room
+npm run build
+npm run size
 npm run dev
 ```
 
-Optional e2e:
+Optional e2e / visual:
 
 ```powershell
 cd site
 npx playwright install chromium
 cd ..
 npm run test:e2e
+# Soft visual gate (requires baselines or --update-snapshots):
+$env:VISUAL=1; npm run test:e2e -- --grep "visual regression"
 ```
 
 Notes:
 
-- Use **PowerShell, cmd, or Git Bash** — scripts are npm/Node, not macOS shell.
-- Prefer relative paths: `npm install ./packages/glyptide`.
-- Keep `package-lock.json`. Do not delete it or migrate package managers casually.
-- Auth for future publish: use Windows npm login / token via environment; **never commit `.npmrc` with tokens** (ignored).
+- Prefer **Node.js 24 LTS** on this machine; retain `package-lock.json`.
+- Use PowerShell, cmd, or Git Bash — scripts are npm/Node, not bash-only.
+- Relative install paths: `npm install ./packages/glyptide`.
+- Never commit `.npmrc` with tokens (ignored), PEMs, or machine-specific cert paths.
+
+---
+
+## Cross-platform notes (macOS / Linux)
+
+- Playwright: workers capped at 4 by default (override `PW_WORKERS`); webServer uses `npx vite --host 127.0.0.1 --port 5173` (works on all platforms; avoids npm swallowing flags on Windows).
+- `.gitattributes` normalizes text to LF; harmless on macOS/Linux.
+- Norton / `NODE_EXTRA_CA_CERTS` is **Windows antivirus–specific** — not required on macOS/Linux unless a similar MITM proxy exists.
 
 ---
 
@@ -121,7 +132,7 @@ Notes:
 
 | Command | Purpose |
 |---------|---------|
-| `npm install` | Workspace install |
+| `npm ci` / `npm install` | Workspace install from lockfile |
 | `npm run build:lib` | Build `glyptide` + `@glyptide/react` |
 | `npm run generate:ai-docs` | Refresh `site/public` AI assets |
 | `npm run build` | Lib + AI docs + site production build |
@@ -134,8 +145,6 @@ Notes:
 | `npm run size` | Bundle size budgets |
 | `npm run check:ai-docs` | Fail if generated AI docs are stale |
 
-Site-only: `npm run build -w site`, `npm run test -w site`.
-
 ---
 
 ## npm publication readiness
@@ -147,44 +156,73 @@ Site-only: `npm run build -w site`, `npm run test -w site`.
 | `prepublishOnly` build on core | Yes |
 | README + LICENSE in packages | Yes |
 | Public registry publish | **No — do not publish without explicit authorization** |
-| npm account access | Available on Windows PC (per handover intent) |
+| npm account auth on Windows | **Blocked** — `npm whoami` returns 401; run `npm login` |
 
 Suggested publish order **when authorized**: build → clean-room → dry-run `npm pack` → `npm publish` from `packages/glyptide`, then `@glyptide/react` with peer dep on published `glyptide`. Update docs that currently say “not on npm yet.”
 
 ---
 
-## Recommended next steps (Windows)
+## Recommended next steps
 
-1. Clone/pull `main`, `npm install`, run the verification table above.
-2. Confirm `npm run build` and `npm run dev` in the browser.
-3. Install Playwright browsers if running e2e.
-4. When ready to publish: dry-run pack, then publish only with explicit go-ahead.
-5. Keep AI entry at `docs/ai-integrate.md` / `/llms.txt` — avoid teaching agents from `site/src`.
+1. `npm login` on Windows; confirm `npm whoami`.
+2. When authorized: pack dry-run, then publish core then React adapter.
+3. Keep AI entry at `docs/ai-integrate.md` / `/llms.txt` — avoid teaching agents from `site/src`.
+4. Continue product work on `main` from this Windows environment.
 
 ---
 
-## Verification (macOS machine, pre-push)
+## Verification
 
-Recorded 2026-11-27 (re-run on Windows after clone):
+### macOS (pre-handover)
+
+Recorded 2026-11-27:
 
 | Check | Result |
 |-------|--------|
-| `npm run build:lib` | Pass |
-| `npm run generate:ai-docs` | Pass |
-| `npm run typecheck` | Pass |
-| `npm test` (Vitest) | **127 passed** (14 files) |
-| `npm run test:clean-room` | Pass — both packages, no maps/src/site |
-| `npm run measure:ai-context` | ~2.2k tok recommended first load |
-| `npm run build` (full) | Pass — Vite MPA (`/`, `/docs/`, `/playground/`, for-ai) |
-| `npm run test:e2e` | **24 passed**, 4 skipped (visual regression subset) |
-| Lint | No separate ESLint target — `tsc` is the static gate |
+| `npm run build:lib` / `generate:ai-docs` / `typecheck` | Pass |
+| `npm test` (Vitest) | **127 passed** |
+| `npm run test:clean-room` / `build` / `test:e2e` | Pass — **24 passed**, 4 skipped (visual) |
+
+### Windows primary (stabilization)
+
+Recorded 2026-11-27 — Node **v24.22.3**, Norton CA via user-local `NODE_EXTRA_CA_CERTS` (TLS verification **enabled**; no `NODE_TLS_REJECT_UNAUTHORIZED=0`):
+
+| Check | Result |
+|-------|--------|
+| Clone / `npm ci` (lockfile retained) | Pass |
+| `build:lib` / `generate:ai-docs` / `typecheck` | Pass |
+| Vitest | **127 passed** |
+| Full `npm run build` | Pass |
+| `npm run size` / `test:clean-room` | Pass |
+| Playwright e2e | **24 passed** (visual skipped without `VISUAL`) |
+| Visual (`VISUAL=1`) | First run failed: **missing baselines** (not pixel diffs). After `--update-snapshots`, **4/4 passed** on `chromium-win32`. |
+| `npm whoami` | **401** — re-login required before publish |
+| Package names on registry | Not published (404) |
+
+Visual baselines live under `site/e2e/visual.spec.ts-snapshots/*-chromium-win32.png` (Windows Chromium). macOS/Linux would generate their own platform suffix if `VISUAL=1` is used there.
+
+**Distribution sizes** (Node 24 build; tsup output is the published minified form — no separate unminified artifacts). Re-print with `node scripts/report-dist-sizes.mjs`:
+
+| Artifact | Raw | Gzip | Brotli | Packed | Unpacked |
+|----------|-----|------|--------|--------|----------|
+| `glyptide` tarball | — | — | — | 177 907 B (173.74 KB) | 888 713 B (867.88 KB) |
+| `@glyptide/react` tarball | — | — | — | 3 513 B (3.43 KB) | 15 248 B (14.89 KB) |
+| `index.js` (ESM) | 177 095 B | 33 584 B | 27 188 B | — | — |
+| `glyptide.iife.js` | 124 810 B | 27 916 B | 23 009 B | — | — |
+| `engine.js` | 72 337 B | 17 674 B | 15 257 B | — | — |
+| `patterns.js` | 78 827 B | 9 636 B | 6 950 B | — | — |
+| `styles.css` | 12 659 B | 2 282 B | 1 918 B | — | — |
+| `@glyptide/react` `index.js` | 4 090 B | 1 064 B | 939 B | — | — |
 
 ---
 
 ## Resume checklist
 
-- [ ] `git pull origin main` on Windows  
-- [ ] `npm install`  
-- [ ] `npm run build:lib && npm run generate:ai-docs && npm run typecheck && npm test && npm run test:clean-room`  
-- [ ] `npm run dev` — spot-check home, playground, docs, Learn with AI, for-ai  
-- [ ] Only then consider npm publish (explicit authorization required)
+- [x] Windows clone / primary environment  
+- [x] Node.js 24 LTS  
+- [x] Norton HTTPS trust via `NODE_EXTRA_CA_CERTS` (no TLS disable)  
+- [x] Cross-platform Playwright / `.gitattributes` fixes  
+- [x] Full build / typecheck / unit / e2e / clean-room  
+- [x] Visual baselines (`VISUAL=1`) on Windows Chromium  
+- [ ] `npm login` (fix 401) before any publish attempt  
+- [ ] npm publish only with explicit authorization  

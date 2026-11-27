@@ -23,6 +23,9 @@ packages/*/dist
 .vscode/*
 !.vscode/extensions.json
 *.pem
+*.cer
+*.crt
+.certs/
 .vercel
 *.local
 .eslintcache

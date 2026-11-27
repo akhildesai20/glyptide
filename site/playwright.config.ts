@@ -1,4 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
+import os from "node:os";
+
+// Cap parallel browsers so the Vite webServer stays responsive (high core-count
+// Windows machines previously timed out on page.goto with ~12 workers).
+const defaultWorkers = Math.max(1, Math.min(4, os.cpus().length));
 
 export default defineConfig({
   testDir: "./e2e",
@@ -6,12 +11,19 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  workers: process.env.PW_WORKERS
+    ? Number(process.env.PW_WORKERS)
+    : process.env.CI
+      ? 2
+      : defaultWorkers,
   use: {
     baseURL: "http://127.0.0.1:5173",
     trace: "on-first-retry",
   },
   webServer: {
-    command: "npm run dev -- --host 127.0.0.1 --port 5173",
+    // Call vite directly: npm 11 on Windows can swallow `--host` / `--port` when
+    // forwarded through `npm run … --`, leaving Vite bound only to localhost.
+    command: "npx vite --host 127.0.0.1 --port 5173",
     url: "http://127.0.0.1:5173",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
