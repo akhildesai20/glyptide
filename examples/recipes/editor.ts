@@ -2,7 +2,6 @@
  * AI Document Editor — insert / replace / review accept-reject (mock).
  */
 import { createGlyptide } from "glyptide";
-import "glyptide/styles.css";
 
 export function runEditorInsert(root: HTMLElement) {
   const g = createGlyptide({

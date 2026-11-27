@@ -63,13 +63,13 @@
         <div class="header-actions">
           <div class="theme-switch" role="group" aria-label="Color theme">
             <button type="button" data-theme-set="light" title="Light" aria-label="Light theme">
-              <span aria-hidden="true">☀</span>
+              <span data-icon="sun" data-icon-size="md" aria-hidden="true"></span>
             </button>
             <button type="button" data-theme-set="system" title="System" aria-label="System theme">
-              <span aria-hidden="true">◐</span>
+              <span data-icon="monitor" data-icon-size="md" aria-hidden="true"></span>
             </button>
             <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark theme">
-              <span aria-hidden="true">☾</span>
+              <span data-icon="moon" data-icon-size="md" aria-hidden="true"></span>
             </button>
           </div>
         </div>
@@ -358,24 +358,61 @@
         </div>
       </section>
 
-      <section class="docs-section wrap" id="recipes" aria-labelledby="recipes-heading">
+      <section class="recipes-section wrap" id="recipes" aria-labelledby="recipes-heading">
         <div class="section-head">
           <div>
             <p class="section-kicker">Recipes</p>
-            <h2 id="recipes-heading">Production-oriented compositions</h2>
+            <h2 id="recipes-heading">Glyptide in practice.</h2>
             <p class="section-sub">
-              Offline mocks in <code>examples/recipes/</code> — chat, editor,
-              research, coding, composer. No live providers.
+              Explore production-oriented compositions for common generative
+              interfaces.
+            </p>
+            <p class="section-note">
+              Runs locally with simulated streams. No API keys required.
+              Source:
+              <a
+                href="https://github.com/akhildesai20/glyptide/tree/main/examples/recipes"
+                rel="noopener noreferrer"
+                target="_blank"
+                >examples/recipes/</a
+              >
             </p>
           </div>
         </div>
-        <ul class="doc-list">
-          <li><strong>Chat</strong> — anticipation thresholds, AbortSignal, streaming</li>
-          <li><strong>Editor</strong> — insert + ghost review accept/reject</li>
-          <li><strong>Research</strong> — structured outline sections</li>
-          <li><strong>Coding</strong> — code line stream</li>
-          <li><strong>Composer</strong> — draft + regenerate via reset/start</li>
-        </ul>
+        <div
+          class="recipe-grid"
+          id="recipeGrid"
+          role="group"
+          aria-label="Recipe demonstrations"
+        ></div>
+        <div
+          class="recipe-stage"
+          id="recipeStage"
+          hidden
+          tabindex="-1"
+          aria-live="polite"
+        >
+          <div class="recipe-stage-toolbar">
+            <h3 id="recipeStageTitle" class="recipe-stage-title">Recipe</h3>
+            <div class="recipe-stage-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="recipeReplay">
+                Replay
+              </button>
+              <a
+                class="btn btn-ghost btn-sm"
+                id="recipeSourceLink"
+                href="https://github.com/akhildesai20/glyptide/tree/main/examples/recipes"
+                rel="noopener noreferrer"
+                target="_blank"
+                >examples/recipes/</a
+              >
+            </div>
+          </div>
+          <div class="recipe-stage-surface glyptide-stage" aria-label="Recipe preview">
+            <div class="glyptide-document" id="recipeOutput"></div>
+            <div class="glyptide-waiting" id="recipeWaiting" hidden></div>
+          </div>
+        </div>
       </section>
 
       <!-- Pattern library -->

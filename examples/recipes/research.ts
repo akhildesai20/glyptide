@@ -2,7 +2,6 @@
  * AI Research Assistant — progressive sections + citations (mock structured).
  */
 import { createGlyptide } from "glyptide";
-import "glyptide/styles.css";
 
 const SECTIONS = `## Findings
 Streaming Markdown belongs to the host renderer.

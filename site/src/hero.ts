@@ -40,8 +40,8 @@ function pickPresetId(previous: string | null): string {
 
 /**
  * Hero rotator using the production Glyptide engine.
- * Every sentence uses Gradient ink with a random curated palette,
- * and keeps the gradient visible through the readable hold period.
+ * Token stream delivery with Gradient ink appearance and a random
+ * curated palette, held through the readable pause between beats.
  */
 export function initHero(
   sentenceEl: HTMLElement,
@@ -77,14 +77,14 @@ export function initHero(
     sentenceEl.dataset.preset = preset;
     return {
       caseId: "new",
-      patternId: "new-gradient-ink",
-      patternName: "Gradient ink",
-      kind: "phrase",
+      patternId: "new-token-stream",
+      patternName: "Token stream",
+      kind: "token",
       effect: prefersReduced() ? "none" : "gradientInk",
       source: "",
       text: beat.text,
-      speed: 42,
-      latency: 220,
+      speed: 58,
+      latency: 160,
       waitingThresholdMs: 180,
       stallMs: 2500,
       catchUp: "catchUp",

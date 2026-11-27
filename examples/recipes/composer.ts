@@ -3,7 +3,6 @@
  * Host supplies rewritten text; Glyptide only presents it.
  */
 import { createGlyptide } from "glyptide";
-import "glyptide/styles.css";
 
 export function runComposerDraft(root: HTMLElement) {
   const g = createGlyptide({

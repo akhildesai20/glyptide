@@ -2,7 +2,6 @@
  * AI Coding Assistant — code stream + replacement review (mock).
  */
 import { createGlyptide } from "glyptide";
-import "glyptide/styles.css";
 
 const SNIPPET = `function pace(tokens) {
   return tokens.map(reveal);

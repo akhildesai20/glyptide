@@ -2,7 +2,6 @@
  * AI Chat recipe — anticipation + streaming + cancel (mock stream, no provider).
  */
 import { createGlyptide, pipeTextToGlyptide } from "glyptide";
-import "glyptide/styles.css";
 
 const SAMPLE =
   "Glyptide paces tokens for reading comfort while your model stream continues in the background.";
@@ -13,10 +12,12 @@ export async function runChatRecipe(root: HTMLElement, signal?: AbortSignal) {
     element: out,
     pattern: "new-word-settle",
     latency: 0,
-    waitingThresholdMs: 180,
-    stallMs: 2500,
     motion: { preset: "natural" },
     signal,
+    config: {
+      waitingThresholdMs: 180,
+      stallMs: 2500,
+    },
   });
 
   async function* mock() {

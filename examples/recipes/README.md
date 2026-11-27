@@ -2,6 +2,8 @@
 
 Offline, deterministic reference integrations. No live AI providers.
 
+Import `glyptide/styles.css` in the host application (these modules do not inject styles).
+
 | Recipe | File | Demonstrates |
 |--------|------|----------------|
 | Chat | `chat.ts` | Anticipation thresholds, streaming, AbortSignal |

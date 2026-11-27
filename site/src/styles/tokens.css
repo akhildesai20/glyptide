@@ -49,8 +49,19 @@
   --ease: cubic-bezier(0.22, 0.75, 0.25, 1);
   --duration-fast: 120ms;
   --duration: 200ms;
+  --duration-icon: 280ms;
   --max: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
+
+  /* Icon system (Lucide 24-unit viewBox) */
+  --icon-xs: 12px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --icon-feature: 44px;
+  --icon-stroke: 1.75;
+  --icon-stroke-feature: 1.35;
 
   --glyptide-ink: var(--ink);
   --glyptide-gen: var(--added);

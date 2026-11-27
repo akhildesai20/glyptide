@@ -30,17 +30,50 @@ import {
   urduForCase,
   type SampleLang,
 } from "./locale-samples";
+import { hydrateIcons } from "./icons";
+import {
+  copyWithIconFeedback,
+  setIconLabel,
+  wireControlAnim,
+} from "./icons/controls";
+import { mountRecipesSection } from "./recipes-ui";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 
 initTheme();
+hydrateIcons(document);
 syncThemeSwitch();
 
 $("heroMeta").textContent =
   `${patternCount} patterns · 6 use cases · Open source`;
 
 initHero($("heroSentence"), $("heroPause"));
+mountRecipesSection($("recipes"));
+
+/* Playback + chrome icons */
+setIconLabel($("play"), "play", "Generate");
+setIconLabel($("pause"), "pause", "Pause");
+setIconLabel($("stop"), "stop", "Stop");
+setIconLabel($("accept"), "accept", "Accept");
+setIconLabel($("reject"), "reject", "Discard");
+setIconLabel($("reset"), "reset", "Reset");
+setIconLabel($("exportCode"), "code", "Code");
+setIconLabel($("copyForAi"), "sparkles", "Copy for AI");
+setIconLabel($("sharePlay"), "share", "Share");
+setIconLabel($("recipeReplay"), "replay", "Replay");
+wireControlAnim($("reset"), "reset");
+wireControlAnim($("stop"), "stop");
+wireControlAnim($("play"), "play");
+wireControlAnim($("sharePlay"), "share");
+wireControlAnim($("recipeReplay"), "replay");
+
+document.querySelectorAll<HTMLAnchorElement>('a[target="_blank"]').forEach((a) => {
+  if (a.querySelector(".g-icon")) return;
+  if (/github\.com/i.test(a.href) && a.textContent?.trim() === "GitHub") {
+    setIconLabel(a, "github", "GitHub");
+  }
+});
 
 /* —— Integration strip —— */
 let codeTab: keyof typeof INTEGRATE_SNIPPETS = "js";
@@ -58,13 +91,16 @@ document.querySelectorAll<HTMLButtonElement>("[data-code-tab]").forEach((btn) =>
 });
 renderIntegrate();
 
+setIconLabel($("copyIntegrate"), "copy", "Copy");
 $("copyIntegrate").onclick = async () => {
-  try {
-    await navigator.clipboard.writeText(INTEGRATE_SNIPPETS[codeTab]);
-    $("copyIntegrateStatus").textContent = "Copied";
-    setTimeout(() => ($("copyIntegrateStatus").textContent = ""), 1600);
-  } catch {
-    $("copyIntegrateStatus").textContent = "Select and copy manually";
+  const ok = await copyWithIconFeedback(
+    $("copyIntegrate"),
+    INTEGRATE_SNIPPETS[codeTab],
+    { idleLabel: "Copy", successLabel: "Copied" },
+  );
+  $("copyIntegrateStatus").textContent = ok ? "" : "Select and copy manually";
+  if (ok) {
+    window.setTimeout(() => ($("copyIntegrateStatus").textContent = ""), 1600);
   }
 };
 
@@ -109,15 +145,20 @@ function onState(s: EngineState): void {
   );
   const active = ["Waiting", "Generating", "Waiting for text", "Paused"].includes(s);
   const play = $("play") as HTMLButtonElement;
-  play.textContent = active
-    ? "Restart"
-    : s === "Interrupted"
-      ? "Resume stream"
-      : cases[currentCase].id === "replace" || cases[currentCase].id === "rewrite"
-        ? "Rewrite"
-        : "Generate";
+  if (active) setIconLabel(play, "replay", "Restart");
+  else if (s === "Interrupted") setIconLabel(play, "play", "Resume stream");
+  else if (
+    cases[currentCase].id === "replace" ||
+    cases[currentCase].id === "rewrite"
+  )
+    setIconLabel(play, "play", "Rewrite");
+  else setIconLabel(play, "play", "Generate");
   ($("pause") as HTMLButtonElement).disabled = !active;
-  ($("pause") as HTMLButtonElement).textContent = s === "Paused" ? "Resume" : "Pause";
+  setIconLabel(
+    $("pause"),
+    s === "Paused" ? "play" : "pause",
+    s === "Paused" ? "Resume" : "Pause",
+  );
   ($("stop") as HTMLButtonElement).disabled = !active && s !== "Interrupted";
   ($("accept") as HTMLButtonElement).hidden = s !== "Review";
   ($("reject") as HTMLButtonElement).hidden = s !== "Review";
@@ -356,7 +397,7 @@ function renderCards(): void {
           <button type="button" class="btn btn-secondary btn-sm replay">Play</button>
           <button type="button" class="btn btn-secondary btn-sm miniaccept" hidden>Accept</button>
           <button type="button" class="btn btn-secondary btn-sm minireject" hidden>Discard</button>
-          <button type="button" class="btn btn-ghost btn-sm use">Try ↗</button>
+          <button type="button" class="btn btn-ghost btn-sm use">Try</button>
           <button type="button" class="btn btn-ghost btn-sm copy-snip">Copy for AI</button>
         </div>
       </div>`;
@@ -376,9 +417,9 @@ function renderCards(): void {
       out,
       wait,
       change: (s) => {
-        replay.textContent = ["Waiting", "Generating", "Waiting for text"].includes(s)
-          ? "Stop"
-          : "Replay";
+        if (["Waiting", "Generating", "Waiting for text"].includes(s))
+          setIconLabel(replay, "stop", "Stop");
+        else setIconLabel(replay, "replay", "Replay");
         (article.querySelector(".miniaccept") as HTMLElement).hidden = s !== "Review";
         (article.querySelector(".minireject") as HTMLElement).hidden = s !== "Review";
       },
@@ -397,33 +438,36 @@ function renderCards(): void {
       wait.textContent = "Ready to preview.";
     }
 
-    (article.querySelector(".miniaccept") as HTMLButtonElement).onclick = () =>
-      engine.accept();
-    (article.querySelector(".minireject") as HTMLButtonElement).onclick = () =>
-      engine.reject();
+    const useBtn = article.querySelector(".use") as HTMLButtonElement;
+    const copySnip = article.querySelector(".copy-snip") as HTMLButtonElement;
+    const acceptBtn = article.querySelector(".miniaccept") as HTMLButtonElement;
+    const rejectBtn = article.querySelector(".minireject") as HTMLButtonElement;
+    setIconLabel(replay, "play", "Play");
+    setIconLabel(useBtn, "arrowRight", "Try");
+    setIconLabel(copySnip, "sparkles", "Copy for AI");
+    setIconLabel(acceptBtn, "accept", "Accept");
+    setIconLabel(rejectBtn, "reject", "Discard");
+    wireControlAnim(replay, "replay");
+
+    acceptBtn.onclick = () => engine.accept();
+    rejectBtn.onclick = () => engine.reject();
     replay.onclick = () =>
       ["Waiting", "Generating", "Waiting for text"].includes(engine.state)
         ? engine.stop()
         : engine.start(demo());
-    (article.querySelector(".use") as HTMLButtonElement).onclick = () =>
-      choose(i, true);
-    (article.querySelector(".copy-snip") as HTMLButtonElement).onclick = async () => {
+    useBtn.onclick = () => choose(i, true);
+    copySnip.onclick = async () => {
       const snip = buildCopyForAiPrompt({
         pattern: p,
         config: demo(),
         appearanceState: appearance.getState(),
       });
-      try {
-        await navigator.clipboard.writeText(snip);
-        (article.querySelector(".copy-snip") as HTMLButtonElement).textContent =
-          "Copied for AI";
-        setTimeout(() => {
-          (article.querySelector(".copy-snip") as HTMLButtonElement).textContent =
-            "Copy for AI";
-        }, 1400);
-      } catch {
-        /* ignore */
-      }
+      await copyWithIconFeedback(copySnip, snip, {
+        idleIcon: "sparkles",
+        idleLabel: "Copy for AI",
+        successLabel: "Copied for AI",
+        holdMs: 1400,
+      });
     };
 
     const observer = new IntersectionObserver(
@@ -572,13 +616,14 @@ document.addEventListener("keydown", (e) => {
 ($("closeCode") as HTMLButtonElement).onclick = () =>
   ($("codeDialog") as HTMLDialogElement).close();
 
+setIconLabel($("copyCode"), "copy", "Copy");
 ($("copyCode") as HTMLButtonElement).onclick = async () => {
-  try {
-    await navigator.clipboard.writeText($("codeText").textContent || "");
-    $("copyStatus").textContent = "Copied.";
-  } catch {
-    $("copyStatus").textContent = "Select and copy manually.";
-  }
+  const ok = await copyWithIconFeedback(
+    $("copyCode"),
+    $("codeText").textContent || "",
+    { idleLabel: "Copy", successLabel: "Copied" },
+  );
+  $("copyStatus").textContent = ok ? "Copied." : "Select and copy manually.";
 };
 
 ($("downloadCode") as HTMLButtonElement).onclick = () => {
@@ -598,15 +643,12 @@ document.addEventListener("keydown", (e) => {
     latency: latency.value,
     scenario: ($("scenario") as HTMLSelectElement).value,
   });
-  try {
-    await navigator.clipboard.writeText(location.href);
-    ($("sharePlay") as HTMLButtonElement).textContent = "Link copied";
-    setTimeout(() => {
-      ($("sharePlay") as HTMLButtonElement).textContent = "Share";
-    }, 1400);
-  } catch {
-    /* ignore */
-  }
+  await copyWithIconFeedback($("sharePlay"), location.href, {
+    idleIcon: "share",
+    idleLabel: "Share",
+    successLabel: "Link copied",
+    holdMs: 1400,
+  });
 };
 
 ($("copyForAi") as HTMLButtonElement).onclick = async () => {
@@ -615,18 +657,11 @@ document.addEventListener("keydown", (e) => {
     config: buildConfig(),
     appearanceState: appearance.getState(),
   });
-  try {
-    await navigator.clipboard.writeText(prompt);
-    ($("copyForAi") as HTMLButtonElement).textContent = "Copied for AI";
-    setTimeout(() => {
-      ($("copyForAi") as HTMLButtonElement).textContent = "Copy for AI";
-    }, 1600);
-  } catch {
-    ($("copyForAi") as HTMLButtonElement).textContent = "Copy failed";
-    setTimeout(() => {
-      ($("copyForAi") as HTMLButtonElement).textContent = "Copy for AI";
-    }, 1600);
-  }
+  await copyWithIconFeedback($("copyForAi"), prompt, {
+    idleIcon: "sparkles",
+    idleLabel: "Copy for AI",
+    successLabel: "Copied for AI",
+  });
 };
 
 /* Deep link — apply case + pattern atomically (setCase alone would reset pattern) */

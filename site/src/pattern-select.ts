@@ -1,4 +1,5 @@
 import type { PatternDefinition } from "glyptide";
+import { createIcon, hydrateIcons } from "./icons";
 
 export interface PatternGroup {
   id: string;
@@ -116,11 +117,12 @@ export function mountPatternSelect(options: MountOptions): {
   root.innerHTML = `
     <button type="button" class="pattern-trigger" id="patternTrigger" aria-haspopup="listbox" aria-expanded="false">
       <span class="pattern-trigger-label" id="patternTriggerLabel">Select pattern</span>
-      <span class="preset-caret" aria-hidden="true">▾</span>
+      <span class="preset-caret" data-icon="chevronDown" data-icon-size="sm" aria-hidden="true"></span>
     </button>
     <div class="pattern-popover" id="patternPopover" hidden>
       <label class="pattern-search-wrap">
         <span class="sr-only">Search patterns</span>
+        <span class="pattern-search-icon" data-icon="search" data-icon-size="sm" aria-hidden="true"></span>
         <input type="search" class="pattern-search" id="patternSearch" placeholder="Search patterns…" autocomplete="off" />
       </label>
       <div class="pattern-list" id="patternList" role="listbox" tabindex="-1"></div>
@@ -128,12 +130,23 @@ export function mountPatternSelect(options: MountOptions): {
     <select id="pattern" class="pattern-native-fallback" aria-hidden="true" tabindex="-1"></select>
   `;
 
+  hydrateIcons(root);
   const trigger = root.querySelector("#patternTrigger") as HTMLButtonElement;
   const label = root.querySelector("#patternTriggerLabel") as HTMLElement;
   const popover = root.querySelector("#patternPopover") as HTMLElement;
   const search = root.querySelector("#patternSearch") as HTMLInputElement;
   const list = root.querySelector("#patternList") as HTMLElement;
   const native = root.querySelector("#pattern") as HTMLSelectElement;
+
+  function syncCaret(expanded: boolean): void {
+    const current = trigger.querySelector(".preset-caret");
+    const next = createIcon(expanded ? "chevronUp" : "chevronDown", {
+      size: "sm",
+      className: "preset-caret",
+    });
+    if (current) current.replaceWith(next);
+    else trigger.append(next);
+  }
 
   function patterns(): PatternDefinition[] {
     return options.getPatterns();
@@ -174,7 +187,10 @@ export function mountPatternSelect(options: MountOptions): {
         const head = document.createElement("div");
         head.className = "pattern-group-head";
         head.setAttribute("role", "presentation");
-        head.innerHTML = `<span class="pattern-group-icon" aria-hidden="true"></span><span>${g.label}</span>`;
+        head.append(
+          createIcon("recipes", { size: "xs", className: "pattern-group-icon" }),
+          document.createTextNode(g.label),
+        );
         list.append(head);
       }
       for (const { pattern, index } of g.patterns) {
@@ -231,6 +247,7 @@ export function mountPatternSelect(options: MountOptions): {
     open = true;
     popover.hidden = false;
     trigger.setAttribute("aria-expanded", "true");
+    syncCaret(true);
     search.value = "";
     renderList();
     // Ensure selected visible
@@ -246,6 +263,7 @@ export function mountPatternSelect(options: MountOptions): {
     open = false;
     popover.hidden = true;
     trigger.setAttribute("aria-expanded", "false");
+    syncCaret(false);
     trigger.focus();
   }
 

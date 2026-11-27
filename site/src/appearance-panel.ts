@@ -37,6 +37,7 @@ import {
   type AppearanceState,
   resolvedThemeMode,
 } from "./appearance";
+import { hydrateIcons } from "./icons";
 
 export type AppearanceChangeHandler = (
   state: AppearanceState,
@@ -345,7 +346,7 @@ export function mountAppearancePanel(options: PanelOptions): {
         btn.innerHTML = `
           <span class="preset-item-swatch" style="background:${palettePreviewGradient(pal)}"></span>
           <span class="preset-item-name">${preset.name}</span>
-          <span class="preset-check" aria-hidden="true">✓</span>
+          <span class="preset-check" data-icon="copied" data-icon-size="sm" aria-hidden="true"></span>
         `;
         btn.onclick = () => {
           state = selectPreset(state, preset.id);
@@ -356,6 +357,7 @@ export function mountAppearancePanel(options: PanelOptions): {
         list.append(btn);
       }
     }
+    hydrateIcons(list);
 
     root.querySelectorAll<HTMLButtonElement>("[data-edit-theme]").forEach((b) => {
       const t = b.dataset.editTheme as ThemeMode;

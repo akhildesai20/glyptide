@@ -41,6 +41,7 @@
         <nav class="nav" aria-label="Primary">
           <a href="/#library">Library</a>
           <a href="/#playground">Playground</a>
+          <a href="/#recipes">Recipes</a>
           <a href="/#docs">Documentation</a>
           <a href="/for-ai.html" aria-current="page">For AI</a>
           <a
@@ -53,13 +54,13 @@
         <div class="header-actions">
           <div class="theme-switch" role="group" aria-label="Color theme">
             <button type="button" data-theme-set="light" title="Light" aria-label="Light theme">
-              <span aria-hidden="true">☀</span>
+              <span data-icon="sun" data-icon-size="md" aria-hidden="true"></span>
             </button>
             <button type="button" data-theme-set="system" title="System" aria-label="System theme">
-              <span aria-hidden="true">◐</span>
+              <span data-icon="monitor" data-icon-size="md" aria-hidden="true"></span>
             </button>
             <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark theme">
-              <span aria-hidden="true">☾</span>
+              <span data-icon="moon" data-icon-size="md" aria-hidden="true"></span>
             </button>
           </div>
         </div>
@@ -163,19 +164,30 @@
 
     <script type="module">
       import { initTheme, syncThemeSwitch } from "/src/theme.ts";
+      import { hydrateIcons } from "/src/icons/index.ts";
+      import { copyWithIconFeedback, setIconLabel } from "/src/icons/controls.ts";
       initTheme();
+      hydrateIcons(document);
       syncThemeSwitch();
       const btn = document.getElementById("copyLlms");
       const status = document.getElementById("copyLlmsStatus");
+      if (btn) setIconLabel(btn, "copy", "Copy llms.txt");
+      document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+        if (/github\.com/i.test(a.href) && a.textContent?.trim() === "GitHub") {
+          setIconLabel(a, "github", "GitHub");
+        }
+      });
       btn?.addEventListener("click", async () => {
         try {
           const res = await fetch("/llms.txt");
           const text = await res.text();
-          await navigator.clipboard.writeText(text);
-          status.textContent = "Copied";
-          setTimeout(() => (status.textContent = ""), 1600);
+          const ok = await copyWithIconFeedback(btn, text, {
+            idleLabel: "Copy llms.txt",
+            successLabel: "Copied",
+          });
+          if (status) status.textContent = ok ? "" : "Open llms.txt and copy manually";
         } catch {
-          status.textContent = "Open llms.txt and copy manually";
+          if (status) status.textContent = "Open llms.txt and copy manually";
         }
       });
     </script>
